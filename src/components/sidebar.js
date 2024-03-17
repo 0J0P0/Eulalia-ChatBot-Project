@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, Switch, Route } from 'react-router-dom';
 
 import '../styles/sidebar.css';
 
@@ -8,9 +9,9 @@ const SideBar = props => {
       <div className={sidebarClass}>
         <div className='sidebar_links'>
             <ul>
-                <li><a href='./App.js'>Inici</a></li>
-                <li><a href='./Quisom.js'>Qui som?</a></li>
-                <li><a href='#'>Ajuda</a></li>
+                <li><Link to='/'>Inici</Link></li>
+                <li><Link to='/quisom'>Qui som?</Link></li>
+                <li><Link to='/ajuda'>Ajuda</Link></li>
             </ul>
         </div>
       </div>
