@@ -7,25 +7,21 @@ import SideBar from './components/sidebar.js';
 import Quisom from './pages/Quisom.js';
 
 function App() {
-    const [sidebarOpen, setSideBarOpen] = useState(false);
-    
-    const handleViewSidebar = () => {
-      setSideBarOpen(!sidebarOpen);
-    };
-    
-    return (
+  const [sidebarOpen, setSideBarOpen] = useState(false);
+  
+  const handleViewSidebar = () => {
+    setSideBarOpen(!sidebarOpen);
+  };
+  
+  return (
     <Router>
-        <Header onClick={handleViewSidebar} />
-        <div className='flex'>
-          <SideBar isOpen={sidebarOpen}/>
-          <div className='sidebar_content'>
-            <Routes>
-              <Route path='/quisom' element={<Quisom/>} />
-            </Routes>
-          </div>
-        </div>
+      <Header onClick={handleViewSidebar} />
+      <SideBar isOpen={sidebarOpen}/>
+        <Routes>
+          <Route path='/quisom' element={<Quisom/>} />
+        </Routes>
     </Router>
-  );
+);
 }
 
 export default App;
