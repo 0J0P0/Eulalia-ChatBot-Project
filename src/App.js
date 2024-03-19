@@ -7,6 +7,7 @@ import SideBar from './components/sidebar.js';
 import Quisom from './pages/Quisom.js';
 import Chat from './pages/Chat.js';
 import Ajuda from './pages/Ajuda.js';
+import Inici from './pages/Inici.js';
 
 function App() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
@@ -16,18 +17,20 @@ function App() {
   };
   
   return (
-    <Router>
-      {/* <Home /> */}
-      <Header onClick={handleViewSidebar} />
-      <SideBar isOpen={sidebarOpen}/>
-      <p>
-      </p>
-        <Routes>
-          <Route path='/quisom' element={<Quisom/>} />
-          <Route path='/chat' element={<Chat/>} />
-          <Route path='/ajuda' element={<Ajuda/>} />
-        </Routes>
-    </Router>
+    <div>
+      {/* <Inici /> */}
+      <Router>
+        <Header onClick={handleViewSidebar} />
+        <SideBar isOpen={sidebarOpen}/>
+        <p>
+        </p>
+          <Routes>
+            <Route path='/quisom' element={<Quisom/>} />
+            <Route path='/chat' element={<Chat/>} />
+            <Route path='/ajuda' element={<Ajuda/>} />
+          </Routes>
+      </Router>
+    </div>
 );
 }
 

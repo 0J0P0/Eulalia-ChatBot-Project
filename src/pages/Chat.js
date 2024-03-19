@@ -2,7 +2,10 @@ import React from 'react';
 
 function Chat() {
     return (
-       <p>Chat</p>
+       <div>
+        <h1>Chat</h1>
+        <p>Chat page body content</p>  
+       </div>
     );
 }
 
