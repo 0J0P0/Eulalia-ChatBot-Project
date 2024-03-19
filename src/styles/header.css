@@ -1,13 +1,13 @@
 .header {
     background-color: rgb(211, 199, 216);
-    height: 50px;
+    height: 4vw;
     display: flex;
     justify-content: space-between;
 }
 
 .nav_list_icon {
-    height: 40px;
-    padding-top: 5px;
+    height: 3vw;
+    padding-top: 0.5vw;
 }
 
 .nav_list_icon:hover {
@@ -21,6 +21,6 @@
 }
 
 .nav_bcn {
-    height: 40px;
-    padding-top: 5px;
+    height: 3vw;
+    padding-top: 0.5vw;
 }
