@@ -1,10 +1,10 @@
 import React from 'react'
-import { Router } from 'react-router-dom';
-import Header from '../components/header';
-import SideBar from '../components/sidebar';
 import '../styles/quisom.css';
+
 import quisom1 from '../img/quisom1.jpg';
 import quisom2 from '../img/quisom2.jpg';
+
+import Footer from '../components/footer.js';
 
 function Quisom() {
   return (
@@ -42,9 +42,7 @@ function Quisom() {
         </form>
       </div>
     
-      <div className='footer'>
-        <p>2023 by Eulalia. Proudly created with React</p>
-      </div>
+      <Footer />
     </div>
 
   );

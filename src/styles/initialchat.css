@@ -1,0 +1,44 @@
+.chat_container {
+    position: absolute;
+    background-color: #E7E6E6;
+    left: 50%;
+    top: 28vw;
+    height: 40vw;
+    width: 70vw;
+    padding: 20px;
+    border-radius: 2vw;
+    margin-top: -12vw;
+    margin-left: -35vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2vw;
+}
+
+.intro_container {
+    background-color: #F4F4F4;
+    border-radius: 2vw;
+    height: 25vw;
+    margin-top: 1vw;
+    padding: 10px; /* Add padding for spacing */
+    border-radius: 2vw; /* Add border radius for rounded corners */
+    margin-left: 1vw;
+    margin-right: 1vw;
+
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Align items vertically */
+    flex: 1; /* Allow the paragraph to grow to fill available space */
+
+    h1 {
+        font-size: 1.6vw;
+        align-self: center;
+        margin-bottom: 4vw;
+    }
+
+    p {
+        font-size: 1.3vw;
+        text-align: justify;
+        align-self: center;
+        margin: 0vw 3vw;
+    }
+}
+
