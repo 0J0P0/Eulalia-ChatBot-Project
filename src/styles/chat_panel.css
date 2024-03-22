@@ -1,0 +1,21 @@
+.panel_bar {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    /* justify-content: center; Center items horizontally */
+    position: relative;
+    left: 50%;
+    height: 5vw;
+    width: 70vw;
+    border-radius: 2vw;
+    margin-top: -12vw;
+    margin-left: -35vw;
+    background-color: #57680c;
+}
+  
+.prompt_bar {
+    height: 5vw;
+    width: 64vw;
+    padding: 0.8vw 0vw;
+    border-radius: 2vw;
+    background-color: #bed363;
+}

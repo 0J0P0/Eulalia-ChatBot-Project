@@ -1,0 +1,13 @@
+.size-4 {
+	/* Your custom size styles */
+	width: 2rem;
+	height: 2rem;
+}
+
+.icon_arrow_down {
+	color: blue; /* Example color */
+}
+
+.icon_arrow_elbow {
+	color: red; /* Example color */
+}

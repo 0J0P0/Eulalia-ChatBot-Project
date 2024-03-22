@@ -1,24 +1,17 @@
-.chat_container {
-    position: absolute;
-    background-color: #E7E6E6;
-    left: 50%;
-    top: 28vw;
-    height: 40vw;
-    width: 70vw;
-    padding: 20px;
-    border-radius: 2vw;
-    margin-top: -12vw;
-    margin-left: -35vw;
+.initial_container {
+    height: 25vw;
+    margin-top: 1vw;
+    margin-bottom: 10vw;
+    /* padding-bottom: 20px; */
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2vw;
+    background-color: aqua;
 }
 
 .intro_container {
     background-color: #F4F4F4;
     border-radius: 2vw;
     height: 25vw;
-    margin-top: 1vw;
     padding: 10px; /* Add padding for spacing */
     border-radius: 2vw; /* Add border radius for rounded corners */
     margin-left: 1vw;

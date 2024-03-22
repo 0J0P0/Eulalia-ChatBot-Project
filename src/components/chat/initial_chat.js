@@ -1,9 +1,9 @@
 import React from 'react';
-import '../../styles/initialchat.css';
+import '../../styles/initial_chat.css';
 
 function InitialChat() {
   return (
-    <div className='chat_container'>
+    <div className='initial_container'>
       <div className='intro_container'>
         <h1>Què ès Eulàlia?</h1>
         <p>Eulàlia és un assistent virtual que t'ajudarà a trobar la informació que necessites.</p>
