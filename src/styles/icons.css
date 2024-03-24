@@ -1,7 +1,7 @@
 .size-4 {
 	/* Your custom size styles */
-	width: 2rem;
-	height: 2rem;
+	width: 2vw;
+	height: 2vw;
 }
 
 .icon_arrow_down {
@@ -9,5 +9,7 @@
 }
 
 .icon_arrow_elbow {
-	color: red; /* Example color */
+	color: #486A8B; /* Example color */
+	height: 2vw;
+	width: 2vw;
 }

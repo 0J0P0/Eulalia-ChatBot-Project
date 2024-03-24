@@ -5,7 +5,6 @@ import Textarea from 'react-textarea-autosize'
 
 import { nanoid } from 'nanoid'
 import { useEnterSubmit } from './hooks/enter_submit'
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '../tooltip.js'
 import { Button } from './hooks/chat_button.js'
 import { IconArrowElbow } from '../icons.js'
 
@@ -63,17 +62,10 @@ function ChatPanel({ id, title, input, setInput }) {
             onChange={e => setInput(e.target.value)}
           />
           <div>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button type="submit" size="icon" disabled={input === ''}>
-                  <IconArrowElbow />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Send message</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
+            <Button type="submit" size="icon" disabled={input === ''}>
+              <IconArrowElbow />
+            </Button>
+          </div>
         </div>
       </form>
     </div>

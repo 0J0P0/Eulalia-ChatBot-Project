@@ -1,21 +1,23 @@
 .panel_bar {
     display: flex;
     align-items: center; /* Center items vertically */
-    /* justify-content: center; Center items horizontally */
+    justify-content: space-between; /* Space items evenly */
     position: relative;
     left: 50%;
-    height: 5vw;
+    height: 4vw;
     width: 70vw;
     border-radius: 2vw;
     margin-top: -12vw;
     margin-left: -35vw;
-    background-color: #57680c;
+    background-color: #B2B1B1;
 }
   
 .prompt_bar {
-    height: 5vw;
-    width: 64vw;
-    padding: 0.8vw 0vw;
+    height: 4vw;
+    width: 62vw;
+    padding: 0.8vw 0vw 0.8vw 2vw;
+    border: 0;
     border-radius: 2vw;
-    background-color: #bed363;
+    background-color: transparent;
+    padding-left: 2vw;
 }

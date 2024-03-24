@@ -10,7 +10,7 @@ const SideBar = props => {
         <div className='sidebar_links'>
             <ul>
                 <li><Link to='/'>Inici</Link></li>
-                <li><Link to='/chat'>Eulàlia</Link></li>
+                <li><Link to='/bot'>Eulàlia</Link></li>
                 <li><Link to='/quisom'>Qui som?</Link></li>
                 <li><Link to='/ajuda'>Ajuda</Link></li>
             </ul>
