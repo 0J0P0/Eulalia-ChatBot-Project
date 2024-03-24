@@ -122,22 +122,27 @@ function Bot() {
   }
 
   return (
-    <div>
+    <div className='chat_container'>
       <div className='chat_test'>
-        <MainContainer>
-          <ChatContainer>       
-            <MessageList 
-              scrollBehavior="smooth" 
-              typingIndicator={isTyping ? <TypingIndicator content="Eulàlia is typing" /> : null}
-            >
-              {messages.map((message, i) => {
-                console.log(message)
-                return <Message className='message' key={i} model={message} />
-              })}
-            </MessageList>
-            <MessageInput placeholder="Type message here" onSend={handleSend} />        
-          </ChatContainer>
-        </MainContainer>
+        <MessageList 
+          scrollBehavior="smooth" 
+          typingIndicator={isTyping ? <TypingIndicator content="Eulàlia is typing" /> : null}
+        >
+          {messages.map((message, index) => (
+            <div key={index}>
+              {message.sender === "Eulàlia" ? (
+                <div className='eulalia_message'>
+                  {message.message}
+                </div>
+              ) : (
+                <div className='user_message'>
+                  {message.message}
+                </div>
+              )}
+            </div>
+          ))}
+        </MessageList>
+        <MessageInput placeholder="Type message here" onSend={handleSend} />        
       </div>
     </div>
   )
