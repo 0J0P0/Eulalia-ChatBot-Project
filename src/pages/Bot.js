@@ -23,6 +23,8 @@ import {
 }
 from '@chatscope/chat-ui-kit-react'
 
+import eulalia_message_logo from '../img/eulalia_message_logo.svg'
+import user_message_logo from '../img/user_message_logo.svg'
 
 function Chat() {
   const id = nanoid()
@@ -45,9 +47,10 @@ function Chat() {
 
 const API_KEY = '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'
 const systemMessage = {
-  "role": "system", "content": "Explain things like you're talking to a software professional with 2 years of experience."
+  'role': 'system', 'content': "Ets un assistent de xat dissenyat per oferir suport intern a un equip de tècnics de l'Ajuntament de Barcelona. La teva tasca principal és proporcionar respostes a les preguntes dels tècnics utilitzant una base de dades que conté informació detallada sobre els serveis i les estadístiques oferts per l'Ajuntament de Barcelona. Si no teniu la resposta adequada, podeu suggerir-vos que es comuniquin a través de la pàgina de contacte o dirigir-los a la secció d'informació rellevant."
 }
 
+// https://github.com/coopercodes/ReactChatGPTChatbot
 
 function Bot() {
   // const id = nanoid()
@@ -62,7 +65,7 @@ function Bot() {
     const newMessage = {
       message,
       direction: 'outgoing',
-      sender: "user"
+      sender: 'user'
     };
 
     const newMessages = [...messages, newMessage];
@@ -78,13 +81,13 @@ function Bot() {
 
   async function processMessageToChatGPT(chatMessages) {
     // Format messages for chatGPT API
-    // API is expecting objects in format of { role: "user" or "assistant", "content": "message here"}
+    // API is expecting objects in format of { role: 'user' or 'assistant', 'content': 'message here'}
     let apiMessages = chatMessages.map((messageObject) => {  // Format the messages for the API
-      let role = "";
-      if (messageObject.sender === "Eulàlia") {
-        role = "assistant";
+      let role = '';
+      if (messageObject.sender === 'Eulàlia') {
+        role = 'assistant';
       } else {
-        role = "user";
+        role = 'user';
       }
       return { role: role, content: messageObject.message}
     });
@@ -93,20 +96,20 @@ function Bot() {
     // and the messages which we formatted above. We add a system message in the front to'
     // determine how we want chatGPT to act. 
     const apiRequestBody = {
-      "model": "gpt-3.5-turbo",
-      "messages": [
+      'model': 'gpt-3.5-turbo',
+      'messages': [
         systemMessage,  // The system message DEFINES the logic of our chatGPT
         ...apiMessages // The messages from our chat with Eulàlia
       ]
     }
 
     // Make the request to the chatGPT API
-    await fetch("https://api.openai.com/v1/chat/completions", 
+    await fetch('https://api.openai.com/v1/chat/completions', 
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Authorization": "Bearer " + API_KEY,
-        "Content-Type": "application/json"
+        'Authorization': 'Bearer ' + API_KEY,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(apiRequestBody)
     }).then((data) => {
@@ -115,7 +118,7 @@ function Bot() {
       console.log(data);
       setMessages([...chatMessages, {  // Add the response from chatGPT to our messages
         message: data.choices[0].message.content,
-        sender: "Eulàlia"
+        sender: 'Eulàlia'
       }]);
       setIsTyping(false);
     });
@@ -125,24 +128,30 @@ function Bot() {
     <div className='chat_container'>
       <div className='chat_test'>
         <MessageList 
-          scrollBehavior="smooth" 
-          typingIndicator={isTyping ? <TypingIndicator content="Eulàlia is typing" /> : null}
+          scrollBehavior='smooth' 
+          typingIndicator={isTyping ? <TypingIndicator content='Eulàlia is typing' /> : null}
         >
           {messages.map((message, index) => (
-            <div key={index}>
-              {message.sender === "Eulàlia" ? (
-                <div className='eulalia_message'>
-                  {message.message}
-                </div>
-              ) : (
-                <div className='user_message'>
-                  {message.message}
-                </div>
-              )}
+            <div key={index} className='message_container'>
+              <img
+                src={message.sender === 'Eulàlia' ? eulalia_message_logo : user_message_logo}
+                alt='Message Logo'
+                className='message_logo' />
+              <div>
+                {message.sender === 'Eulàlia' ? (
+                  <div className='eulalia_message'>
+                      {message.message}
+                  </div>
+                ) : (
+                  <div className='user_message'>
+                      {message.message}
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </MessageList>
-        <MessageInput placeholder="Type message here" onSend={handleSend} />        
+        <MessageInput placeholder='Type message here' onSend={handleSend} />        
       </div>
     </div>
   )

@@ -14,15 +14,27 @@
     gap: 6vw;
 }
 
-.chat_test {
-    position: "relative";
-    height: 800px;
-    width: 700px;
-    background-color: #0e5f54;
+
+.message_container {
+    display: flex;
+    align-items: center;
+    background-color: #E7E6E6;
+}
+
+.message_logo {
+    width: 2vw; /* Adjust size as needed */
+    height: 2vw; /* Adjust size as needed */
+    background-color: transparent;
+}
+
+.user_message, .eulalia_message {
+    background-color: #e06868;
+    padding: 2vw 0vw;
+    text-align: justify;
+    margin-left: 1vw;
+    font-size: 1.3vw;
 }
 
 .eulalia_message {
-    background-color: #e32828;
-    color: rgb(0, 162, 38);
+    background-color: #68e0a8;
 }
-
