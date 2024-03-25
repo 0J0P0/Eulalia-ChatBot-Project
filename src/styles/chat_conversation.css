@@ -1,53 +1,23 @@
-.chatbot-container {
-  width: 400px;
-  margin: 0 auto;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  background-color: #f8f8f8;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.chatbot-messages {
-  height: 400px;
-  overflow-y: scroll;
-  padding: 8px;
-}
-.message {
-  margin: 8px 0;
-  padding: 8px;
-  border-radius: 4px;
-  font-size: 16px;
-  line-height: 1.5;
-}
-.user-message {
-  background-color: #007bff;
-  color: #fff;
-  text-align: right;
-}
-.ai-message {
-  background-color: #ca2d2d;
-  text-align: left;
-}
-.chatbot-input-form {
+.message_container {
   display: flex;
-  margin-top: 16px;
+  align-items: center;
+  background-color: #E7E6E6;
 }
-.chatbot-input-form input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px 0 0 4px;
-  font-size: 16px;
+
+.message_logo {
+  width: 2vw; /* Adjust size as needed */
+  height: 2vw; /* Adjust size as needed */
+  background-color: transparent;
 }
-.chatbot-input-form button {
-  padding: 8px 16px;
-  border: none;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 0 4px 4px 0;
-  font-size: 16px;
-  cursor: pointer;
+
+.user_message, .eulalia_message {
+  background-color: #e06868;
+  padding: 2vw 0vw;
+  text-align: justify;
+  margin-left: 1vw;
+  font-size: 1.3vw;
 }
-.chatbot-input-form button:hover {
-  background-color: #0056b3;
+
+.eulalia_message {
+  background-color: #68e0a8;
 }

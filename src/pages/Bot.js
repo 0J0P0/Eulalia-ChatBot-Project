@@ -1,48 +1,39 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { useUIState, useAIState } from 'ai/rsc'
+// import { useUIState, useAIState } from 'ai/rsc'
 
-import Footer from '../components/footer.js'
+// import Footer from '../components/footer.js'
 
 // import AI from '../components/chat/ai.tsx'
-import ChatConversation from '../components/chat/chat_conversation.js'
-import InitialChat from '../components/chat/initial_chat.js'
-import ChatPanel from '../components/chat/chat_panel.js'
+// import InitialChat from '../components/chat/initial_chat.js'
+// import ChatPanel from '../components/chat/chat_panel.js'
+// import { nanoid } from '../utils/utils.ts'
 
-import '../styles/chat.css'
-import { nanoid } from '../utils/utils.ts'
+import '../styles/bot.css'
 
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
-import {
-  MainContainer,
-  ChatContainer,
-  MessageList,
-  Message,
-  MessageInput,
-  TypingIndicator
-}
-from '@chatscope/chat-ui-kit-react'
 
-import eulalia_message_logo from '../img/eulalia_message_logo.svg'
-import user_message_logo from '../img/user_message_logo.svg'
+import ChatConversation from '../components/chat/ChatConversation.js'
+import ChatPanel from '../components/chat/ChatPanel.js'
 
-function Chat() {
-  const id = nanoid()
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('')
 
-  return (
-    <div className='chat_container'>
-      <InitialChat />
+// function Chat() {
+//   const id = nanoid()
+//   const [messages, setMessages] = useState([]);
+//   const [input, setInput] = useState('')
 
-      {/* <ChatConversation /> */}
+//   return (
+//     <div className='chat_container'>
+//       <InitialChat />
 
-      <ChatPanel id={id} input={input} setInput={setInput} />
+//       {/* <ChatConversation /> */}
 
-      <Footer />
-    </div>
-  );
-}
+//       <ChatPanel id={id} input={input} setInput={setInput} />
+
+//       <Footer />
+//     </div>
+//   );
+// }
 
 
 const API_KEY = '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'
@@ -53,11 +44,7 @@ const systemMessage = {
 // https://github.com/coopercodes/ReactChatGPTChatbot
 
 function Bot() {
-  // const id = nanoid()
-  // const session = (await auth()) as Session
-
   const [messages, setMessages] = useState([]);
-
   const [isTyping, setIsTyping] = useState(false);
 
   // Handle the sending a message
@@ -126,32 +113,9 @@ function Bot() {
 
   return (
     <div className='chat_container'>
-      <div className='chat_test'>
-        <MessageList 
-          scrollBehavior='smooth' 
-          typingIndicator={isTyping ? <TypingIndicator content='Eulàlia is typing' /> : null}
-        >
-          {messages.map((message, index) => (
-            <div key={index} className='message_container'>
-              <img
-                src={message.sender === 'Eulàlia' ? eulalia_message_logo : user_message_logo}
-                alt='Message Logo'
-                className='message_logo' />
-              <div>
-                {message.sender === 'Eulàlia' ? (
-                  <div className='eulalia_message'>
-                      {message.message}
-                  </div>
-                ) : (
-                  <div className='user_message'>
-                      {message.message}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </MessageList>
-        <MessageInput placeholder='Type message here' onSend={handleSend} />        
+      <div>
+        <ChatConversation messages={messages} isTyping={isTyping} />
+        <ChatPanel handleSend={handleSend} />
       </div>
     </div>
   )
