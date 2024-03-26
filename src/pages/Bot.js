@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 // import { useUIState, useAIState } from 'ai/rsc'
 
-// import Footer from '../components/footer.js'
+import Footer from '../components/Footer.js'
 
 // import AI from '../components/chat/ai.tsx'
 // import InitialChat from '../components/chat/initial_chat.js'
@@ -113,10 +113,9 @@ function Bot() {
 
   return (
     <div className='chat_container'>
-      <div>
-        <ChatConversation messages={messages} isTyping={isTyping} />
-        <ChatPanel handleSend={handleSend} />
-      </div>
+      <ChatConversation messages={messages} isTyping={isTyping} />
+      <ChatPanel handleSend={handleSend} />
+      <Footer />
     </div>
   )
 }

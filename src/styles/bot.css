@@ -2,12 +2,11 @@
     position: absolute;
     background-color: #E7E6E6;
     left: 50%;
-    top: 28vw;
+    top: 16vw;
     height: 38vw;
     width: 70vw;
     padding: 20px;
     border-radius: 2vw;
-    margin-top: -12vw;
     margin-left: -35vw;
     display: grid;
     grid-template-rows: 1fr 1fr;

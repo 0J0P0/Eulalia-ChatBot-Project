@@ -4,7 +4,7 @@ import '../styles/quisom.css';
 import quisom1 from '../img/quisom1.jpg';
 import quisom2 from '../img/quisom2.jpg';
 
-import Footer from '../components/footer.js';
+import Footer from '../components/Footer.js';
 
 function Quisom() {
   return (

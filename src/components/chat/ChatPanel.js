@@ -9,7 +9,7 @@ function ChatPanel({ handleSend }) {
   const handleChange = (event) => {
     setInput(event.target.value);
   };
-
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     if (input.trim() !== '') {
