@@ -3,7 +3,6 @@
   padding: 1vw;
   border-radius: 2vw;
   overflow-y: auto; /* Enable vertical scrollbar */
-  background-color: #d367e4;
 }
 
 /* .message-list-container::-webkit-scrollbar {

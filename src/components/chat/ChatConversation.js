@@ -5,8 +5,6 @@ import user_message_logo from '../../img/user_message_logo.svg';
 
 import { TypingIndicator } from '@chatscope/chat-ui-kit-react';
 
-// import MessageList from './MessageList.js';
-
 import '../../styles/chat_conversation.css';
 
 

@@ -5,7 +5,6 @@
     /* padding-bottom: 20px; */
     display: grid;
     grid-template-columns: 1fr 1fr;
-    background-color: aqua;
 }
 
 .intro_container {

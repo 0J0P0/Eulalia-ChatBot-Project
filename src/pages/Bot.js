@@ -1,41 +1,13 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
-// import { useUIState, useAIState } from 'ai/rsc'
-
-import Footer from '../components/Footer.js'
-
-// import AI from '../components/chat/ai.tsx'
-// import InitialChat from '../components/chat/initial_chat.js'
-// import ChatPanel from '../components/chat/chat_panel.js'
-// import { nanoid } from '../utils/utils.ts'
+import { useState } from 'react'
 
 import '../styles/bot.css'
 
-import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
-
-import ChatConversation from '../components/chat/ChatConversation.js'
-import ChatPanel from '../components/chat/ChatPanel.js'
 import Logo from '../components/Logo.js'
-
-
-// function Chat() {
-//   const id = nanoid()
-//   const [messages, setMessages] = useState([]);
-//   const [input, setInput] = useState('')
-
-//   return (
-//     <div className='chat_container'>
-//       <InitialChat />
-
-//       {/* <ChatConversation /> */}
-
-//       <ChatPanel id={id} input={input} setInput={setInput} />
-
-//       <Footer />
-//     </div>
-//   );
-// }
-
+import Footer from '../components/Footer.js'
+import ChatPanel from '../components/chat/ChatPanel.js'
+import ChatConversation from '../components/chat/ChatConversation.js'
+import InitialChat from '../components/chat/InitialChat.js'
 
 const API_KEY = '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'
 const systemMessage = {
@@ -116,7 +88,11 @@ function Bot() {
     <div>
       <Logo subtitle='' />
       <div className='chat_container'>
-        <ChatConversation messages={messages} isTyping={isTyping} />
+        {messages.length === 0 ? (
+          <InitialChat />
+        ) : (
+          <ChatConversation messages={messages} isTyping={isTyping} />
+        )}
         <ChatPanel handleSend={handleSend} />
         <Footer />
       </div>
