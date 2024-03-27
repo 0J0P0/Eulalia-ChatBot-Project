@@ -16,14 +16,13 @@
     height: 8vw;
     transform: translateX(-50%);
     display: flex;
+    text-align: center;
     align-items: center;
     justify-content: space-between;
-    background-color: aqua;
 
     img {
         width: auto;
         height: 6vw;
-        background-color: aquamarine;
     }
 
     h1 {
@@ -31,17 +30,12 @@
         position: relative;
         font-size: 5vw;
     }
-    
-    h2 {
-        font-family: 'Open Sans', sans-serif; /* Specify Open Sans as the font family */
-        font-weight: bold;
-        font-size: 20px;
-    }
 }
 
-
 .page_subtitle {
-    font-family: 'Open Sans', sans-serif; 
-    position: fixed;
-    top: 250px;
+    position: absolute;
+    margin-top: 7vw;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1vw;
 }

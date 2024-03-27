@@ -36,13 +36,8 @@
 }
 
 .user_message, .eulalia_message {
-  background-color: #e06868;
   padding: 2vw 0vw;
   text-align: justify;
   margin-left: 1vw;
   font-size: 1.3vw;
-}
-
-.eulalia_message {
-  background-color: #68e0a8;
 }

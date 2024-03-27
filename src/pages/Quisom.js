@@ -5,13 +5,13 @@ import quisom1 from '../img/quisom1.jpg';
 import quisom2 from '../img/quisom2.jpg';
 
 import Footer from '../components/Footer.js';
+import Logo from '../components/Logo.js';
+
 
 function Quisom() {
   return (
     <div>
-      <div className='fill_logo'>
-        <p>Quisom</p>
-      </div>
+      <Logo subtitle='QUI SOM' />
 
       <div className='quisom_container'>
         <img src={quisom1} alt='El nostre Equip'/>
