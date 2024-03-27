@@ -15,6 +15,7 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 
 import ChatConversation from '../components/chat/ChatConversation.js'
 import ChatPanel from '../components/chat/ChatPanel.js'
+import Logo from '../components/Logo.js'
 
 
 // function Chat() {
@@ -112,10 +113,13 @@ function Bot() {
   }
 
   return (
-    <div className='chat_container'>
-      <ChatConversation messages={messages} isTyping={isTyping} />
-      <ChatPanel handleSend={handleSend} />
-      <Footer />
+    <div>
+      <Logo subtitle='' />
+      <div className='chat_container'>
+        <ChatConversation messages={messages} isTyping={isTyping} />
+        <ChatPanel handleSend={handleSend} />
+        <Footer />
+      </div>
     </div>
   )
 }

@@ -1,0 +1,47 @@
+/* COMPONENT 1: LOGO */
+
+/* Text Colors */
+.black-text {
+    color: black;
+}
+
+.blue-text {
+    color: #5782AA;
+}
+.logo_container {
+    position: absolute;
+    top: 6vw;
+    left: 50%;
+    width: 22vw;
+    height: 8vw;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: aqua;
+
+    img {
+        width: auto;
+        height: 6vw;
+        background-color: aquamarine;
+    }
+
+    h1 {
+        font-family: 'Playfair Display';
+        position: relative;
+        font-size: 5vw;
+    }
+    
+    h2 {
+        font-family: 'Open Sans', sans-serif; /* Specify Open Sans as the font family */
+        font-weight: bold;
+        font-size: 20px;
+    }
+}
+
+
+.page_subtitle {
+    font-family: 'Open Sans', sans-serif; 
+    position: fixed;
+    top: 250px;
+}
