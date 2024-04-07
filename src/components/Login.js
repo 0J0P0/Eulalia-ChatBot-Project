@@ -6,13 +6,9 @@ import '../styles/login.css';
 
 const Login = () => {
   return (
-    <div className='login'>
-      <ul>
-        <li>
-          <Link to="/Chat" id="boto">Inicia sessió</Link>
-        </li>
-      </ul>
-    </div>
+    <li>
+      <Link className='login' to="/bot" id="boto">Inicia sessió</Link>
+    </li>
   );
 };
 
