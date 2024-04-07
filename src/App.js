@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Header from './components/Header.js'
 import SideBar from './components/Sidebar.js';
 
+import Inici from './pages/Inici.js';
 import Quisom from './pages/Quisom.js';
 import Bot from './pages/Bot.js';
 import Ajuda from './pages/Ajuda.js';
@@ -22,11 +23,11 @@ function App() {
   
   return (
     <div>
-      {/* <Inici /> */}
       <Router>
         <Header onClick={handleViewSidebar} />
         <SideBar isOpen={sidebarOpen} />
           <Routes>
+            <Route path='/' element={<Inici/>} />
             <Route path='/quisom' element={<Quisom/>} />
             <Route path='/bot' element={<Bot/>} />
             <Route path='/ajuda' element={<Ajuda/>} />

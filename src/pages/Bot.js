@@ -94,7 +94,7 @@ function Bot() {
           <ChatConversation messages={messages} isTyping={isTyping} />
         )}
         <ChatPanel handleSend={handleSend} />
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   )

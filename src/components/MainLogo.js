@@ -4,19 +4,14 @@ import '../styles/main_logo.css';
 
 import main_eulalia_logo from '../img/main_eulalia_logo.png';
 
-
-function Logo() {
+function MainLogo() {
   return (
     <div className='main_logo_container'>
-      <div>
-        <img className='logo_img' src={main_eulalia_logo} alt='Eulalia Logo'/>
-      </div>
-      <div>
-        <h1>
-          <span class="black-text">Eulàl</span>
-          <span class="blue-text">ia</span>
-        </h1>
-      </div>
+      <img className='logo_img' src={main_eulalia_logo} alt='Eulalia MainLogo'/>
+      <h1>
+        <span class="black-text">Eulàl</span>
+        <span class="blue-text">ia</span>
+      </h1>
       <div className='page_subtitle'>
         <h2> FEM BARCELONA </h2>
       </div>
@@ -24,4 +19,4 @@ function Logo() {
   );
 };
 
-export default Logo;
+export default MainLogo;
