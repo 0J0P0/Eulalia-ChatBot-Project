@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './styles/App.css';
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
@@ -9,7 +8,6 @@ import SideBar from './components/Sidebar.js';
 import Quisom from './pages/Quisom.js';
 import Bot from './pages/Bot.js';
 import Ajuda from './pages/Ajuda.js';
-import Inici from './pages/Inici.js';
 
 export const metadata = {
   title: 'Eulàlia Chat'
@@ -35,7 +33,7 @@ function App() {
           </Routes>
       </Router>
     </div>
-);
+  );
 }
 
 export default App;
