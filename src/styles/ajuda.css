@@ -25,36 +25,21 @@
     max-height: 90%;
     max-width: 100%;
     text-decoration: none;
-}
 
-.One img,
-.Two img,
-.Three img,
-.Four img,
-.Five img,
-.Six img {
-    width: 100%;
-    height: 90%;
-    border-radius: 20px;
-}
+    img {
+        width: 100%;
+        height: 90%;
+        border-radius: 20px;
+    }
 
-.One .text_link,
-.Two .text_link,
-.Three .text_link,
-.Four .text_link,
-.Five .text_link,
-.Six .text_link {
-    margin-top: 10px;
-    text-align: center;
-    color: black; /* Set default color to black */
-    text-decoration: none;
-}
+    .text_link {
+        margin-top: 10px;
+        text-align: center;
+        color: black; /* Set default color to black */
+        text-decoration: none;
+    }
 
-.One .text_link:hover,
-.Two .text_link:hover,
-.Three .text_link:hover,
-.Four .text_link:hover,
-.Five .text_link:hover,
-.Six .text_link:hover {
-    color: #858585; /* Change color on hover */
+    .text_link:hover {
+        color: #858585; /* Change color on hover */
+    }
 }
