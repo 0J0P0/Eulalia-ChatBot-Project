@@ -4,7 +4,7 @@ import { useState } from 'react'
 import '../styles/bot.css'
 
 import Logo from '../components/Logo.js'
-import Footer from '../components/Footer.js'
+import Footer from '../components/footer.js'
 import ChatPanel from '../components/chat/ChatPanel.js'
 import ChatConversation from '../components/chat/ChatConversation.js'
 import InitialChat from '../components/chat/InitialChat.js'

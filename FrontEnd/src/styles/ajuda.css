@@ -1,5 +1,8 @@
+/* Ajuda page style */
+
 .grid_container {
-    margin-top: 100px; 
+    margin-top: 150px; 
+    margin-bottom: 20px;
     margin-left: 10%;
     margin-right: 10%;
     display: grid;
@@ -7,7 +10,6 @@
     gap: 20px;
     grid-auto-rows: minmax(150px, auto);
     max-width: 90%;
-    background-color: aqua;
 }
 
 .One,

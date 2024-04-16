@@ -1,4 +1,2 @@
-/node_modules
-/build
-.env
-.gitignore
+node_modules/
+*.sql

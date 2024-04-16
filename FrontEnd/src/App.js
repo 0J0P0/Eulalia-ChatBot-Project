@@ -2,8 +2,8 @@ import './styles/App.css';
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import Header from './components/Header.js'
-import SideBar from './components/Sidebar.js';
+import Header from './components/header.js'
+import SideBar from './components/sidebar.js';
 
 import Inici from './pages/Inici.js';
 import Quisom from './pages/Quisom.js';

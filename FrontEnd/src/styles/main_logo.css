@@ -58,3 +58,23 @@
     transform: translate(-50%, -50%);
 
 }
+
+/* Aquest botó extra és només per fer proves de creació d'usuaris */
+#boto_2 {
+    text-decoration: none;
+    padding: 10px 9vw;
+    font-size: 13px;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    opacity: 0.8;
+    border: none;
+    border-radius: 20px;
+    /* display: block;
+    margin: 0 auto; */
+    position: fixed;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
