@@ -1,0 +1,42 @@
+.message_list_container {
+  height: 30vw; /* Adjust the height as needed */
+  padding: 1vw;
+  border-radius: 2vw;
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+/* .message-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.message-list-container::-webkit-scrollbar-track {
+  background: #5fd7ec;
+}
+
+.message-list-container::-webkit-scrollbar-thumb {
+  background: #c63939;
+  border-radius: 4px;
+}
+
+.message-list-container::-webkit-scrollbar-thumb:hover {
+  background: #e855f2;
+} */
+
+.message_container {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+}
+
+.message_logo {
+  width: 2vw; /* Adjust size as needed */
+  height: 2vw; /* Adjust size as needed */
+  background-color: transparent;
+}
+
+.user_message, .eulalia_message {
+  padding: 2vw 0vw;
+  text-align: justify;
+  margin-left: 1vw;
+  font-size: 1.3vw;
+}
