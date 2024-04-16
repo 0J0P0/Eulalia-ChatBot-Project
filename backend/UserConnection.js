@@ -13,18 +13,18 @@ const pool = new Pool({
 // Create a new user record in the databsse
 const createUser = (body) => {
     return new Promise(function (resolve, reject) {
-      const {id, username, password } = body;
+      const {username, password} = body;
       pool.query(
         // Taula: users_login
-        "INSERT INTO users_login (id, username, password) VALUES ($1, $2, $3) RETURNING *",
-        [id, username, password],
+        "INSERT INTO users_login (username, password) VALUES ($1, $2) RETURNING *",
+        [username, password],
         (error, results) => {
           if (error) {
             reject(error);
           }
           if (results && results.rows) {
             resolve(
-              `A new merchant has been added: ${JSON.stringify(results.rows[0])}`
+              `A new user has been added: ${JSON.stringify(results.rows[0])}`
             );
           } else {
             reject(new Error("No results found"));
