@@ -10,30 +10,29 @@ const pool = new Pool({
   port: 5990,
 });
 
-// Create a new user record in the databsse
+// Create a new user record in the database
 const createUser = (body) => {
-    return new Promise(function (resolve, reject) {
-      const {username, password} = body;
-      pool.query(
-        // Taula: users_login
-        "INSERT INTO users_login (username, password) VALUES ($1, $2) RETURNING *",
-        [username, password],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          }
-          if (results && results.rows) {
-            resolve(
-              `A new user has been added: ${JSON.stringify(results.rows[0])}`
-            );
-          } else {
-            reject(new Error("No results found"));
-          }
+  return new Promise(function (resolve, reject) {
+    const { username, password } = body;
+    pool.query(
+      "INSERT INTO users_login (username, password) VALUES ($1, $2) RETURNING *",
+      [username, password],
+      (error, results) => {
+        if (error) {
+          reject(error);
         }
-      );
-    });
-  };
+        if (results && results.rows) {
+          resolve(
+            `A new user has been added: ${JSON.stringify(results.rows[0])}`
+          );
+        } else {
+          reject(new Error("No results found"));
+        }
+      }
+    );
+  });
+};
 
-  module.exports = {
-    createUser
-  };
+module.exports = {
+  createUser
+};
