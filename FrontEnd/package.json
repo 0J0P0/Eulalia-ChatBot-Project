@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
+<<<<<<<< HEAD:FrontEnd/package.json
+=======
+>>>>>>> e0c4b7cfb78108b6e358c64bf3ad5b9cd17f14e0
   "name": "c",
   "version": "0.1.0",
   "private": true,
@@ -13,8 +17,16 @@
     "crypto": "^1.0.1",
     "crypto-browserify": "^3.12.0",
     "dotenv": "^16.4.5",
+<<<<<<< HEAD
     "next-auth": "^4.24.7",
     "openai": "^4.29.2",
+=======
+    "express": "^4.19.2",
+    "next-auth": "^4.24.7",
+    "nodemon": "^3.1.0",
+    "openai": "^4.29.2",
+    "pg": "^8.11.5",
+>>>>>>> e0c4b7cfb78108b6e358c64bf3ad5b9cd17f14e0
     "radix-ui": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -55,4 +67,13 @@
   "main": "index.js",
   "author": "",
   "license": "ISC"
+<<<<<<< HEAD
+========
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
+  }
+>>>>>>>> e0c4b7cfb78108b6e358c64bf3ad5b9cd17f14e0:package.json
+=======
+>>>>>>> e0c4b7cfb78108b6e358c64bf3ad5b9cd17f14e0
 }
