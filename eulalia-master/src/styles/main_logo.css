@@ -1,0 +1,80 @@
+.black-text {
+    color: black;
+}
+
+.blue-text {
+    color: #5782AA;
+}
+
+.main_logo_container {
+    top: 30%;
+    width: 30%;
+    height: 10vw;
+    margin: 0 auto;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+
+    .logo_img {
+        height: 8vw;
+        width: auto;
+    }
+
+    h1 {
+        font-family: 'Playfair Display';
+        position: relative;
+        font-size: 7vw;
+    }
+
+    .page_subtitle {
+        font-family: 'Open Sans', sans-serif; /* Specify Open Sans as the font family */
+        position: fixed;
+        top: 12%;
+        
+        h2 {
+            font-family: 'Open Sans', sans-serif; /* Specify Open Sans as the font family */
+            font-weight: bold;
+            font-size: 1.5vw;
+        }
+    }
+}
+
+#boto {
+    text-decoration: none;
+    padding: 10px 9vw;
+    font-size: 13px;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    opacity: 0.8;
+    border: none;
+    border-radius: 20px;
+    /* display: block;
+    margin: 0 auto; */
+    position: fixed;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+/* Aquest botó extra és només per fer proves de creació d'usuaris */
+#boto_2 {
+    text-decoration: none;
+    padding: 10px 9vw;
+    font-size: 13px;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    opacity: 0.8;
+    border: none;
+    border-radius: 20px;
+    /* display: block;
+    margin: 0 auto; */
+    position: fixed;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
