@@ -20,27 +20,45 @@ const Login = () => {
     setPassword(event.target.value);
   }
 
-  function SendUser() {
-    fetch('http://localhost:3000', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    })
-      .then(response => {
-        return response.text();
-      })
-      .then(data => {
-        alert(data);
-        setUsername('');
-        setPassword('');
-        togglePopup();
-      })
-      .catch(error => {
-        console.error('Error sending user:', error);
+  // function SendUser() {
+  //   fetch('http://localhost:3000', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ username, password }),
+  //   })
+  //     .then(response => {
+  //       return response.text();
+  //     })
+  //     .then(data => {
+  //       alert(data);
+  //       setUsername('');
+  //       setPassword('');
+  //       togglePopup();
+  //     })
+  //     .catch(error => {
+  //       console.error('Error sending user:', error);
+  //     });
+  // }
+
+   // Function to send user data to server
+   const SendUser = async () => {
+    // Implement logic to send user data to server
+    try {
+      const response = await fetch('http://localhost:3000/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
-  }
+      const data = await response.json();
+      console.log(data); // Optionally handle response from server
+    } catch (error) {
+      console.error('Error sending user data:', error);
+    }
+  };
 
   return (
     <li>
