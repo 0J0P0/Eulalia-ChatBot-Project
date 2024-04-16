@@ -1,8 +1,0 @@
-.background_img {
-    width: 100%;
-    height: auto;
-    opacity: 0.4;
-    position: fixed;
-    background-size: cover;
-    z-index: -2;  /* Send to back */
-  }
