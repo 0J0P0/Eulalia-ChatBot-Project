@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+
 import '../styles/login.css';
 
-const Login = () => {
+function Login() {
   const [showPopup, setShowPopup] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -19,26 +22,28 @@ const Login = () => {
     setPassword(event.target.value);
   }
 
-  function SendUser() {
-    fetch('http://localhost:3000', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    })
+  function handleUser(event) {
+    event.preventDefault();
+    axios.post('http://localhost:8081/login', { username, password })
       .then(response => {
-        return response.text();
-      })
-      .then(data => {
-        alert(data);
-        setUsername('');
-        setPassword('');
-        togglePopup();
+        console.log(response.data);
       })
       .catch(error => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
         console.error('Error sending user:', error);
-      });
+      }); 
   }
 
   return (
@@ -50,7 +55,7 @@ const Login = () => {
           <p className="welcome-text">Benvingut a Eulàlia!</p>
           <input type="text" placeholder="Username" value={username} onChange={handleUsernameChange} />
           <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
-          <button className='submit-button' onClick={SendUser}>Submit</button>
+          <button className='submit-button' onClick={handleUser}>Submit</button>
           <button className='close-button' onClick={togglePopup}>Close</button>
         </div>
       )}
