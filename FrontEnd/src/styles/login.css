@@ -42,4 +42,9 @@
     padding: 10px 20px;
     cursor: pointer;
   }
-  
+
+  .popup-container .error-message {
+    color: rgb(242, 60, 60);
+    margin-top: 10px;
+    font-size: 13px;
+  }

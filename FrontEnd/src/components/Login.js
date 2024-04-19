@@ -10,6 +10,7 @@ function Login() {
   const [showPopup, setShowPopup] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   function togglePopup() {
@@ -33,6 +34,9 @@ function Login() {
           // Redirect to the bot page
           navigate('/bot');
         }
+        else{
+          setErrorMessage('El teu usuari o contrasenya són incorrectes');
+        }
       })
       .catch(error => {
         if (error.response) {
@@ -54,14 +58,15 @@ function Login() {
 
   return (
     <li>
-      <Link className='login' to="/bot" id="boto">Inicia sessió</Link>
-      <button className='login' id="boto_2" onClick={togglePopup}>Crea el teu usuari</button>
+      {/* <Link className='login' to="/bot" id="boto">Inicia sessió</Link> */}
+      <button className='login' id="boto" onClick={togglePopup}>Inicia sessió</button>
       {showPopup && (
         <div className="popup-container">
           <p className="welcome-text">Benvingut a Eulàlia!</p>
           <input type="text" placeholder="Username" value={username} onChange={handleUsernameChange} />
           <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
           <button className='submit-button' onClick={handleUser}>Submit</button>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <button className='close-button' onClick={togglePopup}>Close</button>
         </div>
       )}
