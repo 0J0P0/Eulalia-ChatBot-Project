@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+
 
 import '../styles/login.css';
 
@@ -9,6 +10,7 @@ function Login() {
   const [showPopup, setShowPopup] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   function togglePopup() {
     setShowPopup(!showPopup);
@@ -27,6 +29,10 @@ function Login() {
     axios.post('http://localhost:8081/login', { username, password })
       .then(response => {
         console.log(response.data);
+        if (response.data.length > 0){
+          // Redirect to the bot page
+          navigate('/bot');
+        }
       })
       .catch(error => {
         if (error.response) {

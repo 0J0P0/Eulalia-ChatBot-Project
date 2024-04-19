@@ -1,3 +1,6 @@
+// server.js
+// Creates a basic Express.js server that listens on port 8081
+
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
@@ -15,6 +18,8 @@ const pool = new Pool({
   port: 5990,
 });
 
+// Send a POST request to the /login endpoint
+// See if the username and password match the values provided in the request body.
 app.post('/login', (req, res) => {
   const sql = "SELECT * FROM users_login WHERE username = $1 AND password = $2;";
 
