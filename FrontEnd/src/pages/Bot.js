@@ -4,7 +4,6 @@ import { useState } from 'react'
 import '../styles/bot.css'
 
 import Logo from '../components/Logo.js'
-import Footer from '../components/footer.js'
 import ChatPanel from '../components/chat/ChatPanel.js'
 import ChatConversation from '../components/chat/ChatConversation.js'
 import InitialChat from '../components/chat/InitialChat.js'
@@ -13,23 +12,20 @@ function Bot() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
 
-  // Handle the sending a message
   const handleSend = async (message) => {
-    const newMessage = {
-      message,
-    };
-
+    const newMessage = { message, sender: 'User' };
     const newMessages = [...messages, newMessage];
-    
     setMessages(newMessages);
+
+    setIsTyping(true);
 
     await processMessageToChatGPT(newMessages);
   };
 
   async function processMessageToChatGPT(chatMessages) {
-
-    const messages = chatMessages.map((message) => message.message);
-
+    // Get the last 50 messages text
+    const messages = chatMessages.slice(-50).map(message => message.message);
+    // Send the messages to the backend
     fetch('/api/process_message', {
       method: 'POST',
       headers: {
@@ -39,12 +35,11 @@ function Bot() {
     })
     .then(response => response.json())
     .then(data => {
-      const newMessage = {
-        message: data.message,
-      };
-
+      // Add the response to the chat
+      const newMessage = { message: data.message, sender: 'Eulàlia' };
       const newMessages = [...chatMessages, newMessage];
       setMessages(newMessages);
+      setIsTyping(false);
     })
     .catch(error => console.error('Error:', error));
   }
