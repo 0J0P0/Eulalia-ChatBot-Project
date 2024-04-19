@@ -18,24 +18,12 @@ const pool = new Pool({
 app.post('/login', (req, res) => {
   const sql = "SELECT * FROM users_login WHERE username = $1 AND password = $2;";
 
-  pool.query(sql, [req.body.username, req.body.password], (error, data) => {
+  pool.query(sql, [req.body.username, req.body.password], (error, result) => {
     if (error) {
       return res.json("Error");
     }
-    if (data.length > 0) {
-      return res.json("Login successful");
-    } else {
-      return res.json("No record");
-    }
+    return res.json(result['rows']);
   });
-  // pool.query
-  //   .then((result) => {
-  //     res.send(`User added with ID: ${result.rows[0].id}`);
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error executing query', error);
-  //     res.send('Error');
-  //   })
 });
 
 app.listen(8081, () => {
