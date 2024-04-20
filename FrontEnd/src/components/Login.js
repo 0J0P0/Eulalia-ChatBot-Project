@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
-
 
 import '../styles/login.css';
 
@@ -13,18 +12,22 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
+  // Function to show/hide the login popup
   function togglePopup() {
     setShowPopup(!showPopup);
   }
 
+  // Function to handle the username input
   function handleUsernameChange(event) {
     setUsername(event.target.value);
   }
 
+  // Function to handle the password input
   function handlePasswordChange(event) {
     setPassword(event.target.value);
   }
 
+  // Function to handle the user login
   function handleUser(event) {
     event.preventDefault();
     axios.post('http://localhost:8081/login', { username, password })
@@ -34,7 +37,7 @@ function Login() {
           // Redirect to the bot page
           navigate('/bot');
         }
-        else{
+        else {
           setErrorMessage('El teu usuari o contrasenya són incorrectes');
         }
       })
@@ -58,16 +61,17 @@ function Login() {
 
   return (
     <li>
-      {/* <Link className='login' to="/bot" id="boto">Inicia sessió</Link> */}
-      <button className='login' id="boto" onClick={togglePopup}>Inicia sessió</button>
+      <button id="boto" onClick={togglePopup}>Inicia sessió</button>
       {showPopup && (
-        <div className="popup-container">
-          <p className="welcome-text">Benvingut a Eulàlia!</p>
-          <input type="text" placeholder="Username" value={username} onChange={handleUsernameChange} />
-          <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
-          <button className='submit-button' onClick={handleUser}>Submit</button>
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button className='close-button' onClick={togglePopup}>Close</button>
+        <div className="login_container">
+          <p className="welcome_text">Benvingut a Eulàlia!</p>
+          
+          <input type="text" placeholder="Usuari" value={username} onChange={handleUsernameChange} />
+          <input type="password" placeholder="Contrasenya" value={password} onChange={handlePasswordChange} />
+          
+          <button className='submit-button' onClick={handleUser}>Enviar</button>
+          {errorMessage && <p className="error_message">{errorMessage}</p>}
+          <button className='close-button' onClick={togglePopup}>Tancar</button>
         </div>
       )}
     </li>

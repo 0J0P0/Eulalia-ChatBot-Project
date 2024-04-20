@@ -1,50 +1,68 @@
-.popup-container {
-    position: fixed;
-    top: 50%;
+.login_container {
+    top: 71%;
     left: 50%;
+    height: 35%;
     width: 30vw;
+    padding: 2vw 4vw 2vw 4vw;
+    position: fixed;
+    border-radius: 4vw;
     transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
     text-align: center;
-  }
-  
-  .popup-container .welcome-text {
-    margin-bottom: 70px; /* Adjust as needed */
-  }
-  
-  .popup-container input {
-    display: block;
-    width: calc(100% - 40px);
-    margin: 0 auto 20px;
-    padding: 10px;
-    border-radius: 8px;
-  }
-  
-  .popup-container button.submit-button {
-    width: calc(100% - 40px);
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 20px;
-    background-color: #ccc;
-    color: rgb(57, 57, 57);
-    border: none;
-  }
-  
-  .popup-container button.close-button {
-    margin-top: 90px;
-    background-color: #5782AA;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-  .popup-container .error-message {
-    color: rgb(242, 60, 60);
-    margin-top: 10px;
-    font-size: 13px;
-  }
+    p {
+        font-size: 1.5vw;
+        margin-bottom: 2vw;
+    }
+
+    input {
+        display: block;
+        width: calc(100% - 10vw);
+        padding: 0.8vw;
+        margin: 0 auto 2vw;
+        border: 0.1vw solid #B2B1B1;
+        border-radius: 2vw;
+        font-size: 1.3vw;
+
+        &:hover {
+            border: 0.2vw solid #5782AA;
+        }
+    }
+
+    button.submit-button,
+    button.close-button {
+        padding: 1vw;
+        border-radius: 2vw;
+        font-size: 1.3vw;
+        cursor: pointer;
+        transition: transform 0.4s ease;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    button.submit-button {
+        width: 50%;
+        margin-bottom: 0.8vw;
+        background-color: #5782AA;
+        border: none;
+    }
+
+    button.close-button {
+        width: 30%;
+        margin-top: 0.8vw;
+        background-color: #B2B1B1;
+        border: none;
+    }
+
+    .error_message {
+        color: rgb(242, 60, 60);
+        margin-top: 10px;
+        font-size: 13px;
+    }
+}

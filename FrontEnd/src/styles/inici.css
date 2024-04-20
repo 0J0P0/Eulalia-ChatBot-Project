@@ -3,7 +3,6 @@
     height: 100%;
     opacity: 0.4;
     position: fixed;
-    /* background-size: cover; */
     object-fit: cover;
-    z-index: -1;  /* Send to back */
+    z-index: -1;
   }
