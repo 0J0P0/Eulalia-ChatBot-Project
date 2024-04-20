@@ -14,20 +14,35 @@
 }
 
 .prompt_bar {
-    height: 2vw;
+    height: 3vw;
     width: 62vw;
     border: 0;
     border-radius: 2vw;
-    background-color: #b89c9c;
-    padding-left: 1vw;
+    background-color: #B2B1B1;
+    padding-left: 2vw;
+    overflow-y: auto;
+    
+    font-size: 1.2vw;
+
+    &:focus {
+        outline: none;
+    }
 }
 
 .submit_button {
-    height: 2vw;
-    width: 6vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3vw;
+    width: 3vw;
+    margin-right: 0.5vw;
     border: 0;
-    border-radius: 2vw;
-    background-color: #b89c9c;
+    border-radius: 50%; /* Round the button to create a circle */
+    background-color: #5782AA;
     font-size: 1.3vw;
     cursor: pointer;
+
+    &:hover {
+        background-color: #4e7599;
+    }
 }

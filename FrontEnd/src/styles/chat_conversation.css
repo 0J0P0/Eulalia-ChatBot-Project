@@ -5,23 +5,6 @@
   overflow-y: auto; /* Enable vertical scrollbar */
 }
 
-/* .message-list-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.message-list-container::-webkit-scrollbar-track {
-  background: #5fd7ec;
-}
-
-.message-list-container::-webkit-scrollbar-thumb {
-  background: #c63939;
-  border-radius: 4px;
-}
-
-.message-list-container::-webkit-scrollbar-thumb:hover {
-  background: #e855f2;
-} */
-
 .message_container {
   display: flex;
   align-items: center;
