@@ -2,6 +2,7 @@
     height: 4vw;
     display: flex;
     justify-content: space-between;
+    background-color: transparent;
 }
 
 .nav_list_icon {

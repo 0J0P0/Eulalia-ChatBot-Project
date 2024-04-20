@@ -1,5 +1,7 @@
 import React from 'react'
+
 import '../styles/header.css'
+
 import nav_icon from '../img/nav_list.svg'
 import nav_bcn_logo from '../img/nav_bcn_logo.png'
 
