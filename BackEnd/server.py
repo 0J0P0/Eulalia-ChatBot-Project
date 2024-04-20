@@ -76,7 +76,6 @@ def process_message() -> dict:
 
     data = request.get_json()
 
-    
     response = get_response(data['messages'])
     store_message(data, response)
 

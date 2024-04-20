@@ -1,8 +1,9 @@
 .background_img {
     width: 100%;
-    height: auto;
+    height: 100%;
     opacity: 0.4;
     position: fixed;
-    background-size: cover;
-    z-index: -2;  /* Send to back */
+    /* background-size: cover; */
+    object-fit: cover;
+    z-index: -1;  /* Send to back */
   }
