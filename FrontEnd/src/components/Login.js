@@ -60,7 +60,7 @@ function Login() {
   }
 
   return (
-    <li>
+    <div>
       <button id="boto" onClick={togglePopup}>Inicia sessió</button>
       {showPopup && (
         <div className="login_container">
@@ -74,7 +74,7 @@ function Login() {
           <button className='close-button' onClick={togglePopup}>Tancar</button>
         </div>
       )}
-    </li>
+    </div>
   );
 };
 
