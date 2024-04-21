@@ -14,18 +14,16 @@ Contents:
 
 
 import os
-import psycopg2 
 from flask_cors import CORS
-from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 
 
 from EulaliaGPT.eulalia import get_response
+from DataBase.connection import create_connection
 
 
 app = Flask(__name__)
 CORS(app)  # Allow CORS for all routes
-
 
 
 def store_chat_message(data, response):
@@ -39,15 +37,11 @@ def store_chat_message(data, response):
     """
 
     try:
-        conn = psycopg2.connect(database=os.getenv("DATABASE_URL"),
-                                user=os.getenv("DATABASE_USER"),
-                                password=os.getenv("DATABASE_PASSWORD"),
-                                host=os.getenv("DATABASE_HOST"),
-                                port=os.getenv("DATABASE_PORT"))
-        cur = conn.cursor()
+        conn, cur = create_connection()
 
         user_message = data['messages'][-1]
         chat_message = response['message']
+
         cur.execute( 
             f'''INSERT INTO {os.getenv("DATABASE_MESSAGES_TABLE")} (user_id, user_message, chat_message) VALUES (%s, %s, %s);''',
             ('admin@eulalia.com', user_message, chat_message))
@@ -74,13 +68,8 @@ def store_contact_messages() -> dict:
     data = request.get_json()
 
     try:
-        conn = psycopg2.connect(database=os.getenv("DATABASE_URL"),
-                                user=os.getenv("DATABASE_USER"),
-                                password=os.getenv("DATABASE_PASSWORD"),
-                                host=os.getenv("DATABASE_HOST"),
-                                port=os.getenv("DATABASE_PORT"))
-        cur = conn.cursor()
-
+        conn, cur = create_connection()
+        
         cur.execute( 
             f'''INSERT INTO {os.getenv("DATABASE_CONTACT_TABLE")} (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
             (data['email'], data['name'], data['message'])
