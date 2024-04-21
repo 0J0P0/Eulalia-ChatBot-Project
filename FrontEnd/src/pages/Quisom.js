@@ -13,6 +13,45 @@ import Logo from '../components/Logo.js';
 
 
 function Quisom() {
+
+  const handleSend = async (event) => {
+    event.preventDefault();
+  
+    const form = event.target.closest('form');
+    const formData = new FormData(form);
+  
+    const message = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message')
+    };
+  
+    try {
+      await processMessageBackEnd(message);
+      alert('Missatge enviat correctament');
+      form.reset();
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error en enviar el missatge');
+    }
+  };
+  
+  async function processMessageBackEnd(message) {
+    try {
+      fetch('/api/store_contact_messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message)
+      })
+      .then(response => response.json())
+      .then(data => {console.log('Success:', data)})
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
   return (
     <div>
       <Logo subtitle='QUI SOM' />
@@ -41,7 +80,7 @@ function Quisom() {
           <input type='email' id='email' name='email' required></input>
           <label for='message'>Missatge:</label>
           <textarea id='message' name='message' required></textarea>
-          <input type='submit' value='Enviar'></input>
+          <input type='submit' value='Enviar' onClick={handleSend}></input>
         </form>
         <div className='contact_data_container'>
           <p className='description_text'>Si vols conèixer més sobre el nostre equip o sobre la nostra xef, pots contactar-nos a través del següent formulari:</p>

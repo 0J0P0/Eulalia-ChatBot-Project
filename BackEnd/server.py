@@ -7,8 +7,9 @@ Description:
 This module contains the server that will receive messages from the frontend and return a response.
 
 Contents:
-- store_message: Function to store the message received in a postgreSQL database.
-- process_message: Function to process the message received and return a response.
+- store_chat_message: Function to store the message received in a postgreSQL database.
+- store_contact_messages: Function to store the contact messages received in a postgreSQL database.
+- process_chat_message: Function to process the message received and return a response.
 """
 
 
@@ -27,7 +28,7 @@ CORS(app)  # Allow CORS for all routes
 
 
 
-def store_message(data, response):
+def store_chat_message(data, response):
     """
     Store the message received in a postgreSQL database.
 
@@ -36,35 +37,67 @@ def store_message(data, response):
     data : dict
         Data received.
     """
-    # Connect to the database
+
     try:
         conn = psycopg2.connect(database=os.getenv("DATABASE_URL"),
                                 user=os.getenv("DATABASE_USER"),
                                 password=os.getenv("DATABASE_PASSWORD"),
                                 host=os.getenv("DATABASE_HOST"),
                                 port=os.getenv("DATABASE_PORT"))
-        # Create a cursor
         cur = conn.cursor()
 
-        # Insert the message into the table
         user_message = data['messages'][-1]
         chat_message = response['message']
         cur.execute( 
-            '''INSERT INTO messages (user_id, user_message, chat_message) VALUES (%s, %s, %s);''',
-            ('admin', user_message, chat_message))
+            f'''INSERT INTO {os.getenv("DATABASE_MESSAGES_TABLE")} (user_id, user_message, chat_message) VALUES (%s, %s, %s);''',
+            ('admin@eulalia.com', user_message, chat_message))
         
-        # Commit the changes
         conn.commit() 
-
-        # Close the cursor and connection
         cur.close() 
         conn.close() 
+
     except Exception as e:
         print(f"Error storing message: {e}")
 
 
-@app.route('/api/process_message', methods=['POST'])
-def process_message() -> dict:
+@app.route('/api/store_contact_messages', methods=['POST'])
+def store_contact_messages() -> dict:
+    """
+    Store the contact messages received in a postgreSQL database.
+
+    Returns
+    -------
+    dict
+        Response message with log information.
+    """
+
+    data = request.get_json()
+
+    try:
+        conn = psycopg2.connect(database=os.getenv("DATABASE_URL"),
+                                user=os.getenv("DATABASE_USER"),
+                                password=os.getenv("DATABASE_PASSWORD"),
+                                host=os.getenv("DATABASE_HOST"),
+                                port=os.getenv("DATABASE_PORT"))
+        cur = conn.cursor()
+
+        cur.execute( 
+            f'''INSERT INTO {os.getenv("DATABASE_CONTACT_TABLE")} (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
+            (data['email'], data['name'], data['message'])
+        )
+        
+        conn.commit() 
+        cur.close() 
+        conn.close() 
+
+        return jsonify({"log": "Message stored successfully"})
+    except Exception as e:
+        print(f"Error storing contact message: {e}")
+        return jsonify({"log": "Error storing message"})
+
+
+@app.route('/api/process_chat_message', methods=['POST'])
+def process_chat_message() -> dict:
     """
     Process the message received and return a response.
 
@@ -77,7 +110,7 @@ def process_message() -> dict:
     data = request.get_json()
 
     response = get_response(data['messages'])
-    store_message(data, response)
+    store_chat_message(data, response)
 
     return jsonify(response)
 

@@ -26,7 +26,7 @@ function Bot() {
     // Get the last 50 messages text
     const messages = chatMessages.slice(-50).map(message => message.message);
     // Send the messages to the backend
-    fetch('/api/process_message', {
+    fetch('/api/process_chat_message', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

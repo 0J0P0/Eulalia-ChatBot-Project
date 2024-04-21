@@ -23,9 +23,9 @@ DROP TABLE IF EXISTS contact_messages;
 
 CREATE TABLE IF NOT EXISTS contact_messages (
     user_id VARCHAR(255),
+    user_name VARCHAR(255),
     contact_message_id TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_contact_message VARCHAR(255),
     PRIMARY KEY (user_id, contact_message_id),
     FOREIGN KEY (user_id) REFERENCES users_login(username)
 );
-
