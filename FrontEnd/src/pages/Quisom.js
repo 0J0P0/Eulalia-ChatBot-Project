@@ -1,4 +1,5 @@
 import React from 'react'
+
 import '../styles/quisom.css';
 
 import quisom1 from '../img/quisom1.jpg';

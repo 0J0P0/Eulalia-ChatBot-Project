@@ -37,9 +37,9 @@
     button.close-button {
         padding: 1vw;
         border-radius: 2vw;
-        font-size: 1.3vw;
         cursor: pointer;
         transition: transform 0.4s ease;
+        font-size: 1.3vw;
 
         &:hover {
             transform: scale(1.05);
@@ -51,6 +51,7 @@
         margin-bottom: 0.8vw;
         background-color: #5782AA;
         border: none;
+        color: #f8f8f8;
     }
 
     button.close-button {
