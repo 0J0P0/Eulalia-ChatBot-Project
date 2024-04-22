@@ -30,10 +30,10 @@ function Login() {
   // Function to handle the user login
   function handleUser(event) {
     event.preventDefault();
-    axios.post('http://localhost:8081/login', { username, password })
+    axios.post('http://127.0.0.1:5000/login', { username, password })
       .then(response => {
         console.log(response.data);
-        if (response.data.length > 0){
+        if (response.data.success) {
           // Redirect to the bot page
           navigate('/bot');
         }

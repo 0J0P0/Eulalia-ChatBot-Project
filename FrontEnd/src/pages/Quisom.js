@@ -8,7 +8,7 @@ import phone from '../img/phone.svg';
 import mail from '../img/mail.svg';
 import location from '../img/location.svg';
 
-import Footer from '../components/Footer.js';
+import Footer from '../components/footer.js';
 import Logo from '../components/Logo.js';
 
 

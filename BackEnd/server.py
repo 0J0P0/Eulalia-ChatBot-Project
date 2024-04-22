@@ -26,6 +26,50 @@ app = Flask(__name__)
 CORS(app)  # Allow CORS for all routes
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    """
+    Authenticate user based on provided credentials.
+
+    Expects JSON data with 'username' and 'password' fields.
+
+    Returns:
+    JSON: Authentication result.
+    """
+    # Get the JSON data from the request
+    data = request.get_json()
+    # Extract username and password from the JSON data
+    username = data.get('username')
+    password = data.get('password')
+
+    # Check if username or password is missing
+    if not username or not password:
+        return jsonify({"error": "Missing username or password"}), 400
+
+    try:
+        # Create a connection to your PostgreSQL database
+        conn, cur = create_connection()
+
+        # Execute the SQL query to check if the username and password match
+        cur.execute("SELECT * FROM users_login WHERE username = %s AND password = %s;", (username, password))
+        user = cur.fetchone()
+
+        # Commit changes and close the cursor and connection
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        # Check if user exists (authentication successful)
+        if user:
+            return jsonify({"success": True, "message": "Authentication successful"})
+        else:
+            return jsonify({"success": False, "message": "Authentication failed"})
+    except Exception as e:
+        # Handle any errors that occur during the process
+        print(f"Error authenticating user: {e}")
+        return jsonify({"success": False, "message": "Authentication failed"}), 500
+
+
 def store_chat_message(data, response):
     """
     Store the message received in a postgreSQL database.
@@ -43,7 +87,7 @@ def store_chat_message(data, response):
         chat_message = response['message']
 
         cur.execute( 
-            f'''INSERT INTO {os.getenv("DATABASE_MESSAGES_TABLE")} (user_id, user_message, chat_message) VALUES (%s, %s, %s);''',
+            f'''INSERT INTO messages (user_id, user_message, chat_message) VALUES (%s, %s, %s);''',
             ('admin@eulalia.com', user_message, chat_message))
         
         conn.commit() 
@@ -71,7 +115,7 @@ def store_contact_messages() -> dict:
         conn, cur = create_connection()
         
         cur.execute( 
-            f'''INSERT INTO {os.getenv("DATABASE_CONTACT_TABLE")} (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
+            f'''INSERT INTO contact_messages (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
             (data['email'], data['name'], data['message'])
         )
         

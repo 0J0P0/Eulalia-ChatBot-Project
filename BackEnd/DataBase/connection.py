@@ -28,11 +28,11 @@ def create_connection():
         Cursor to the database.
     """
    
-    conn = psycopg2.connect(database=os.getenv("DATABASE_URL"),
-                                user=os.getenv("DATABASE_USER"),
-                                password=os.getenv("DATABASE_PASSWORD"),
-                                host=os.getenv("DATABASE_HOST"),
-                                port=os.getenv("DATABASE_PORT"))
+    conn = psycopg2.connect(user='postgres',
+                                host='147.83.46.71',
+                                password='password',
+                                database='usersDB', 
+                                port=5990)
     cur = conn.cursor()
 
     return conn, cur
