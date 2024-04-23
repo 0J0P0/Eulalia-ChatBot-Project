@@ -47,7 +47,7 @@ function Bot() {
 
   return (
     <div>
-      <div className='bot_container'>
+      <div>
         <Logo subtitle='' />
         <div className='chat_container'>
           {messages.length === 0 ? (

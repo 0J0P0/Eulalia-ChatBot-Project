@@ -1,8 +1,3 @@
-.bot_container {
-    min-height: 120vh;
-    margin-bottom: 6vw;
-}
-
 .chat_container {
     position: absolute;
     background-color: #E7E6E6;
