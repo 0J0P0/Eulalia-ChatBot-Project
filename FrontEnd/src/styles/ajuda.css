@@ -1,4 +1,7 @@
-/* Ajuda page style */
+.ajuda_container {
+    min-height: 80vh;
+    margin-bottom: 5vw;
+}
 
 .grid_container {
     margin-top: 150px; 
@@ -42,6 +45,6 @@
     }
 
     .text_link:hover {
-        color: #858585; /* Change color on hover */
+        color: #5782AA; /* Change color on hover */
     }
 }

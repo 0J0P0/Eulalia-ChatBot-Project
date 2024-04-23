@@ -1,14 +1,3 @@
-.fill_logo {
-    position: absolute;
-    left: 50%;
-    top: 25%;
-    height: 80px;
-    width: 200px;
-    margin-top: -50px;
-    margin-left: -100px;
-    background-color: #E7E6E6;
-}
-
 .quisom_container {
     position: absolute;
     left: 50%;
@@ -53,7 +42,7 @@
 .project_container {
     position: absolute;
     left: 50%;
-    top: 80vw;
+    top: calc(28vw + 24vw + 12vw);
     height: 24vw;
     width: 60vw;
     padding: 20px;
@@ -75,7 +64,7 @@
 .contact_container {
     position: absolute;
     left: 50%;
-    top: 132vw;
+    top: calc(28vw + 24vw + 12vw + 24vw + 12vw);
     height: 24vw;
     width: 60vw;
     padding: 20px;

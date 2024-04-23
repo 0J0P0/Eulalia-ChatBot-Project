@@ -7,6 +7,7 @@ import Logo from '../components/Logo.js'
 import ChatPanel from '../components/chat/ChatPanel.js'
 import ChatConversation from '../components/chat/ChatConversation.js'
 import InitialChat from '../components/chat/InitialChat.js'
+import Footer from '../components/Footer.js'
 
 function Bot() {
   const [messages, setMessages] = useState([]);
@@ -46,15 +47,18 @@ function Bot() {
 
   return (
     <div>
-      <Logo subtitle='' />
-      <div className='chat_container'>
-        {messages.length === 0 ? (
-          <InitialChat />
-        ) : (
-          <ChatConversation messages={messages} isTyping={isTyping} />
-        )}
-        <ChatPanel handleSend={handleSend} />
+      <div className='bot_container'>
+        <Logo subtitle='' />
+        <div className='chat_container'>
+          {messages.length === 0 ? (
+            <InitialChat />
+          ) : (
+            <ChatConversation messages={messages} isTyping={isTyping} />
+          )}
+          <ChatPanel handleSend={handleSend} />
+        </div>
       </div>
+      <Footer />
     </div>
   )
 }

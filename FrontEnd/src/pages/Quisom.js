@@ -100,10 +100,9 @@ function Quisom() {
           </div>
         </div>
       </div>
-    
+
       <Footer />
     </div>
-
   );
 }
 
