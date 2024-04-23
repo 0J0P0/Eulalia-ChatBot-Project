@@ -51,7 +51,7 @@ def login():
         conn, cur = create_connection()
 
         # Execute the SQL query to check if the username and password match
-        cur.execute("SELECT * FROM users_login WHERE username = %s AND password = %s;", (username, password))
+        cur.execute("SELECT * FROM LOGIN_TABLE WHERE username = %s AND password = %s;", (username, password))
         user = cur.fetchone()
 
         # Commit changes and close the cursor and connection
