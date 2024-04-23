@@ -1,7 +1,12 @@
 .footer {
     height: 7vw;
-    bottom: 0;
     background-color: #5782AA;
     color: white;
     text-align: center;
+    padding-top: 1vw;
+
+    p {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 1.3vw;
+    }
 }

@@ -5,7 +5,7 @@ import '../styles/footer.css'
 const Footer = () => {
   return (
     <div className='footer'>
-      <p>2023 by Eulàlia. Proudly created with React</p>
+      <p>2024 by Eulàlia.</p>
     </div>
   )
 }
