@@ -29,9 +29,8 @@ function ChatPanel({ handleSend }) {
 
   return (
     <form onSubmit={handleSubmit} className='panel_bar'>
-      <input
+      <textarea
         className='prompt_bar'
-        type="text"
         placeholder="Escriu un missatge..."
         value={input}
         onChange={handleChange}
