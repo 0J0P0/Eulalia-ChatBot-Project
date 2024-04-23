@@ -7,13 +7,14 @@
 
 .nav_list_icon {
     height: 3vw;
+    position: fixed;
     padding-top: 0.5vw;
     z-index: 1;
 }
 
 .nav_list_icon:hover {
-    transform: scale(1.1); /* Increase size by 10% */
-    transition: transform 0.4s ease; /* Add smooth transition */
+    transform: scale(1.1);
+    transition: transform 0.4s ease;
 }
 
 .nav_list_icon:not(:hover) {
@@ -24,4 +25,5 @@
 .nav_bcn {
     height: 3vw;
     padding-top: 0.5vw;
+    margin-left: 91vw;
 }
