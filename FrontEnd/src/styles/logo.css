@@ -16,11 +16,12 @@
     display: flex;
     text-align: center;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
     img {
         width: auto;
-        height: 6vw;
+        height: 9vh;
+        margin-bottom: 0.5vh;
     }
 
     h1 {

@@ -17,8 +17,9 @@
     align-items: center;
 
     .logo_img {
-        height: 8vw;
+        height: 14.5vh;
         width: auto;
+        margin-bottom: 0.5vh;
     }
 
     h1 {
