@@ -87,7 +87,7 @@ def store_chat_message(data, response):
         chat_message = response['message']
 
         cur.execute( 
-            f'''INSERT INTO messages (user_id, user_message, chat_message) VALUES (%s, %s, %s);''',
+            f'''INSERT INTO {os.getenv("DATABASE_MESSAGES_TABLE")} (user_id, user_message, chat_message) VALUES (%s, %s, %s);''',
             ('admin@eulalia.com', user_message, chat_message))
         
         conn.commit() 
@@ -115,7 +115,7 @@ def store_contact_messages() -> dict:
         conn, cur = create_connection()
         
         cur.execute( 
-            f'''INSERT INTO contact_messages (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
+            f'''INSERT INTO {os.getenv("DATABASE_CONTACT_TABLE")} (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
             (data['email'], data['name'], data['message'])
         )
         

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import Header from './components/header.js'
-import SideBar from './components/sidebar.js';
+import Header from './components/Header.js'
+import SideBar from './components/SideBar.js';
 
 import './styles/App.css';
 
