@@ -37,11 +37,18 @@ function App() {
     localStorage.setItem('authenticated', status);
   };
 
+  const handleLogout = () => {
+    // Clear authentication status and remove token from localStorage
+    localStorage.removeItem('authenticated');
+    // Update authentication status
+    setAuthenticated(false);
+  };
+
   return (
     <div className='main_container'>
       <Router>
         <Header onClick={handleViewSidebar} />
-        <SideBar isOpen={sidebarOpen} authenticated={authenticated} />
+        <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} />
         <Routes>
           <Route path='/' element={<Inici authenticateUser={authenticateUser} />} />
           <Route path='/quisom' element={<Quisom />} />
