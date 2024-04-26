@@ -22,7 +22,7 @@ const SideBar = props => {
                 <li><Link to='/quisom'>Qui som?</Link></li>
                 <li><Link to='/ajuda'>Ajuda</Link></li>
                 {props.authenticated && (
-                    <li><button onClick={handleLogout}>Logout</button></li>
+                    <li><button className='logout_button' onClick={handleLogout}>Tanca Sessió</button></li>
                 )}
             </ul>
         </div>

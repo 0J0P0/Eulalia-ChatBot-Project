@@ -18,7 +18,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
+  height: calc(100% - 3.6vw); /* Adjusted height to accommodate logout button */
 
   ul {
     list-style: none;
@@ -41,4 +41,20 @@
       }
     }
   }
+}
+
+.logout_button {
+  background-color: transparent; /* Remove background color */
+  color: #ffffff; /* Text color */
+  border: none; /* Remove default button border */
+  padding: 0.4vw 1vw; /* Smaller padding */
+  font-size: 1vw; /* Smaller font size */
+  text-decoration: none; /* Remove default button underline */
+  cursor: pointer; /* Show pointer cursor on hover */
+  transition: 0.3s; /* Smooth transition on hover */
+
+  /* Position the logout button at the bottom left */
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
