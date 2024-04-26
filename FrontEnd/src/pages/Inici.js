@@ -7,12 +7,12 @@ import Login from '../components/Login.js';
 
 import backgound_img from '../img/inici_background.jpg';
 
-function Inici() {
+function Inici({ authenticateUser }) {
   return (
     <div>
-      <img className='background_img' src={backgound_img}/>
+      <img className='background_img' src={backgound_img} alt="background"/>
       <MainLogo />
-      <Login />
+      <Login authenticateUser={authenticateUser} />
     </div>
   );
 }

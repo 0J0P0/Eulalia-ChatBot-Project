@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-import Header from './components/Header.js'
+import Header from './components/Header.js';
 import SideBar from './components/SideBar.js';
 
 import './styles/App.css';
@@ -17,22 +17,41 @@ export const metadata = {
 
 function App() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
-  
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if user is already authenticated when the app loads
+    const isAuthenticated = localStorage.getItem('authenticated');
+    if (isAuthenticated) {
+      setAuthenticated(true);
+    }
+  }, []);
+
   const handleViewSidebar = () => {
     setSideBarOpen(!sidebarOpen);
   };
-  
+
+  const authenticateUser = (status) => {
+    setAuthenticated(status);
+    // Update authentication status in localStorage
+    localStorage.setItem('authenticated', status);
+  };
+
   return (
     <div className='main_container'>
       <Router>
         <Header onClick={handleViewSidebar} />
-        <SideBar isOpen={sidebarOpen} />
-          <Routes>
-            <Route path='/' element={<Inici/>} />
-            <Route path='/quisom' element={<Quisom/>} />
-            <Route path='/bot' element={<Bot/>} />
-            <Route path='/ajuda' element={<Ajuda/>} />
-          </Routes>
+        <SideBar isOpen={sidebarOpen} authenticated={authenticated} />
+        <Routes>
+          <Route path='/' element={<Inici authenticateUser={authenticateUser} />} />
+          <Route path='/quisom' element={<Quisom />} />
+          {authenticated ? (
+            <Route path='/bot' element={<Bot />} />
+          ) : (
+            <Route path='/bot' element={<Navigate to="/" />} />
+          )}
+          <Route path='/ajuda' element={<Ajuda />} />
+        </Routes>
       </Router>
     </div>
   );

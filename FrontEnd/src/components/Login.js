@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import axios from 'axios';
 
 import '../styles/login.css';
 
-function Login() {
+function Login({ authenticateUser }) {
   const [showPopup, setShowPopup] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -34,27 +33,19 @@ function Login() {
       .then(response => {
         console.log(response.data);
         if (response.data.success) {
+          // Store authentication status in localStorage
+          localStorage.setItem('authenticated', true);
           // Redirect to the bot page
           navigate('/bot');
+          // Update authentication status
+          authenticateUser(true);
         }
         else {
           setErrorMessage('El teu usuari o contrasenya són incorrectes');
         }
       })
       .catch(error => {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
-        }
+        // Handle error
         console.error('Error sending user:', error);
       }); 
   }
