@@ -51,12 +51,8 @@ function App() {
         <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} />
         <Routes>
           <Route path='/' element={<Inici authenticateUser={authenticateUser} />} />
+          <Route path='/bot' element={<Bot />} />
           <Route path='/quisom' element={<Quisom />} />
-          {authenticated ? (
-            <Route path='/bot' element={<Bot />} />
-          ) : (
-            <Route path='/bot' element={<Navigate to="/" />} />
-          )}
           <Route path='/ajuda' element={<Ajuda />} />
         </Routes>
       </Router>
