@@ -8,12 +8,13 @@ import ChatPanel from '../components/chat/ChatPanel.js';
 import InitialChat from '../components/chat/InitialChat.js';
 import ChatConversation from '../components/chat/ChatConversation.js';
 
+import new_chat_icon from '../img/new_chat.svg';
+
 function Bot() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    // Retrieve messages from localStorage when component mounts
     const storedMessages = localStorage.getItem('chatMessages');
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
@@ -58,6 +59,11 @@ function Bot() {
     .catch(error => console.error('Error:', error));
   }
 
+  const handleNewChat = () => {
+    setMessages([]);
+    localStorage.removeItem('chatMessages');
+  };
+
   return (
     <div>
       <Logo subtitle='' />
@@ -69,6 +75,11 @@ function Bot() {
         )}
         <ChatPanel handleSend={handleSend} />
       </div>
+      <button onClick={handleNewChat} className='new_chat_button'>
+        <img
+          src={new_chat_icon}
+          alt='New chat' />
+      </button>
       <Footer />
     </div>
   )

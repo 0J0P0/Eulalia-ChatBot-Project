@@ -38,7 +38,7 @@
     width: 3vw;
     margin-right: 0.5vw;
     border: 0;
-    border-radius: 50%; /* Round the button to create a circle */
+    border-radius: 50%;
     background-color: #5782AA;
     font-size: 1.3vw;
     cursor: pointer;
