@@ -1,17 +1,24 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 
-import '../styles/bot.css'
+import '../styles/bot.css';
 
-import Logo from '../components/Logo.js'
-import ChatPanel from '../components/chat/ChatPanel.js'
-import ChatConversation from '../components/chat/ChatConversation.js'
-import InitialChat from '../components/chat/InitialChat.js'
-import Footer from '../components/Footer.js'
+import Logo from '../components/Logo.js';
+import Footer from '../components/Footer.js';
+import ChatPanel from '../components/chat/ChatPanel.js';
+import InitialChat from '../components/chat/InitialChat.js';
+import ChatConversation from '../components/chat/ChatConversation.js';
 
 function Bot() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+
+  useEffect(() => {
+    // Retrieve messages from localStorage when component mounts
+    const storedMessages = localStorage.getItem('chatMessages');
+    if (storedMessages) {
+      setMessages(JSON.parse(storedMessages));
+    }
+  }, []);
 
   const handleSend = async (message) => {
     const newMessage = { message, sender: 'User' };
@@ -19,6 +26,9 @@ function Bot() {
     setMessages(newMessages);
 
     setIsTyping(true);
+
+    // Store messages in localStorage
+    localStorage.setItem('chatMessages', JSON.stringify(newMessages));
 
     await processMessageToChatGPT(newMessages);
   };
@@ -41,21 +51,24 @@ function Bot() {
       const newMessages = [...chatMessages, newMessage];
       setMessages(newMessages);
       setIsTyping(false);
+
+      // Store updated messages in localStorage
+      localStorage.setItem('chatMessages', JSON.stringify(newMessages));
     })
     .catch(error => console.error('Error:', error));
   }
 
   return (
     <div>
-        <Logo subtitle='' />
-        <div className='chat_container'>
-          {messages.length === 0 ? (
-            <InitialChat />
-          ) : (
-            <ChatConversation messages={messages} isTyping={isTyping} />
-          )}
-          <ChatPanel handleSend={handleSend} />
-        </div>
+      <Logo subtitle='' />
+      <div className='chat_container'>
+        {messages.length === 0 ? (
+          <InitialChat />
+        ) : (
+          <ChatConversation messages={messages} isTyping={isTyping} />
+        )}
+        <ChatPanel handleSend={handleSend} />
+      </div>
       <Footer />
     </div>
   )

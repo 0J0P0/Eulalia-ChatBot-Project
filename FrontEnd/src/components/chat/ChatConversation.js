@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useRef, useEffect } from 'react';
 
 import eulalia_message_logo from '../../img/eulalia_message_logo.svg';
 import user_message_logo from '../../img/user_message_logo.svg';
@@ -10,14 +10,14 @@ import '../../styles/chat_conversation.css';
 
 function ChatConversation({ messages, isTyping }) {
   // Ref for scrolling to bottom
-  const messagesEndRef = React.useRef(null);
+  const messagesEndRef = useRef(null);
 
   // Function to scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
