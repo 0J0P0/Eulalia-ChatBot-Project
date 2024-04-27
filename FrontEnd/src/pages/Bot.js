@@ -47,7 +47,6 @@ function Bot() {
 
   return (
     <div>
-      <div>
         <Logo subtitle='' />
         <div className='chat_container'>
           {messages.length === 0 ? (
@@ -57,7 +56,6 @@ function Bot() {
           )}
           <ChatPanel handleSend={handleSend} />
         </div>
-      </div>
       <Footer />
     </div>
   )

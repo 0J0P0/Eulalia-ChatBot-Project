@@ -20,9 +20,8 @@ function App() {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check if user is already authenticated when the app loads
     const isAuthenticated = localStorage.getItem('authenticated');
-    if (isAuthenticated) {
+    if (isAuthenticated === 'true') {
       setAuthenticated(true);
     }
   }, []);

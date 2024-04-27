@@ -1,4 +1,4 @@
-import React from 'react';
+import { React } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import '../styles/sidebar.css';
@@ -10,7 +10,6 @@ const SideBar = props => {
   const sidebarClass = props.isOpen ? "sidebar open" : "sidebar";
 
   const handleLogout = () => {
-      // localStorage.removeItem('authenticated');
       props.authenticateUser(false);
       navigate('/');
   };  
