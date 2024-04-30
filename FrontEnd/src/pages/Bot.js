@@ -6,6 +6,7 @@ import Logo from '../components/Logo.js';
 import Footer from '../components/Footer.js';
 import ChatPanel from '../components/chat/ChatPanel.js';
 import InitialChat from '../components/chat/InitialChat.js';
+import ChatHistory from '../components/chat/ChatHistory.js';
 import ChatConversation from '../components/chat/ChatConversation.js';
 
 import new_chat_icon from '../img/new_chat.svg';
@@ -68,12 +69,17 @@ function Bot() {
     <div>
       <Logo subtitle='' />
       <div className='chat_container'>
-        {messages.length === 0 ? (
-          <InitialChat />
-        ) : (
-          <ChatConversation messages={messages} isTyping={isTyping} />
-        )}
-        <ChatPanel handleSend={handleSend} />
+        <div className='left_chat_col'>
+          <ChatHistory />
+        </div>
+        <div className='right_chat_col'>
+          {messages.length === 0 ? (
+            <InitialChat />
+          ) : (
+            <ChatConversation messages={messages} isTyping={isTyping} />
+          )}
+          <ChatPanel handleSend={handleSend} />
+        </div>
       </div>
       <button onClick={handleNewChat} className='new_chat_button'>
         <img

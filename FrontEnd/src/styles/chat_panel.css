@@ -1,16 +1,10 @@
 .panel_bar {
     display: flex;
-    align-items: center; /* Center items vertically */
-    justify-content: space-between; /* Space items evenly */
-    position: absolute;
-    top: 37vw;
-    left: 50%;
-    height: 4vw;
-    width: 70vw;
+    align-items: center;
+    margin: 0 2vw 1vw 2vw;
+    justify-content: space-between;
     border-radius: 2vw;
-    margin-left: -35vw;
     background-color: #B2B1B1;
-    transform: translateY(-50%);
 
     .prompt_bar {
         height: 3vw;
@@ -20,8 +14,6 @@
         border: 0;
         border-radius: 2vw;
         background-color: transparent;
-        /* padding-left: 2vw;   */
-        
         font-size: 1.2vw;
     
         &:focus {

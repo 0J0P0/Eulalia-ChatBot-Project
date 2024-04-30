@@ -1,8 +1,7 @@
 .message_list_container {
-  height: 30vw; /* Adjust the height as needed */
-  padding: 1vw;
-  border-radius: 2vw;
-  overflow-y: auto; /* Enable vertical scrollbar */
+  height: 86%;
+  margin-left: 2vw;
+  overflow-y: auto;
 }
 
 .message_container {
@@ -12,8 +11,8 @@
 }
 
 .message_logo {
-  width: 2vw; /* Adjust size as needed */
-  height: 2vw; /* Adjust size as needed */
+  width: 2vw;
+  height: 2vw;
   background-color: transparent;
 }
 

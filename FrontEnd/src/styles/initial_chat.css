@@ -1,24 +1,20 @@
 .initial_container {
-    height: 25vw;
-    margin-top: 1vw;
-    margin-bottom: 10vw;
-    /* padding-bottom: 20px; */
+    height: 86%;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
 
 .intro_container {
-    background-color: #F4F4F4;
     border-radius: 2vw;
     height: 25vw;
-    padding: 10px; /* Add padding for spacing */
-    border-radius: 2vw; /* Add border radius for rounded corners */
-    margin-left: 1vw;
-    margin-right: 1vw;
+    padding: 10px;
+    border-radius: 2vw;
+    margin: 2vw 2vw 1vw 2vw;
+    background-color: #F4F4F4;
 
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Align items vertically */
-    flex: 1; /* Allow the paragraph to grow to fill available space */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 
     h1 {
         font-size: 1.6vw;
