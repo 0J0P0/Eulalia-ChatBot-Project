@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS messages (
     user_message_id TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_message VARCHAR(255),
     chat_message VARCHAR(255),
+    user_conv VARCHAR(255),
+    user_conv_id INT,
     PRIMARY KEY (user_id, user_message_id),
     FOREIGN KEY (user_id) REFERENCES users_login(username)
 );
