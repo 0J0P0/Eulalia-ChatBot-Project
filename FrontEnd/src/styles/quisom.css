@@ -132,6 +132,7 @@
      
         .description_text {
             height: 50%;
+            margin-right: 1vw;
             font-size: 1.3vw;
             text-align: justify;
             align-self: center;

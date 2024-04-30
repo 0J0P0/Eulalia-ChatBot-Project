@@ -6,7 +6,7 @@ function InitialChat() {
     <div className='initial_container'>
       <div className='intro_container'>
         <h1>Què ès Eulàlia?</h1>
-        <p>Eulàlia és un assistent virtual que t'ajudarà a trobar la informació que necessites.</p>
+        <p>Eulàlia és un assistent de xat dissenyat per oferir suport intern a l'equip de tècnics de l'Ajuntament de Barcelona.</p>
       </div>
       <div className='intro_container'>
         <h1>Com usar Eulàlia?</h1>

@@ -60,7 +60,7 @@ function Quisom() {
         <img src={quisom1} alt='El nostre Equip'/>
         <div className='quisom_text'>
           <h3>El nostre equip</h3>
-          <p>El nostre equip està format per professionals amb una llarga trajectòria en el sector de la restauració. La nostra missió és oferir als nostres clients una experiència gastronòmica única, on la qualitat dels productes i el servei al client són la nostra prioritat.</p>
+          <p>L'equip de desenvolupadors està format per un grup de 10 estudiants del 3r any del grau de Ciència i Enginyeria de Dades a la Universitat Politècnica de Catalunya.</p>
         </div>
       </div>
 
@@ -68,7 +68,7 @@ function Quisom() {
         <img src={quisom2} alt='Sobre Eulalia'/>
         <div className='quisom_text'>
           <h3>Sobre Eulalia</h3>
-          <p>Eulalia és la nostra xef i la responsable de la cuina. La seva passió per la cuina mediterrània i la seva creativitat són la clau del nostre èxit. La seva trajectòria professional l'ha portat a treballar en restaurants amb estrelles Michelin i a guanyar diversos premis en concursos de cuina.</p>
+          <p>Eulàlia és un assistent de xat dissenyat per oferir suport intern a l'equip de tècnics de l'Ajuntament de Barcelona. La seva principal tasca és proporcionar respostes a les preguntes dels tècnics utilitzant una base de dades que conté informació detallada sobre els serveis i les estadístiques oferts per l'Ajuntament de Barcelona.</p>
         </div>
       </div>
 
@@ -83,19 +83,19 @@ function Quisom() {
           <input type='submit' value='Enviar' onClick={handleSend}></input>
         </form>
         <div className='contact_data_container'>
-          <p className='description_text'>Si vols conèixer més sobre el nostre equip o sobre la nostra xef, pots contactar-nos a través del següent formulari:</p>
+          <p className='description_text'>Si vols conèixer més sobre el nostre equip o sobre la Eulàlia, pots contactar-nos a través del següent formulari:</p>
           <div className='contact_data'>
             <div className='contact_item'>
               <img src={phone} alt='phone' />
-              <p>93 123 45 67</p>
+              <p>+34 673 91 45 60</p>
             </div>
             <div className='contact_item'>
               <img src={mail} alt='mail' />
-              <p>s.s.s</p>
+              <p>eulalia.contact@gmail.com</p>
             </div>
             <div className='contact_item'>
               <img src={location} alt='location' />
-              <p>Carrer de la Ciutat, 1, 08002 Barcelona</p>
+              <p>C. de Jordi Girona, 1, 08034 Barcelona</p>
             </div>
           </div>
         </div>
