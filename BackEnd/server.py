@@ -142,7 +142,7 @@ def process_chat_message() -> dict:
 
     data = request.get_json()
 
-    response = get_response(data['messages'])
+    response = get_response(data)
     store_chat_message(data, response)
 
     return jsonify(response)
