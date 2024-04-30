@@ -71,6 +71,11 @@ function Bot() {
       <div className='chat_container'>
         <div className='left_chat_col'>
           <ChatHistory />
+          <button onClick={handleNewChat} className='new_chat_button'>
+            <img
+              src={new_chat_icon}
+              alt='New chat' />
+          </button>
         </div>
         <div className='right_chat_col'>
           {messages.length === 0 ? (
@@ -81,11 +86,6 @@ function Bot() {
           <ChatPanel handleSend={handleSend} />
         </div>
       </div>
-      <button onClick={handleNewChat} className='new_chat_button'>
-        <img
-          src={new_chat_icon}
-          alt='New chat' />
-      </button>
       <Footer />
     </div>
   )

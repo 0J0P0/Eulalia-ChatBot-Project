@@ -12,14 +12,14 @@ Contents:
 
 
 # TODO
-def get_response(messages: list) -> dict:
+def get_response(data: list) -> dict:
     """
     # TODO
 
     Parameters
     ----------
-    messages : list
-        List of messages received.
+    data : list
+        List of data received.
 
     Returns
     -------
@@ -27,11 +27,19 @@ def get_response(messages: list) -> dict:
         Response message.
     """
 
-    if messages:
-        response_message = f'You said: {messages[-1]}'
+    if data:
+        if len(data['messages']) == 1:
+            conv = 'Chat1'  # placeholder
+            # conv = get_conversation_title(data[0])
+        else:
+            conv = data['messages'][-1]['conversation_title']
+        
+        # TODO DGAY
+        response_message = f'You said: {data['messages'][-1]}'
+
+        response = {'message': response_message, 'conversation_title': conv}
     else:
         response_message = 'No message received.'
 
-    response = {'message': response_message}
 
     return response
