@@ -1,6 +1,6 @@
 """
 Module: server.py
-Author: JP Zaldivar
+Author: JP Zaldivar  && Noa Mediavilla
 Date: April 20, 2024
 
 Description:

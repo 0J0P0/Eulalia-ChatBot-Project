@@ -31,9 +31,10 @@ def get_response(data: list) -> dict:
         
         response_message = f'You said: {data['messages'][-1]}'
 
-        response = {'message': response_message, 'conv_title': data['messages'][-1]['conv_title']}
+        response = {'message': response_message}
     else:
-        response_message = 'No message received.'
+        response = {'message': 'No message received.'}
 
+    print(response)
 
     return response
