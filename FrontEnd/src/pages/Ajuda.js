@@ -7,8 +7,9 @@ import Logo from '../components/Logo.js';
 import img_ine from "../img/ine.jpg";
 import img_moncloa from "../img/moncloa.jpg";
 import img_opendata from "../img/opendata.png";
-import img_aj from "../img/Logo_Ajuntament.jpg";
+import img_aj from "../img/barcelona.jpg";
 import img_generalitat from "../img/generalitat.png";
+import img_bcn_dades from "../img/Logo_Ajuntament.jpg";
 
 
 function Ajuda() {
@@ -26,7 +27,7 @@ function Ajuda() {
           </a>
       
           <a href="https://portaldades.ajuntament.barcelona.cat/ca/" className='Two'>
-              <img src={img_aj} alt='Barcelona Dades'/>
+              <img src={img_bcn_dades} alt='Barcelona Dades'/>
               <div className='text_link'>
                   Barcelona Dades
               </div>
