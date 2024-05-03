@@ -1,43 +1,37 @@
 """
 Module: eulalia.py
-Author: JP Zaldivar
-Date: April 20, 2024
-
-Description:
-
 
 Contents:
 - get_response: Function to process the message received and return a response.
 """
 
 
-# TODO
 def get_response(data: list) -> dict:
     """
-    # TODO
 
     Parameters
     ----------
     data : list
         List of data received.
+        conv_title : title of conversation
 
     Returns
     -------
     dict
         Response message.
     """
-
+    print(data)
     if data:
         if len(data['messages']) == 1:
-            conv = 'Chat1'  # placeholder
-            # conv = get_conversation_title(data[0])
+            data['messages'][0]['conv_title'] = 'Chat1' # placeholder
+            # data['messages'][0]['conv_title'] = get_conversation_title(data[0])
+
         else:
-            conv = data['messages'][-1]['conversation_title']
+            data['messages'][-1]['conv_title'] = data['messages'][0]['conv_title']
         
-        # TODO DGAY
         response_message = f'You said: {data['messages'][-1]}'
 
-        response = {'message': response_message, 'conversation_title': conv}
+        response = {'message': response_message, 'conv_title': data['messages'][-1]['conv_title']}
     else:
         response_message = 'No message received.'
 

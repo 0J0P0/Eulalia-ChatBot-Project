@@ -70,7 +70,7 @@ def login():
         return jsonify({"success": False, "message": "Authentication failed"}), 500
 
 
-def store_chat_message(data, response):
+def store_chat_message(data, response, conv_title):
     """
     Store the message received in a postgreSQL database.
 
@@ -85,10 +85,14 @@ def store_chat_message(data, response):
 
         user_message = data['messages'][-1]
         chat_message = response['message']
+        user_conv = conv_title # Aquesta linia no cal només és orientativa
+        # user_conv = response['user_conv']
+        # Cal definir els id!! (quan es faci check) -> placeholder: 1
+
 
         cur.execute( 
-            f'''INSERT INTO {os.getenv("DATABASE_MESSAGES_TABLE")} (user_id, user_message, chat_message) VALUES (%s, %s, %s);''',
-            ('admin@eulalia.com', user_message, chat_message))
+            f'''INSERT INTO {os.getenv("DATABASE_MESSAGES_TABLE")} (user_id, user_message, chat_message, user_conv, user_conv_id) VALUES (%s, %s, %s, %s, %s);''',
+            ('admin@eulalia.com', user_message, chat_message, user_conv, 1))
         
         conn.commit() 
         cur.close() 
@@ -141,6 +145,18 @@ def process_chat_message() -> dict:
     """
 
     data = request.get_json()
+    # # data es els messages que es reben (get last 50 messages)
+    # # A data faltaria passar-li la conversation title si ja existeix
+    # # Canviem ja la conv_title perquè segurament no en té una adjudicada
+    # if len(data['messages']) == 1:
+    #     conv_title = 'New'
+
+    # # Cal canviar ara la funció get response (he afegit conv_title a input i output)
+    # response, conv_title = get_response(data, conv_title)
+    
+    # # Modificar amb input conv_title afegit
+    # # conv_title = response[-1][1] # NO se com estarà guardat: caldrà modficar (value de l'últim element del dict??)
+    # store_chat_message(data, response, conv_title)
 
     response = get_response(data)
     store_chat_message(data, response)

@@ -23,7 +23,7 @@ function Bot() {
   }, []);
 
   const handleSend = async (message) => {
-    const newMessage = { message, sender: 'User' };
+    const newMessage = { message, sender: 'User', conv_title: null};
     const newMessages = [...messages, newMessage];
     setMessages(newMessages);
 
@@ -37,7 +37,7 @@ function Bot() {
 
   async function processMessageToChatGPT(chatMessages) {
     // Get the last 50 messages text
-    const messages = chatMessages.slice(-50).map(message => message.message);
+    const messages = chatMessages.slice(-50);
     // Send the messages to the backend
     fetch('/api/process_chat_message', {
       method: 'POST',
@@ -49,7 +49,8 @@ function Bot() {
     .then(response => response.json())
     .then(data => {
       // Add the response to the chat
-      const newMessage = { message: data.message, sender: 'Eulàlia' };
+      // AFEGIR EL IF MIRANT SI DATA.CONV_TITLE ES IGUAL A L'ANTERIOR ETC (IF DEL BOT) -> IF NEW, CREATE NEW COMPONENT
+      const newMessage = { message: data.message, sender: 'Eulàlia', conv_title: data.conv_title};
       const newMessages = [...chatMessages, newMessage];
       setMessages(newMessages);
       setIsTyping(false);
