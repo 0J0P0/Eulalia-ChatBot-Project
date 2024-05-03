@@ -3,7 +3,6 @@ import React from 'react';
 import "../styles/ajuda.css";
 
 import Logo from '../components/Logo.js';
-import Footer from '../components/Footer.js';
 
 import img_ine from "../img/ine.jpg";
 import img_moncloa from "../img/moncloa.jpg";
@@ -62,7 +61,6 @@ function Ajuda() {
           </a>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

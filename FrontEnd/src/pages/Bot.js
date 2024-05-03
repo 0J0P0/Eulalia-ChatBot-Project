@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import '../styles/bot.css';
 
 import Logo from '../components/Logo.js';
-import Footer from '../components/Footer.js';
 import ChatPanel from '../components/chat/ChatPanel.js';
 import InitialChat from '../components/chat/InitialChat.js';
 import ChatHistory from '../components/chat/ChatHistory.js';
@@ -87,7 +86,6 @@ function Bot() {
           <ChatPanel handleSend={handleSend} />
         </div>
       </div>
-      <Footer />
     </div>
   )
 }
