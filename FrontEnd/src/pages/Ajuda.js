@@ -3,13 +3,13 @@ import React from 'react';
 import "../styles/ajuda.css";
 
 import Logo from '../components/Logo.js';
-import img_aj from "../img/Logo_Ajuntament.jpg";
 import Footer from '../components/Footer.js';
-// import img_ine from "../img/Logo_INE.jpg";
-// import img_gene from "../img/Logo_Generalitat.jpg";
-// import img_gob from "../img/Logo_Gobierno.png";
-// import img_od from "../img/Logo_Open_Data.png";
-// import img_od2 from "../img/Logo_Open_Data_2.png";
+
+import img_ine from "../img/ine.jpg";
+import img_moncloa from "../img/moncloa.jpg";
+import img_opendata from "../img/opendata.png";
+import img_aj from "../img/Logo_Ajuntament.jpg";
+import img_generalitat from "../img/generalitat.png";
 
 
 function Ajuda() {
@@ -20,7 +20,7 @@ function Ajuda() {
         <div className="grid_container">
           
           <a href="https://opendata-ajuntament.barcelona.cat/es" className='One'>
-              <img src={img_aj} alt='Open Data BCN'/>
+              <img src={img_opendata} alt='Open Data BCN'/>
               <div className='text_link'>
                   Open Data BCN
               </div>
@@ -34,7 +34,7 @@ function Ajuda() {
           </a>
       
           <a href="https://www.ine.es/" className='Three'>
-              <img src={img_aj} alt="Institut Nacional d'Estadística"/>
+              <img src={img_ine} alt="Institut Nacional d'Estadística"/>
               <div className='text_link'>
                   Institut Nacional d'Estadística
               </div>
@@ -48,14 +48,14 @@ function Ajuda() {
           </a>
       
           <a href="https://web.gencat.cat/ca/inici/index.html" className='Five'>
-              <img src={img_aj} alt='Generalitat de Catalunya'/>
+              <img src={img_generalitat} alt='Generalitat de Catalunya'/>
               <div className='text_link'>
                   Generalitat de Catalunya
               </div>
           </a>
       
           <a href="https://www.lamoncloa.gob.es/Paginas/index.aspx" className='Six'>
-              <img src={img_aj} alt='El Govern'/>
+              <img src={img_moncloa} alt='El Govern'/>
               <div className='text_link'>
                   El Govern
               </div>
