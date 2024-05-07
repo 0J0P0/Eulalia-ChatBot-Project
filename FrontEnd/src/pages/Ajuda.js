@@ -18,9 +18,7 @@ function Ajuda() {
         <Logo subtitle="AJUDA"/>
         <div className="grid_container">
           
-          <p>a</p>
-
-          {/* <a href="https://opendata-ajuntament.barcelona.cat/es" className='One'>
+          <a href="https://opendata-ajuntament.barcelona.cat/es" className='One'>
               <img src={img_opendata} alt='Open Data BCN'/>
               <div className='text_link'>
                   Open Data BCN
@@ -60,7 +58,7 @@ function Ajuda() {
               <div className='text_link'>
                   El Govern
               </div>
-          </a> */}
+          </a>
 
         </div>
     </div>
