@@ -20,21 +20,22 @@ def get_response(data: list) -> dict:
     dict
         Response message.
     """
-    print(data)
     if data:
+        print('Data recieved in backend:            ', data)
         if len(data['messages']) == 1:
             data['messages'][0]['conv_title'] = 'Chat1' # placeholder
+            print('First user message', data['messages'][0]['conv_title'])
             # data['messages'][0]['conv_title'] = get_conversation_title(data[0])
 
         else:
             data['messages'][-1]['conv_title'] = data['messages'][0]['conv_title']
+            print('user message', data['messages'][-1]['conv_title'])
         
-        response_message = f'You said: {data['messages'][-1]}'
+        response_message = f'You said: {data['messages'][-1]['message']}'
+        response = {'message': response_message, 'sender': 'Eulàlia', 'conv_title': data['messages'][-1]['conv_title']}
+        # print(response)
 
-        response = {'message': response_message}
     else:
         response = {'message': 'No message received.'}
-
-    print(response)
 
     return response
