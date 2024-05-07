@@ -22,21 +22,25 @@ function Bot() {
   }, []);
 
   const handleSend = async (message) => {
-    const newMessage = {message, sender: 'User', conv_title: null};
-    const len = messages.length
-    console.log(len)
-    if (len > 0) {
-      // const newMessage = {message, sender: 'User', conv_title: messages[0].conv_title};
-      newMessage.conv_title = messages[0].conv_title
-    }
-    
+    // const messages_len = messages.length
+    const newMessage = {message: message, sender: 'User', conv_title: null};
+
+    // if (messages_len > 0) {
+    //   // set the conv_title of all the messages the one from the last message
+    //   const newMessages = messages.map((msg, index) => {
+    //     if (index === messages_len - 1) {
+    //       return {...msg, conv_title: message};
+    //     } else {
+    //       return msg;
+    //     }
+    //   });
+    // }
+
     const newMessages = [...messages, newMessage];
+    localStorage.setItem('chatMessages', JSON.stringify(newMessages));
     
     setMessages(newMessages);
     setIsTyping(true);
-
-    // Store messages in localStorage
-    localStorage.setItem('chatMessages', JSON.stringify(newMessages));
 
     await processMessageToChatGPT(newMessages);
   };
@@ -56,10 +60,10 @@ function Bot() {
     .then(data => {
       // Add the response to the chat
       console.log(data)
-      console.log(data[0])
+      console.log(data.messages)
 
-      const newMessage = { message: data.message, sender: 'Eulàlia', conv_title: data.conv_title};
-      const newMessages = [...chatMessages, newMessage];
+      // const newMessage = { message: data.message, sender: 'Eulàlia', conv_title: data.conv_title};
+      const newMessages = data.messages
       setMessages(newMessages);
       setIsTyping(false);
 
