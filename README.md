@@ -2,10 +2,10 @@
 
 <p>
   <a href="-- drive --" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-green.svg" />
   </a>
   <a href="#" target="_blank">
-    <img alt="License: Proudly created by Eulàlia" src="https://img.shields.io/badge/License-Proudly created by Eulàlia-yellow.svg" />
+    <img alt="License: Proudly created by Eulàlia" src="https://img.shields.io/badge/License-Proudly created by Eulàlia-blue.svg" />
   </a>
 </p>
 

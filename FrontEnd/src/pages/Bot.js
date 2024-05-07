@@ -22,10 +22,17 @@ function Bot() {
   }, []);
 
   const handleSend = async (message) => {
-    const newMessage = { message, sender: 'User', conv_title: null};
+    const newMessage = {message, sender: 'User', conv_title: null};
+    const len = messages.length
+    console.log(len)
+    if (len > 0) {
+      // const newMessage = {message, sender: 'User', conv_title: messages[0].conv_title};
+      newMessage.conv_title = messages[0].conv_title
+    }
+    
     const newMessages = [...messages, newMessage];
+    
     setMessages(newMessages);
-
     setIsTyping(true);
 
     // Store messages in localStorage
@@ -48,7 +55,9 @@ function Bot() {
     .then(response => response.json())
     .then(data => {
       // Add the response to the chat
-      // AFEGIR EL IF MIRANT SI DATA.CONV_TITLE ES IGUAL A L'ANTERIOR ETC (IF DEL BOT) -> IF NEW, CREATE NEW COMPONENT
+      console.log(data)
+      console.log(data[0])
+
       const newMessage = { message: data.message, sender: 'Eulàlia', conv_title: data.conv_title};
       const newMessages = [...chatMessages, newMessage];
       setMessages(newMessages);
@@ -60,10 +69,30 @@ function Bot() {
     .catch(error => console.error('Error:', error));
   }
 
+  // const handleNewChat = () => {
+  //   setMessages([]);
+  //   localStorage.removeItem('chatMessages');
+  // };
+
   const handleNewChat = () => {
+    // Reset chat history
     setMessages([]);
     localStorage.removeItem('chatMessages');
-  };
+
+    // // Send request to backend: refresh history bar
+    // fetch('/api/refresh_history', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({})
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //     // Handle response from backend if needed
+    // })
+    // .catch(error => console.error('Error:', error));
+};
 
   return (
     <div>

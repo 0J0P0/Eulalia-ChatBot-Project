@@ -70,7 +70,7 @@ def login():
         return jsonify({"success": False, "message": "Authentication failed"}), 500
 
 
-def store_chat_message(data, response, conv_title):
+def store_chat_message(data, response):
     """
     Store the message received in a postgreSQL database.
 
@@ -85,18 +85,20 @@ def store_chat_message(data, response, conv_title):
 
         user_message = data['messages'][-1]
         chat_message = response['message']
-        user_conv = conv_title # Aquesta linia no cal només és orientativa
+        user_conv = response['conv_title']
+
+        # Aquesta linia no cal només és orientativa
         # user_conv = response['user_conv']
         # Cal definir els id!! (quan es faci check) -> placeholder: 1
 
 
-        cur.execute( 
+        cur.execute(
             f'''INSERT INTO {os.getenv("DATABASE_MESSAGES_TABLE")} (user_id, user_message, chat_message, user_conv, user_conv_id) VALUES (%s, %s, %s, %s, %s);''',
             ('admin@eulalia.com', user_message, chat_message, user_conv, 1))
-        
-        conn.commit() 
-        cur.close() 
-        conn.close() 
+
+        conn.commit()
+        cur.close()
+        conn.close()
 
     except Exception as e:
         print(f"Error storing message: {e}")
@@ -117,15 +119,15 @@ def store_contact_messages() -> dict:
 
     try:
         conn, cur = create_connection()
-        
-        cur.execute( 
+
+        cur.execute(
             f'''INSERT INTO {os.getenv("DATABASE_CONTACT_TABLE")} (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
             (data['email'], data['name'], data['message'])
         )
-        
-        conn.commit() 
-        cur.close() 
-        conn.close() 
+
+        conn.commit()
+        cur.close()
+        conn.close()
 
         return jsonify({"log": "Message stored successfully"})
     except Exception as e:
@@ -144,24 +146,42 @@ def process_chat_message() -> dict:
         Response message.
     """
 
+    # data es els messages que es reben (get last 50 messages)
     data = request.get_json()
-    # # data es els messages que es reben (get last 50 messages)
-    # # A data faltaria passar-li la conversation title si ja existeix
-    # # Canviem ja la conv_title perquè segurament no en té una adjudicada
-    # if len(data['messages']) == 1:
-    #     conv_title = 'New'
-
-    # # Cal canviar ara la funció get response (he afegit conv_title a input i output)
-    # response, conv_title = get_response(data, conv_title)
-    
-    # # Modificar amb input conv_title afegit
-    # # conv_title = response[-1][1] # NO se com estarà guardat: caldrà modficar (value de l'últim element del dict??)
-    # store_chat_message(data, response, conv_title)
-
-    response = get_response(data)
-    store_chat_message(data, response)
+    # print(data)
+    response = get_response(data)  # msg, title
+    # print(response)
+    store_chat_message(data, response) # Falta arreglar
 
     return jsonify(response)
+
+
+@app.route('/api/refresh_history', methods=['POST'])
+def new_chat():
+    """
+    Refresh history
+    Returns last conversation title created and id --> for later identification
+    """
+
+    try:
+        conn, cur = create_connection()
+
+
+        # FES LA CERCA AMB COMANDA SQL DELS NOMS DE LES CONVERSES --> A PLANTEJAR (SELECT DISTINC FROM)
+        cur.execute(
+            f'''INSERT INTO {os.getenv("DATABASE_CONTACT_TABLE")} (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
+            (data['email'], data['name'], data['message'])
+        )
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify({"log": "Message stored successfully"}) # CAMVIAR EL RETURN (VOLEM QUE RETORNI EL NOM I ID)
+    except Exception as e:
+        print(f"Error getting last conversation: {e}")
+        return jsonify({"log": "Error getting last conversation"})
+
 
 
 if __name__ == '__main__':
