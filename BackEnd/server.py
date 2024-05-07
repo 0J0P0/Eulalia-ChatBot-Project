@@ -70,26 +70,31 @@ def login():
         return jsonify({"success": False, "message": "Authentication failed"}), 500
 
 
-def store_chat_message(data, response):
+def store_chat_message(data):
     """
     Store the message received in a postgreSQL database.
 
     Parameters
     ----------
-    data : dict
+    response : dict
         Data received.
     """
-
+    
     try:
         conn, cur = create_connection()
+        # print(data)
 
-        user_message = data['messages'][-1]
-        chat_message = response['message']
-        user_conv = response['conv_title']
+        last_message = data['messages'][-2]
+        last_reply = data['messages'][-1]
+        # print(last_message)
+        # print(last_reply)
 
-        # Aquesta linia no cal només és orientativa
-        # user_conv = response['user_conv']
-        # Cal definir els id!! (quan es faci check) -> placeholder: 1
+        user_message = last_message['message']
+        chat_message = last_reply['message']
+        user_conv = last_message['conv_title']
+        # print(user_message)
+        # print(chat_message)
+        # print(user_conv)
 
 
         cur.execute(
@@ -145,42 +150,41 @@ def process_chat_message() -> dict:
     dict
         Response message.
     """
-
     # data es els messages que es reben (get last 50 messages)
     data = request.get_json()
     # print(data)
     response = get_response(data)  # msg, title
     # print(response)
-    store_chat_message(data, response) # Falta arreglar
+    store_chat_message(data)
 
     return jsonify(response)
 
 
-@app.route('/api/refresh_history', methods=['POST'])
-def new_chat():
-    """
-    Refresh history
-    Returns last conversation title created and id --> for later identification
-    """
+# @app.route('/api/refresh_history', methods=['POST'])
+# def new_chat():
+#     """
+#     Refresh history
+#     Returns last conversation title created and id --> for later identification
+#     """
 
-    try:
-        conn, cur = create_connection()
+#     try:
+#         conn, cur = create_connection()
 
 
-        # FES LA CERCA AMB COMANDA SQL DELS NOMS DE LES CONVERSES --> A PLANTEJAR (SELECT DISTINC FROM)
-        cur.execute(
-            f'''INSERT INTO {os.getenv("DATABASE_CONTACT_TABLE")} (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
-            (data['email'], data['name'], data['message'])
-        )
+#         # FES LA CERCA AMB COMANDA SQL DELS NOMS DE LES CONVERSES --> A PLANTEJAR (SELECT DISTINC FROM)
+#         # cur.execute(
+        #     f'''INSERT INTO {os.getenv("DATABASE_CONTACT_TABLE")} (user_id, user_name, user_contact_message) VALUES (%s, %s, %s);''',
+        #     (data['email'], data['name'], data['message'])
+        # )
 
-        conn.commit()
-        cur.close()
-        conn.close()
+        # conn.commit()
+        # cur.close()
+        # conn.close()
 
-        return jsonify({"log": "Message stored successfully"}) # CAMVIAR EL RETURN (VOLEM QUE RETORNI EL NOM I ID)
-    except Exception as e:
-        print(f"Error getting last conversation: {e}")
-        return jsonify({"log": "Error getting last conversation"})
+#         return jsonify({"log": "Message stored successfully"}) # CAMVIAR EL RETURN (VOLEM QUE RETORNI EL NOM I ID)
+#     except Exception as e:
+#         print(f"Error getting last conversation: {e}")
+#         return jsonify({"log": "Error getting last conversation"})
 
 
 
