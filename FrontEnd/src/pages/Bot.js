@@ -22,23 +22,10 @@ function Bot() {
   }, []);
 
   const handleSend = async (message) => {
-    // const messages_len = messages.length
     const newMessage = {message: message, sender: 'User', conv_title: null};
-
-    // if (messages_len > 0) {
-    //   // set the conv_title of all the messages the one from the last message
-    //   const newMessages = messages.map((msg, index) => {
-    //     if (index === messages_len - 1) {
-    //       return {...msg, conv_title: message};
-    //     } else {
-    //       return msg;
-    //     }
-    //   });
-    // }
-
     const newMessages = [...messages, newMessage];
+
     localStorage.setItem('chatMessages', JSON.stringify(newMessages));
-    
     setMessages(newMessages);
     setIsTyping(true);
 
@@ -46,9 +33,8 @@ function Bot() {
   };
 
   async function processMessageToChatGPT(chatMessages) {
-    // Get the last 50 messages text
     const messages = chatMessages.slice(-50);
-    // Send the messages to the backend
+
     fetch('/api/process_chat_message', {
       method: 'POST',
       headers: {
@@ -58,17 +44,11 @@ function Bot() {
     })
     .then(response => response.json())
     .then(data => {
-      // Add the response to the chat
-      console.log(data)
-      console.log(data.messages)
-
-      // const newMessage = { message: data.message, sender: 'Eulàlia', conv_title: data.conv_title};
       const newMessages = data.messages
+
+      localStorage.setItem('chatMessages', JSON.stringify(newMessages));
       setMessages(newMessages);
       setIsTyping(false);
-
-      // Store updated messages in localStorage
-      localStorage.setItem('chatMessages', JSON.stringify(newMessages));
     })
     .catch(error => console.error('Error:', error));
   }
