@@ -1,18 +1,17 @@
-.ajuda_container {
-    min-height: 80vh;
-    margin-bottom: 5vw;
-}
-
 .grid_container {
-    margin-top: 150px; 
-    margin-bottom: 20px;
-    margin-left: 10%;
-    margin-right: 10%;
+    position: absolute;
+    left: 50%;
+    top: 28vw;
+    height: 24vw;
+    width: 60vw;
+    transform: translate(-50%);
+    
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     grid-auto-rows: minmax(150px, auto);
     max-width: 90%;
+    background-color: aquamarine;
 }
 
 .One,

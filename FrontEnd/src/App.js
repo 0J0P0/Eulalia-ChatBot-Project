@@ -32,12 +32,11 @@ function App() {
 
   const authenticateUser = (status) => {
     setAuthenticated(status);
-    // Update authentication status in localStorage
     localStorage.setItem('authenticated', status);
   };
 
   return (
-    <div className='main_container'>
+    <div>
       <Router>
         <Header onClick={handleViewSidebar} />
         <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} />

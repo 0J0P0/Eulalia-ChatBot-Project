@@ -1,12 +1,11 @@
 .login_container {
-    top: 71%;
-    left: 50%;
+    bottom: 10vh;
     height: 50%;
-    width: 30vw;
-    padding: 2vw 4vw 2vw 4vw;
-    position: fixed;
-    border-radius: 4vw;
-    transform: translate(-50%, -50%);
+    left: 50%;
+    padding: 2vw;
+    position: absolute;
+    border-radius: 2vw;
+    transform: translate(-50%);
     background-color: #ffffff;
     text-align: center;
     display: flex;
@@ -16,21 +15,16 @@
 
     p {
         font-size: 1.5vw;
-        margin-bottom: 2vw;
     }
 
     input {
         display: block;
-        width: calc(100% - 10vw);
+        width: calc(100% - 7vw);
         padding: 0.8vw;
         margin: 0 auto 2vw;
         border: 0.1vw solid #B2B1B1;
         border-radius: 2vw;
-        font-size: 1.3vw;
-
-        &:hover {
-            border: 0.2vw solid #5782AA;
-        }
+        font-size: 1.1vw;
     }
 
     button.submit-button,
@@ -41,9 +35,6 @@
         transition: transform 0.4s ease;
         font-size: 1.3vw;
 
-        &:hover {
-            transform: scale(1.05);
-        }
     }
 
     button.submit-button {
@@ -69,17 +60,17 @@
 }
 
 #boto {
-    bottom: 6vw;
+    bottom: 10vh;
     left: 50%;
     position: fixed;
-    padding: 10px 9vw;
+    padding: 2vh 5vw;
     border: none;
     border-radius: 20px;
     transform: translate(-50%, -50%);
     cursor: pointer;
 
     background-color: #ffffff;
-    color: rgb(0, 0, 0);
+    color: black;
     opacity: 0.8;
 
     text-decoration: none;

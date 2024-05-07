@@ -1,14 +1,15 @@
 .header {
-    height: 4vw;
+    width: 100%;
+    position: fixed;
     display: flex;
     justify-content: space-between;
-    background-color: transparent;
+    z-index: 1000; 
 }
 
 .nav_list_icon {
-    height: 3vw;
+    height: 8vh;
     position: fixed;
-    padding-top: 0.5vw;
+    padding-top: 0.5vh;
     z-index: 1;
 }
 
@@ -23,7 +24,6 @@
 }
 
 .nav_bcn {
-    height: 3vw;
-    padding-top: 0.5vw;
-    margin-left: 91vw;
+    height: 7.5vh;
+    padding-top: 1vh;
 }

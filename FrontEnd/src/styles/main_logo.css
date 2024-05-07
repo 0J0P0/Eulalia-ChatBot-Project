@@ -7,9 +7,8 @@
 }
 
 .main_logo_container {
-    top: 30%;
-    width: 30%;
-    height: 10vw;
+    top: 15vh;
+    height: 15vh;
     margin: 0 auto;
     display: flex;
     position: relative;
@@ -17,7 +16,7 @@
     align-items: center;
 
     .logo_img {
-        height: 6.5vw;
+        height: 15vh;
         width: auto;
         margin-bottom: 0.5vh;
     }
@@ -25,18 +24,17 @@
     h1 {
         font-family: 'Playfair Display';
         position: relative;
-        font-size: 8vw;
+        font-size: 19vh;
     }
 
     .page_subtitle {
         font-family: 'Open Sans', sans-serif;
-        position: fixed;
-        top: 5vw;
+        margin-top: 22vh;
         
         h2 {
             font-family: 'Open Sans', sans-serif;
             font-weight: bold;
-            font-size: 1.7vw;
+            font-size: 4vh;
         }
     }
 }
