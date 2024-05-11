@@ -51,7 +51,7 @@ def login():
         conn, cur = create_connection()
 
         # Execute the SQL query to check if the username and password match
-        cur.execute(f"SELECT * FROM {os.getenv("LOGIN_TABLE")} WHERE username = %s AND password = %s;", (username, password))
+        cur.execute(f"SELECT * FROM {os.getenv('LOGIN_TABLE')} WHERE username = %s AND password = %s;", (username, password))
         user = cur.fetchone()
 
         # Commit changes and close the cursor and connection
@@ -150,12 +150,12 @@ def process_chat_message() -> dict:
     dict
         Response message.
     """
-    # data es els messages que es reben (get last 50 messages)
+    
     data = request.get_json()
-    # print(data)
-    response = get_response(data)  # msg, title
-    # print(response)
-    store_chat_message(data)
+    
+    response = get_response(data)
+
+    # store_chat_message(data)
 
     return jsonify(response)
 

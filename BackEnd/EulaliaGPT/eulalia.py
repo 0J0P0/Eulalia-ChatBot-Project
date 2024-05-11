@@ -6,35 +6,37 @@ Contents:
 """
 
 
-def get_response(data: list) -> dict:
+from EulaliaGPT.conversation import Conversation
+
+
+def get_response(data: list):
     """
 
     Parameters
     ----------
     data : list
         List of data received.
-        conv_title : title of conversation
 
     Returns
     -------
     dict
         Response message.
     """
-    if data:
-        if len(data['messages']) == 1:
-            # TODO
-            data['messages'][0]['conv_title'] = 'Chat1'
-        else:
-            data['messages'][-1]['conv_title'] = data['messages'][0]['conv_title']
-        
-        # TODO
-        response_message = f'You said: {data['messages'][-1]['message']}'
-        
-        response = {'message': response_message,
-                    'sender': 'Eulàlia',
-                    'conv_title': data['messages'][-1]['conv_title']}
+
+    conv_id = data['messages'][0]['conv_title']
+
+    if conv_id is None:
+        conversation = Conversation()
+        data['messages'][0]['conv_title'] = conversation.id
     else:
-        response = {'message': 'No message received.'}
+        conversation = Conversation(conv_id)
+        data['messages'][-1]['conv_title'] = conv_id
+    
+    response_message = conversation.ask_question(data['messages'][-1]['message'])
+
+    response = {'message': response_message,
+                'sender': 'Eulàlia',
+                'conv_title': data['messages'][-1]['conv_title']}
 
     data['messages'].append(response)
 
