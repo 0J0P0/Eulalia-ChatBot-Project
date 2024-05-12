@@ -42,7 +42,7 @@ function App() {
         <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} />
         <Routes>
           <Route path='/' element={<Inici authenticateUser={authenticateUser} />} />
-          <Route path='/bot' element={<Bot />} />
+          <Route path='/bot' element={authenticated ? <Bot /> : <Inici authenticateUser={authenticateUser} />} />
           <Route path='/quisom' element={<Quisom />} />
           <Route path='/ajuda' element={<Ajuda />} />
         </Routes>

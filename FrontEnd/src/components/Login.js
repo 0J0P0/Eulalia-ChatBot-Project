@@ -33,11 +33,8 @@ function Login({ authenticateUser }) {
       .then(response => {
         console.log(response.data);
         if (response.data.success) {
-          // Store authentication status in localStorage
           localStorage.setItem('authenticated', true);
-          // Redirect to the bot page
           navigate('/bot');
-          // Update authentication status
           authenticateUser(true);
         }
         else {
