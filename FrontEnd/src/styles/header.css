@@ -1,13 +1,14 @@
 .header {
     width: 100%;
-    position: fixed;
+    position: absolute;
     display: flex;
     justify-content: space-between;
     z-index: 1000; 
+    background-color: aqua;
 }
 
 .nav_list_icon {
-    height: 8vh;
+    height: 3vw;
     position: fixed;
     padding-top: 0.5vh;
     z-index: 1;
@@ -24,6 +25,6 @@
 }
 
 .nav_bcn {
-    height: 7.5vh;
+    height: 2.5vw;
     padding-top: 1vh;
 }
