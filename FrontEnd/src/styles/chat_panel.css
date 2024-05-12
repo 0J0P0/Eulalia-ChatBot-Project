@@ -8,13 +8,14 @@
 
     .prompt_bar {
         height: 3vw;
-        width: 62vw;
+        width: 55vw;
         padding-left: 2vw;
         padding-top: 0.5vw;
         border: 0;
         border-radius: 2vw;
         background-color: transparent;
         font-size: 1.2vw;
+        /* font-family: ; */
     
         &:focus {
             outline: none;

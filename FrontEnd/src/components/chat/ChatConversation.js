@@ -42,8 +42,8 @@ function ChatConversation({ messages, isTyping }) {
           </div>
         </div>
       ))}
-      {isTyping && <TypingIndicator content='Eulàlia is typing' />}
-      <div ref={messagesEndRef} /> {/* Ref for scrolling to bottom */}
+      {isTyping && <TypingIndicator content='Eulàlia està escrivint...' />}
+      <div ref={messagesEndRef} />
     </div>
   )
 }

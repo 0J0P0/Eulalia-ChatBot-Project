@@ -9,7 +9,6 @@
     transform: translateX(-50%);
     display: grid;
     grid-template-columns: 20% 80%;
-    z-index: -1;
 
     .left_chat_col {
         border-radius: 2vw 0 0 2vw;
@@ -18,6 +17,7 @@
     
     .right_chat_col {
         border-radius: 0 2vw 2vw 0;
+        overflow-y: hidden;
     }
 }
 

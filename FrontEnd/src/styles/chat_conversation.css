@@ -1,24 +1,24 @@
 .message_list_container {
-  height: 86%;
-  margin-left: 2vw;
+  min-height: calc(100% - 3vw);
+  max-height: calc(100% - 3vw);
+  margin: 1vw 0vw 0vw 1vw;
   overflow-y: auto;
 }
 
 .message_container {
   display: flex;
   align-items: center;
-  background-color: transparent;
 }
 
 .message_logo {
   width: 2vw;
   height: 2vw;
-  background-color: transparent;
 }
 
 .user_message, .eulalia_message {
   padding: 2vw 0vw;
   text-align: justify;
-  margin-left: 1vw;
+  margin: 0vw 1vw;
   font-size: 1.3vw;
+  word-break: break-word;
 }

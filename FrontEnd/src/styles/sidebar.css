@@ -6,7 +6,7 @@
   width: 16vw;
   transition: left 0.3s ease-in-out;
   background-color: #5782AA;
-  z-index: 0;
+  z-index: 1;
 }
 
 .sidebar.open {
@@ -25,7 +25,7 @@
     padding-left: 0px;
 
     li {
-      font-size: 1.4vw;
+      font-size: 1.3vw;
       
       a {
         text-decoration: none;
