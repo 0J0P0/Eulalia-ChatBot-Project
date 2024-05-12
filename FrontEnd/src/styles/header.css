@@ -4,7 +4,6 @@
     display: flex;
     justify-content: space-between;
     z-index: 1000; 
-    background-color: aqua;
 }
 
 .nav_list_icon {
