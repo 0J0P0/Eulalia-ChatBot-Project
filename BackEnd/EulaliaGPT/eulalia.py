@@ -15,14 +15,16 @@ Contents:
 import uuid
 import psycopg
 # from langchain.memory import ChatMessageHistory
-from EulaliaGPT.framework_rag_integrated import process_question as process_question_normal
-# from carpeta_macsql import process_question as process_question_macsql
 from langchain_postgres import PostgresChatMessageHistory
+from EulaliaGPT.framework_rag_integrated import process_question as process_question_normal
+from EulaliaGPT.framework_macsql_integrated import process_question as process_question_macsql
+# from carpeta_macsql import process_question as process_question_macsql
 
 
 #TODO
-sync_connection = psycopg.connect("postgresql://postgres:password@localhost:5432")
-table_name = "chat_history_test"
+sync_connection = psycopg.connect("postgresql://postgres:password@localhost:5432/usersDB")
+table_name = "chat_history"
+PostgresChatMessageHistory.create_tables(sync_connection, table_name)
 
 class Conversation():
     """
@@ -55,7 +57,7 @@ class Conversation():
         Object to create or continue a conversation with the user.
     """
 
-    def __init__(self, id: str = str(uuid.uuid4()), model: str = "NORMAL"):
+    def __init__(self, id: str = str(uuid.uuid4()), model: str = "MACSQL"):
         self.id = id
         self.model = model
         self.memory = PostgresChatMessageHistory(

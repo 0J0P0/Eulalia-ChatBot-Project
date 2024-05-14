@@ -14,12 +14,16 @@ Contents:
 
 
 import os
+import sys
+sys.path.append('./')
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 
 from EulaliaGPT.eulalia import get_response
 from DataBase.connection import create_connection
 
+
+# sys.path.append('Eulalia-Project/BackEnd')
 
 app = Flask(__name__)
 CORS(app)

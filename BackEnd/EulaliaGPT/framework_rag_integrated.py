@@ -9,7 +9,6 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 
-
 from DataBase.chroma import relevant_docs
 
 
