@@ -14,11 +14,9 @@ Contents:
 
 import uuid
 import psycopg
-# from langchain.memory import ChatMessageHistory
 from langchain_postgres import PostgresChatMessageHistory
 from EulaliaGPT.framework_rag_integrated import process_question as process_question_normal
 from EulaliaGPT.framework_macsql_integrated import process_question as process_question_macsql
-# from carpeta_macsql import process_question as process_question_macsql
 
 
 #TODO
@@ -57,7 +55,7 @@ class Conversation():
         Object to create or continue a conversation with the user.
     """
 
-    def __init__(self, id: str = str(uuid.uuid4()), model: str = "MACSQL"):
+    def __init__(self, id: str = str(uuid.uuid4()), model: str = "NORMAL"):
         self.id = id
         self.model = model
         self.memory = PostgresChatMessageHistory(
@@ -69,16 +67,6 @@ class Conversation():
     def generate_answer(self, question):
         """
         Process the question received and return the answer.
-        
-        Parameters
-        ----------
-        question : str
-            Question to process.
-            
-        Returns
-        -------
-        str
-            Answer to the question.
         """
 
         if self.model == "MACSQL":

@@ -2,8 +2,6 @@
 from core.utils import parse_json, parse_sql_from_string, add_prefix, load_json_file, extract_world_info, is_email, is_valid_date_column
 
 
-import sys
-sys.path.append('../../')
 from DataBase.chroma import relevant_docs
 
 

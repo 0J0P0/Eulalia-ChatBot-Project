@@ -9,12 +9,13 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 
+
 from DataBase.chroma import relevant_docs
 
 
-#################
-# PRE-PROCESSING
-#################
+############################################################################################################
+#                                             Pre-Processing                                               #
+############################################################################################################
 
 os.environ["OPENAI_API_KEY"] = "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"
 
@@ -43,13 +44,14 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-connection = psycopg2.connect(
+
+conn = psycopg2.connect(
         user="bot",
         password="password",
         host="localhost",
         port="5432",
         database="dbeulalia"
-    )
+)
 
 sim_search_tool = Tool.from_function(
     func=relevant_docs,
@@ -58,7 +60,6 @@ sim_search_tool = Tool.from_function(
 )
 
 tools = [sim_search_tool]
-
 llm_with_tools = llm.bind_tools(tools)
 
 agent = (
@@ -76,11 +77,15 @@ agent = (
 
 
 def extract_output(output):
-    """Extracts the output from the json string.
-    If an action was taken, returns the relevant tables.
-    Otherwise returns the answer to the query."""
+    """Extracts the output from the json string. If an action was taken, returns the relevant table. Otherwise returns the answer to the query.
+    
+    Parameters
+    ----------
+    output : dict
+        Output from the agent.
+    """
+
     if "actions" in output[0]:
-        
         string_data = output[1]["messages"][0].content
         start_index = string_data.find('[')
         end_index = string_data.rfind(']')
