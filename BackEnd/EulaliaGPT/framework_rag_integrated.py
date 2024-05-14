@@ -1,21 +1,16 @@
-
 import os
 import psycopg2
+from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
-from langchain.agents import create_sql_agent
-from langchain.sql_database import SQLDatabase
-from langchain.agents import AgentExecutor, create_react_agent
-from langchain_community.agent_toolkits import create_sql_agent
+from langchain.agents import AgentExecutor
+from langchain_postgres import PostgresChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 
-import time
-from langchain import hub
-from langchain.tools import Tool
-from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
 
-from EulaliaGPT.chroma import relevant_docs
+from DataBase.chroma import relevant_docs
 
 
 #################
@@ -80,12 +75,6 @@ agent = (
     | OpenAIToolsAgentOutputParser()
 )
 
-# Construct the ReAct agent
-#agent = create_react_agent(llm, tools, prompt)
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-
-
-
 
 def extract_output(output):
     """Extracts the output from the json string.
@@ -107,26 +96,42 @@ def extract_output(output):
         return output[0]["output"]
 
 
-#################
-# PROCESSING
-#################
+############################################################################################################
+#                                               Processing                                                 #
+############################################################################################################
 
-def process_question(question: str, memory, id) -> str:
 
+def process_question(question: str, memory: PostgresChatMessageHistory, id: str) -> str:
+    """Processes the question and returns the answer.
+
+    Parameters
+    ----------
+    question : str
+        Question to process.
+    memory : PostgresChatMessageHistory
+        Chat message history.
+    id : str
+        Session id.
+
+    Returns
+    -------
+    str
+        Answer to the question.
+    """
+    
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
     
     agent_with_chat_history = RunnableWithMessageHistory(
         agent_executor,
-        # This is needed because in most real world scenarios, a session id is needed
-        # It isn't really used here because we are using a simple in memory ChatMessageHistory
         lambda session_id: memory,
         input_messages_key="input",
         history_messages_key="chat_history",
     )
    
     agent_output = agent_with_chat_history.invoke(
-    {"input": question},
-    config={"configurable": {"session_id": id}},
+        {"input": question},
+        config={"configurable": {"session_id": id}}
     )
-    answer = agent_output["output"]
-    return answer
+    
+    return agent_output["output"]
 
