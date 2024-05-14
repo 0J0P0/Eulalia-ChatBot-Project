@@ -1,6 +1,6 @@
 """
 Module: connection.py
-Author: JP Zaldivar
+Author: JP Zaldivar & Noa Mediavilla
 Date: April 20, 2024
 
 Description:
@@ -12,8 +12,7 @@ Contents:
 
 
 import os
-import psycopg2 
-from dotenv import load_dotenv
+import psycopg2
 
 
 def create_connection():
