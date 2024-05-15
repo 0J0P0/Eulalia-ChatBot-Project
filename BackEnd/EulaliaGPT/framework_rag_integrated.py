@@ -17,7 +17,7 @@ from DataBase.chroma import relevant_docs
 #                                             Pre-Processing                                               #
 ############################################################################################################
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = str(os.getenv("API_KEY"))
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
