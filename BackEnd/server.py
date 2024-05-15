@@ -15,8 +15,9 @@ Contents:
 
 import os
 import sys
+os.environ['PYTHONPATH'] = str(os.getenv("PROJECT_PATH"))  # Absolute path to the BackEnd folder
 sys.path.append('./')
-# export PYTHONPATH=/home/user/eulalia/Eulalia-Project/BackEnd
+
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 

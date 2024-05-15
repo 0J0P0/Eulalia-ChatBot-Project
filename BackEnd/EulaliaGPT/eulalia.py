@@ -55,7 +55,7 @@ class Conversation():
         Object to create or continue a conversation with the user.
     """
 
-    def __init__(self, id: str = str(uuid.uuid4()), model: str = "NORMAL"):
+    def __init__(self, id: str = str(uuid.uuid4()), model: str = "MACSQL"):
         self.id = id
         self.model = model
         self.memory = PostgresChatMessageHistory(

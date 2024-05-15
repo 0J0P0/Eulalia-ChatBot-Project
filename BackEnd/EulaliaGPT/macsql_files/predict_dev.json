@@ -1,6 +1,6 @@
 [
   [
-    "Quina és la població de Barcelona al 2016?",
-    "SELECT municipi, SUM(valor) AS poblacio_de_Barcelona_2016 FROM poblacio WHERE data_inici <= '2016-12-31' AND data_final >= '2016-01-01' AND municipi = 'Barcelona' GROUP BY municipi;\t----- bird -----\tdbeulalia"
+    "quantos árvores há em Barcelona?",
+    "error: No SQL found in the input string\t----- bird -----\tdbeulalia"
   ]
 ]
