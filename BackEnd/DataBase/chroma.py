@@ -184,6 +184,9 @@ def relevant_docs(q):
     # Leer el archivo JSON
     with open(ruta_archivo_json, "r") as archivo:
         diccionario_leido = json.load(archivo)
+    for i in ids:
+        if i not in diccionario_leido:
+            print(i)
 
     l_id = list(query_result['id'])
     #print(l_id)

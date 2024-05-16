@@ -1,106 +1,133 @@
-from langchain.agents import create_sql_agent
-from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
-from langchain.llms.openai import OpenAI
-from langchain.sql_database import SQLDatabase
+"""
+Module: framework_rag_integrated.py
+Author: Oriol Mayne, Silvia Fabregas & Xavier Pacheco
+Date: May 15, 2024
+
+Description:
+This module contains the RAG model integration to process the questions received and return a response.
+
+Contents:
+- process_question: Function to process the question received and return a response.
+"""
+
 import os
-import pandas as pd
+import json
+import dotenv
 import subprocess
-import psycopg2
-from langchain_postgres import PostgresChatMessageHistory
-from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor
-from langchain.agents import tool
+from langchain_postgres import PostgresChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.agents.format_scratchpad.openai_tools import ( format_to_openai_tool_messages,)
-
 from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
-from langchain.agents.agent_types import AgentType
-import chromadb
-from chromadb.utils import embedding_functions
-from fuzzywuzzy import fuzz
-import time
-from langchain.tools import Tool
-from DataBase.chroma import relevant_docs
-import json
+from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 
-# Definim la API_KEY del model com a variable d'entorn
-os.environ["OPENAI_API_KEY"] = "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"
+from DataBase.connection import create_connection
 
-# Eina de langchain per tal de crear un chat (versió OPENAI)
+
+############################################################################################################
+#                                             Pre-Processing                                               #
+############################################################################################################
+
+
+dotenv.load_dotenv()
+os.environ["OPENAI_API_KEY"] = str(os.getenv("API_KEY"))
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
-def extract_output(output):
-    """Extracts the output from the json string.
-    If an action was taken, returns the relevant tables.
-    Otherwise returns the answer to the query."""
-    if "actions" in output[0]:
+
+# def extract_output(output):
+#     """
+#     Extracts the output from the json string. If an action was taken, returns the relevant tables. Otherwise returns the answer to the query.
+    
+#     Parameters
+#     ----------
+#     output : str
+#         Output from the tool.
+
+#     Returns
+#     -------
+#     str
+#         Answer to the query or relevant tables.
+    
+#     """
+    
+#     if "actions" in output[0]:
         
-        string_data = output[1]["messages"][0].content
-        start_index = string_data.find('[')
-        end_index = string_data.rfind(']')
-        vector = string_data[start_index + 1:end_index].split(', ')
+#         string_data = output[1]["messages"][0].content
+#         start_index = string_data.find('[')
+#         end_index = string_data.rfind(']')
+#         vector = string_data[start_index + 1:end_index].split(', ')
     
+#         vector = [element.strip('"') for element in vector]
+#         vector = [string.lower() for string in vector]
 
-        # Stripping the double quotes from each element
-        vector = [element.strip('"') for element in vector]
-        vector = [string.lower() for string in vector]
-
-        return vector
-    else:
-        return output[0]["output"]
+#         return vector
+#     else:
+#         return output[0]["output"]
 
 
-def macsql_tool(user_question):
+def macsql_tool(question,
+                tool_script: str = "./EulaliaGPT/MacSqlUtils/run_automated.sh",
+                input_file: str = "./EulaliaGPT/MacSqlUtils/input_automated.json",
+                output_file: str = "./EulaliaGPT/MacSqlUtils/output_eulaliadb_automated.json"):
     """
-    Aquesta funció s'encarrega de cridar a MAC-SQL (que ja integra
-    ChromaDB) per tal de generar la query. Quan aquesta és generada,
-    la executa. Retorna 3 objectes: la execució de la query, la
-    query inicial i la seqüència generada. 
+    Aquesta funció s'encarrega de cridar a MAC-SQL (que ja integra ChromaDB) per tal de generar la query. Quan aquesta és generada, la executa. Retorna 3 objectes: la execució de la query, la query inicial i la seqüència generada. 
+
+    Parameters
+    ----------
+    question : str
+        Pregunta de l'usuari.
+    tool_script : str
+        Bash script to execute the MAC-SQL tool.
+    input_file : str
+        Input file for the MAC-SQL tool.
+    output_file : str
+        Output file for the MAC-SQL tool.
+
+    Returns
+    -------
+    results : list
+        Result of the query.
+    sql_query : str
+        SQL query generated.
+    dades : dict
+        Data returned by the tool.
+    relevant_tables : list
+        Relevant tables to the query.
     """
-    # Connectem a la BD
-    connection = psycopg2.connect(
-            user="bot",
-            password="password",
-            host="localhost",
-            port="5432",
-            database="dbeulalia"
-        )
     
-    # Escrivim en el fitxer d'input les dades
-    with open("./EulaliaGPT/macsql_files/input_automated.json", 'w') as a:
-        dades = [{"db_id": "dbeulalia", "question": user_question, "evidence": "","SQL": ""}]
-        json.dump(dades, a)
+    _, cur = create_connection(database=os.getenv("DATABASE_INFO"), user=(os.getenv("DATABASE_INFO_USER")))
 
-    # Escrivim en el fitxer d'input les dades
-    # if os.path.exists("./EulaliaGPT/macsql_files/output_eulaliadb_automated.json"):
-    #     os.remove("./EulaliaGPT/macsql_files/output_eulaliadb_automated.json")
+    # Write the input data to the input file
+    with open(input_file, 'w') as f:
+        dades = [{"db_id": "dbeulalia", "question": question, "evidence": "","SQL": ""}]
+        json.dump(dades, f)
 
+    # Create the output file
+    with open(output_file, "w") as f:
+        f.truncate(0)
 
-    with open("./EulaliaGPT/macsql_files/output_eulaliadb_automated.json", "w") as json_file:
-        json_file.truncate(0)
+    # Run the MAC-SQL tool
+    subprocess.run(["bash", tool_script], check = True)
 
-    subprocess.run(["bash", "./EulaliaGPT/macsql_files/run_automated.sh"], check = True)
-
-    # Objecte que permet executar les consultes
-    cursor = connection.cursor()
-
-    # Opening JSON file
-    f = open('./EulaliaGPT/macsql_files/output_eulaliadb_automated.json')
-
-    # returns JSON object as a dictionary
+    f = open(output_file)
     dades = json.load(f)
-    sql_query = dades["pred"].replace("`","") 
+    sql_query = dades["pred"].replace("`","")
 
-
-    # Executem la consulta SQL
+    # Returns all the tables relevant to the query
+    relevant_tables = list(dades["extracted_schema"].keys())
+    
     try:
-        cursor.execute(sql_query)
-        results = cursor.fetchall()
+        cur.execute(sql_query)
+        results = cur.fetchall()
     except: 
         results = "No query was generated and therefore no results have been obtained."
 
-    return results, sql_query, dades
+    f.close()
+
+    return results, sql_query, dades, relevant_tables
+
 
 # Funció en format tool pel model
 macsql_tool_agent = Tool.from_function(
@@ -109,9 +136,7 @@ macsql_tool_agent = Tool.from_function(
     description="Function to generate an run an SQL query on relevant tables"
 )
 
-tools = [macsql_tool_agent]
 
-# Missatge d'entrada que es passa a l'agent
 prompt = ChatPromptTemplate.from_messages(
     [
         (
@@ -151,34 +176,44 @@ prompt = ChatPromptTemplate.from_messages(
             information it provides to explain the steps that have been taken. By that, I mean
             that you should explain the steps that the tool has taken and, furthermore, explain
             what your reasoning has been to use the data returned by the tool to answer the question.
-
             Additionally, write a short title for the convesation with the user.
+            Write literally the answer to the query and the descriptive name of the 10 relevant tables found by the tool.
             """,
         ),
+        MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}"),
         MessagesPlaceholder(variable_name="agent_scratchpad"),
     ]
 )
 
+
+tools = [macsql_tool_agent]
 llm_with_tools = llm.bind_tools(tools)
 
-# Creem l'agent enllaçant el prompt amb el LLM millorat amb tools. Un agent és
-# una eina que és capaç de prendre decisions sobre les accions que fer amb les
-# tools que té a l'abast, tal i com se li especifica en el prompt
+
+# Creation of the agent by linking the prompt with the tools-enhanced LLM. An agent is a tool that is able to make decisions about the actions to take with the tools at its disposal, as specified in the prompt
 agent = (
     {
         "input": lambda x: x["input"],
         "agent_scratchpad": lambda x: format_to_openai_tool_messages(
             x["intermediate_steps"],
         ),
+        "chat_history": lambda x: x["chat_history"],
     }
     | prompt
     | llm_with_tools
     | OpenAIToolsAgentOutputParser()
 )
 
+
+############################################################################################################
+#                                               Processing                                                 #
+############################################################################################################
+
+
 def process_question(question: str, memory: PostgresChatMessageHistory, id: str) -> str:
-    """Processes the question and returns the answer.
+    """
+    Processes the question and returns the answer.
 
     Parameters
     ----------
