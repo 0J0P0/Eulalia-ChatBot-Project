@@ -118,5 +118,40 @@ def process_chat_message() -> dict:
     return jsonify(response)
 
 
+@app.route('/api/refresh_history', methods=['POST'])
+def new_chat():
+    """
+    Refresh history
+    Returns list of distinct session IDs
+    """
+
+    try:
+        conn, cur = create_connection(database=os.getenv('DATABASE_CHAT'),
+                                      user=os.getenv('DATABASE_CHAT_USER'))
+
+        # Select distinct session IDs
+        cur.execute(
+            f'''SELECT DISTINCT session_id FROM {os.getenv("DATABASE_CHAT_TABLE")}'''
+        )
+
+        # cur.execute(
+        #     f'''SELECT DISTINCT session_id FROM {os.getenv("DATABASE_CHAT_TABLE")}'''
+        # )
+
+        # Fetch all rows
+        session_ids = [row[0] for row in cur.fetchall()]
+        # print(session_ids)
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify(session_ids)
+    
+    except Exception as e:
+        print(f"Error getting last conversation: {e}")
+        return jsonify({"log": "Error getting last conversation"})
+
+
 if __name__ == '__main__':
     app.run(debug=True)

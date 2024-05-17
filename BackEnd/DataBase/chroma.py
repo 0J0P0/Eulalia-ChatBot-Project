@@ -168,6 +168,7 @@ def relevant_docs(q):
 
     desc = df_descr['Descripcio'].tolist()
     ids = df_descr['ID'].tolist()
+    
     collection.add(documents=desc, ids=ids)
 
     modified_query = modify_query(q, Barri, Districte, Municipi, ComunitatAutonoma)
