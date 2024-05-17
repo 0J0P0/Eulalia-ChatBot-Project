@@ -12,12 +12,22 @@ Contents:
 
 
 import os
+import psycopg
 import psycopg2
 
 
-def create_connection():
+def create_connection(database, user, pyscopg2=True):
     """
     Create a connection to the database.
+
+    Parameters
+    ----------
+    database : str
+        Name of the database to connect to.
+    user : str
+        User name to connect to the database.
+    pyscopg2 : bool
+        Flag to use psycopg2 instead of psycopg.
 
     Returns
     -------
@@ -27,11 +37,15 @@ def create_connection():
         Cursor to the database.
     """
    
-    conn = psycopg2.connect(database=os.getenv("DATABASE_URL"),
-                                user=os.getenv("DATABASE_USER"),
-                                password=os.getenv("DATABASE_PASSWORD"),
-                                host=os.getenv("DATABASE_HOST"),
-                                port=os.getenv("DATABASE_PORT"))
+    if pyscopg2:
+        conn = psycopg2.connect(database=database,
+                                    user=user,
+                                    password=str(os.getenv("DATABASE_PASSWORD")),
+                                    host=os.getenv("DATABASE_HOST"),
+                                    port=os.getenv("DATABASE_PORT"))
+    else:
+        conn = psycopg.connect("postgresql://postgres:password@localhost:5432/usersDB")
+
     cur = conn.cursor()
 
     return conn, cur

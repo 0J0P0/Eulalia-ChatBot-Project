@@ -15,12 +15,15 @@ Contents:
 
 import os
 import sys
+import dotenv
+dotenv.load_dotenv()
+os.environ['PYTHONPATH'] = str(os.getenv("PROJECT_PATH"))  # Absolute path to the BackEnd folder
 sys.path.append('./')
-# export PYTHONPATH=/home/user/eulalia/Eulalia-Project/BackEnd
+
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 
-from EulaliaGPT.eulalia import get_response
+from EulaliaGPT.conversation import get_response
 from DataBase.connection import create_connection
 
 
@@ -42,12 +45,14 @@ def login():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
-
+    
     if not username or not password:
         return jsonify({"error": "Missing username or password"}), 400
 
     try:
-        conn, cur = create_connection()
+        conn, cur = create_connection(database=os.getenv('DATABASE_CHAT'),
+                                      user=os.getenv('DATABASE_CHAT_USER'))
+        
         cur.execute(f"SELECT * FROM {os.getenv('LOGIN_TABLE')} WHERE username = %s AND password = %s;", (username, password))
 
         user = cur.fetchone()

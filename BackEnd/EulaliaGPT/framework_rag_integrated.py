@@ -1,5 +1,18 @@
+"""
+Module: framework_rag_integrated.py
+Author: David Gallardo, Xavi Pacheco & Pablo Gete
+Date: May 15, 2024
+
+Description:
+This module contains the RAG model integration to process the questions received and return a response.
+
+Contents:
+- process_question: Function to process the question received and return a response.
+"""
+
+
 import os
-import psycopg2
+import dotenv
 from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor
@@ -11,14 +24,16 @@ from langchain.agents.format_scratchpad.openai_tools import format_to_openai_too
 
 
 from DataBase.chroma import relevant_docs
+from DataBase.connection import create_connection
 
 
 ############################################################################################################
 #                                             Pre-Processing                                               #
 ############################################################################################################
 
-os.environ["OPENAI_API_KEY"] = "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"
 
+dotenv.load_dotenv()
+os.environ["OPENAI_API_KEY"] = str(os.getenv("API_KEY"))
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 prompt = ChatPromptTemplate.from_messages(
@@ -44,14 +59,7 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-
-conn = psycopg2.connect(
-        user="bot",
-        password="password",
-        host="localhost",
-        port="5432",
-        database="dbeulalia"
-)
+conn, _ = create_connection(database=os.getenv("DATABASE_INFO"), user=(os.getenv("DATABASE_INFO_USER")))
 
 sim_search_tool = Tool.from_function(
     func=relevant_docs,
@@ -76,28 +84,33 @@ agent = (
 )
 
 
-def extract_output(output):
-    """Extracts the output from the json string. If an action was taken, returns the relevant table. Otherwise returns the answer to the query.
+# def extract_output(output):
+#     """
+#     Extracts the output from the json string. If an action was taken, returns the relevant table. Otherwise returns the answer to the query.
     
-    Parameters
-    ----------
-    output : dict
-        Output from the agent.
-    """
+#     Parameters
+#     ----------
+#     output : dict
+#         Output from the agent.
 
-    if "actions" in output[0]:
-        string_data = output[1]["messages"][0].content
-        start_index = string_data.find('[')
-        end_index = string_data.rfind(']')
-        vector = string_data[start_index + 1:end_index].split(', ')
+#     Returns
+#     -------
+#     str
+#         Answer to the query or relevant table.
+#     """
+
+#     if "actions" in output[0]:
+#         string_data = output[1]["messages"][0].content
+#         start_index = string_data.find('[')
+#         end_index = string_data.rfind(']')
+#         vector = string_data[start_index + 1:end_index].split(', ')
     
-        # Stripping the double quotes from each element
-        vector = [element.strip('"') for element in vector]
-        vector = [string.lower() for string in vector]
+#         vector = [element.strip('"') for element in vector]
+#         vector = [string.lower() for string in vector]
 
-        return vector
-    else:
-        return output[0]["output"]
+#         return vector
+#     else:
+#         return output[0]["output"]
 
 
 ############################################################################################################
@@ -106,7 +119,8 @@ def extract_output(output):
 
 
 def process_question(question: str, memory: PostgresChatMessageHistory, id: str) -> str:
-    """Processes the question and returns the answer.
+    """
+    xProcesses the question and returns the answer.
 
     Parameters
     ----------
