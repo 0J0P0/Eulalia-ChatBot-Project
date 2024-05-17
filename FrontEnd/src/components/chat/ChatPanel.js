@@ -5,7 +5,6 @@ import '../../styles/chat_panel.css';
 
 function ChatPanel({ handleSend }) {
   const [input, setInput] = useState('');
-  // const promptBarRef = useRef(null);
 
   const handleChange = (event) => {
     setInput(event.target.value);
@@ -18,14 +17,6 @@ function ChatPanel({ handleSend }) {
       setInput('');
     }
   };
-
-  // const scrollToBottom = () => {
-  //   promptBarRef.current?.scrollIntoView({ behavior: "smooth" });
-  // };
-
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [input]);
 
   return (
     <form onSubmit={handleSubmit} className='panel_bar'>

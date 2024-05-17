@@ -1,15 +1,19 @@
 .chathistory_container {
-    height: 83%;
-    margin: 1vw 0.5vw 0.5vw 1vw;
+    height: 25vw;
+    padding: 10px;
+    border-radius: 2vw;
+    margin: 2vw 0vw 1vw 2vw;
     overflow-y: auto;
+    background-color: aqua;
+    
+    h1 {
+        font-size: 1.6vw;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 4vw;
+    }
 }
 
-.chathistory_title {
-    font-size: 1.5vw;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 2.5vw;
-}
 
 .prevChat {
   position: relative;
@@ -21,7 +25,6 @@
   margin-top: 0.5vw;
   border: none;
   border-radius: 2vw;
-  /* display: block; */
   cursor: pointer;
 }
 

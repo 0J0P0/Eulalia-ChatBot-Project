@@ -5,7 +5,6 @@ import { useState } from 'react';
 import '../../styles/chathistory.css'
 
 
-
 function ChatHistory({ conversationIds }) {
 
   const [selectedChatId, setSelectedChatId] = useState(null);
@@ -25,7 +24,7 @@ function ChatHistory({ conversationIds }) {
   
   return (
     <div className='chathistory_container'>
-      <p className="chathistory_title">Converses</p>
+      <h1>Converses</h1>
       {conversationIds.map(id => (
         <PrevChat key={id} id={id} />
       ))}
