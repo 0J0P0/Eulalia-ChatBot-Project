@@ -1,40 +1,44 @@
+.quisom_page_container {
+    height: calc(13vw + 24vw + 12vw + 24vw + 12vw + 24vw + 8vw);
+    background-color: aqua;
+}
+
 .quisom_container {
     position: absolute;
     left: 50%;
-    top: 28vw;
+    top: 13vw;
     height: 24vw;
     width: 60vw;
     padding: 20px;
     border-radius: 2vw;
-    margin-top: -12vw;
     margin-left: -30vw;
     background-color: #E7E6E6;
     display: flex;
 
     img {
-        width: 40%; /* Set width of the image */
-        height: auto; /* Maintain aspect ratio */
+        width: 40%;
+        height: auto;
         border-radius: 2vw;
-        margin-left: 0.8vw; /* Add margin between image and text */
-        margin-right: 4vw; /* Add margin between image and text */
+        margin-left: 0.8vw;
+        margin-right: 4vw;
     }
 }
 
 .quisom_text {
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Align items vertically */
-    flex: 1; /* Allow the paragraph to grow to fill available space */
-    margin-right: 0.8vw; /* Add margin between image and text */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-right: 0.8vw;
     
     h3 {
         font-size: 1.6vw;
-        align-self: center; /* Align h3 to the start of the flex container */
+        align-self: center;
     } 
     
     p {
-        flex: 1; /* Allow the paragraph to grow to fill available space */
+        flex: 1;
         font-size: 1.3vw;
-        text-align: justify; /* Justify text */
+        text-align: justify;
         align-self: center;
     }
 }
@@ -42,34 +46,32 @@
 .project_container {
     position: absolute;
     left: 50%;
-    top: calc(28vw + 24vw + 12vw);
+    top: calc(13vw + 24vw + 12vw);
     height: 24vw;
     width: 60vw;
     padding: 20px;
     border-radius: 2vw;
-    margin-top: -12vw;
     margin-left: -30vw;
     background-color: #E7E6E6;
     display: flex;
 
     img {
-        width: 40%; /* Set width of the image */
-        height: auto; /* Maintain aspect ratio */
+        width: 40%;
+        height: auto;
         border-radius: 2vw;
-        margin-left: 0.8vw; /* Add margin between image and text */
-        margin-right: 4vw; /* Add margin between image and text */
+        margin-left: 0.8vw;
+        margin-right: 4vw;
     }
 }
 
 .contact_container {
     position: absolute;
     left: 50%;
-    top: calc(28vw + 24vw + 12vw + 24vw + 12vw);
+    top: calc(13vw + 24vw + 12vw + 24vw + 12vw);
     height: 24vw;
     width: 60vw;
     padding: 20px;
     border-radius: 2vw;
-    margin-top: -12vw;
     margin-left: -30vw;
     background-color: #E7E6E6;
     display: flex;

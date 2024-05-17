@@ -1,7 +1,12 @@
+.bot_page_container {
+    height: 100vh;
+    padding-bottom: 12vw;
+}
+
 .chat_container {
     position: absolute;
     background-color: #E7E6E6;
-    top: 16vw;
+    top: 13vw;
     height: 38vw;
     width: 80vw;
     border-radius: 2vw;

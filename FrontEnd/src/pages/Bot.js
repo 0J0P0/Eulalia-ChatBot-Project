@@ -76,7 +76,7 @@ function Bot() {
   };
 
   return (
-    <div>
+    <div className='bot_page_container'>
       <Logo subtitle='' />
       <div className='chat_container'>
         <div className='left_chat_col'>
