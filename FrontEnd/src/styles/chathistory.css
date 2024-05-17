@@ -1,5 +1,31 @@
 .chathistory_container {
-    background-color: aquamarine;
     height: 83%;
-    margin: 1vw 1vw 0.5vw 1vw;
+    margin: 1vw 0.5vw 0.5vw 1vw;
+    overflow-y: auto;
+}
+
+.chathistory_title {
+    font-size: 1.5vw;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 2.5vw;
+}
+
+.prevChat {
+  position: relative;
+  background-color: #B2B1B1;
+  height: 2vw;
+  width: 12.5vw;
+  font-size: 0.5vw;
+  text-align: center;
+  margin-top: 0.5vw;
+  border: none;
+  border-radius: 2vw;
+  /* display: block; */
+  cursor: pointer;
+}
+
+.prevChat:hover {
+  background-color: #646464;
+  color: white;
 }

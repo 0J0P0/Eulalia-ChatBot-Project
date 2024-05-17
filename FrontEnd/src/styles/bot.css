@@ -11,8 +11,8 @@
     grid-template-columns: 20% 80%;
 
     .left_chat_col {
+        overflow-y: auto;
         border-radius: 2vw 0 0 2vw;
-        background-color: blueviolet;
     }
     
     .right_chat_col {
