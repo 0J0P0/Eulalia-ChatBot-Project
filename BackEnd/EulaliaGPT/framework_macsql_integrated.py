@@ -159,7 +159,7 @@ prompt = ChatPromptTemplate.from_messages(
             the answer in the original language of the question.
 
             DO NOT, under any circumstance, send an invented query to the MAC-SQL tool. You 
-            MUST NOT invent a query. You MUST send the original question of the query, as is.
+            MUST NOT invent a query. You MUST send the original question of the query, as it is.
             NO CHANGES.
  
             The MACSQL tool should only be invoked whenever the question done by the user is
@@ -176,9 +176,9 @@ prompt = ChatPromptTemplate.from_messages(
             information it provides to explain the steps that have been taken. By that, I mean
             that you should explain the steps that the tool has taken and, furthermore, explain
             what your reasoning has been to use the data returned by the tool to answer the question.
-            Additionally, write a short title for the convesation with the user.
-            Write literally the answer to the query and the descriptive name of the 10 relevant tables found by the tool.
             """,
+            # Imperative: Write an additional line, indicating a brief title for the question of the user. It must be
+            # written in the following format: "Title: <title>".
         ),
         MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}"),
@@ -211,7 +211,7 @@ agent = (
 ############################################################################################################
 
 
-def process_question(question: str, memory: PostgresChatMessageHistory, id: str) -> str:
+def process_question(question: str, memory: PostgresChatMessageHistory, id: str) -> dict:
     """
     Processes the question and returns the answer.
 
@@ -226,10 +226,14 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
 
     Returns
     -------
-    str
-        Answer to the question.
+    dict
+        answer: str
+            Answer to the question.
+        relevant_tables: list
+            Relevant tables to the query.
+        sql_query: str
+            SQL query generated.
     """
-
     agent_executor = AgentExecutor(agent=agent, tools = tools, verbose=True)
     
     agent_with_chat_history = RunnableWithMessageHistory(
@@ -244,4 +248,14 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         config={"configurable": {"session_id": id}}
     )
 
-    return agent_output["output"]
+    with open("./EulaliaGPT/MacSqlUtils/output_eulaliadb_automated.json") as f:
+        dades = json.load(f)
+        sql_query = dades["pred"].replace("`","")
+        relevant_tables = list(dades["extracted_schema"].keys())
+
+    output = {}
+    output["answer"] = agent_output["output"]
+    output["relevant_tables"] = relevant_tables
+    output["sql_query"] = sql_query
+    
+    return output

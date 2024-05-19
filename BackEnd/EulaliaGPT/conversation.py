@@ -85,6 +85,8 @@ class Conversation():
         elif self.model == "NORMAL":
             answer = process_question_normal(question, self.memory, self.id)
 
+        print(answer)
+        
         return answer
 
 
@@ -114,25 +116,7 @@ def get_response(data: dict):
     
     response_message = conversation.generate_answer(data['messages'][-1]['message'])
 
-    # response_message = """
-    # Hi ha un total de 1.625.137 arbres a Barcelona l'any 2017.
-    
-    # Les 10 taules rellevants trobades pel MACSQL són:
-    # 1. puntuacio_mitjana_d_avaluacio_d_espais_verds
-    # 2. valoracio_de_la_gestio_municipal_per_edat
-    # 3. dades_de_les_eleccions_al_consell_municipal_de_barcelona
-    # 4. percepcio_del_propi_barri
-    # 5. valoracio_de_la_gestio_municipal
-    # 6. percepcio_del_propi_barri_per_edat
-    # 7. valoracio_de_la_gestio_municipal_per_sexe
-    # 8. resultats_eleccions_municipals_26_maig_2019_candidatura
-    # 9. resultats_eleccions_municipals_28_maig_2023_candidatura
-    # 10. percentatge_participacio_eleccions_consell_municipal_franja_hor 
-    
-    # Si necessites més informació sobre algun d'aquests temes, no dubtis a preguntar-me.
-    # """
-
-    response = {'message': response_message,
+    response = {'message': response_message['answer'],
                 'sender': 'Eulàlia',
                 'conv_title': data['messages'][-1]['conv_title']}
 

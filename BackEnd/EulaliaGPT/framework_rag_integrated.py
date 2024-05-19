@@ -120,7 +120,7 @@ agent = (
 
 def process_question(question: str, memory: PostgresChatMessageHistory, id: str) -> str:
     """
-    xProcesses the question and returns the answer.
+    Processes the question and returns the answer.
 
     Parameters
     ----------
@@ -137,7 +137,7 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         Answer to the question.
     """
     
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, return_intermediate_steps=True)
     
     agent_with_chat_history = RunnableWithMessageHistory(
         agent_executor,
@@ -150,6 +150,8 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         {"input": question},
         config={"configurable": {"session_id": id}}
     )
-    
+    print("=============================")
+    print(agent_output)
+    print("=============================")    
     return agent_output["output"]
 
