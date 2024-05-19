@@ -50,7 +50,7 @@ prompt = ChatPromptTemplate.from_messages(
             the query is related to information contained in the dataset.
             
             The information contained in the dataset is about Barcelona and its demographics; 
-            otherwise, it should respond normally to the query.
+            Always remember to use the tool when the query is related to this information.
             """,
         ),
         MessagesPlaceholder(variable_name="chat_history"),
@@ -150,8 +150,14 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         {"input": question},
         config={"configurable": {"session_id": id}}
     )
-    print("=============================")
-    print(agent_output)
-    print("=============================")    
-    return agent_output["output"]
+    # print("=============================")
+    # for value in agent_output["intermediate_steps"][0]:
+    #     print(value)
+    #     print()
+    # print("=============================")    
+    
+    output = {"answer": agent_output["output"], 
+            "relevant_tables": agent_output["intermediate_steps"][0][1], 
+            "sql_query": ""}
+    return output
 
