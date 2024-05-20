@@ -1,6 +1,6 @@
 [
   [
-    "quants arbres hi ha a barcelona?",
-    "error: No SQL found in the input string\t----- bird -----\tdbeulalia"
+    "quants habitants hi ha a barcelona?",
+    "SELECT sum(valor) FROM poblacio WHERE municipi='Barcelona'\t----- bird -----\tdbeulalia"
   ]
 ]

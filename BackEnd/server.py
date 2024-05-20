@@ -119,7 +119,7 @@ def process_chat_message() -> dict:
 
 
 @app.route('/api/refresh_history', methods=['POST'])
-def new_chat():
+def refresh_history():
     """
     Refresh history
     Returns list of distinct session IDs
@@ -129,14 +129,23 @@ def new_chat():
         conn, cur = create_connection(database=os.getenv('DATABASE_CHAT'),
                                       user=os.getenv('DATABASE_CHAT_USER'))
 
-        # Select distinct session IDs
         cur.execute(
-            f'''SELECT DISTINCT session_id FROM {os.getenv("DATABASE_CHAT_TABLE")}'''
+            f'''
+            SELECT session_id
+            FROM (
+                SELECT session_id, created_at
+                FROM {os.getenv("DATABASE_CHAT_TABLE")}
+                ORDER BY created_at DESC
+            ) subquery
+            GROUP BY session_id
+            ORDER BY MAX(created_at);
+            '''
         )
 
-        # Fetch all rows
         session_ids = [row[0] for row in cur.fetchall()]
-        # print(session_ids)
+        session_ids.reverse()
+        # total_sessions = len(session_ids)
+        # session_ids = [total_sessions - i for i in range(total_sessions)]
 
         conn.commit()
         cur.close()
