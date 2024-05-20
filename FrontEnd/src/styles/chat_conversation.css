@@ -2,7 +2,6 @@
   height: 81%;
   margin: 2vw 0vw 0vw 2vw;
   overflow-y: auto;
-  background-color: aqua;
 }
 .message_container {
   display: flex;
@@ -20,8 +19,6 @@
   margin: 0vw 2vw 1vw 1vw;
   font-size: 1.3vw;
   word-break: break-word;
-
-  background-color: antiquewhite;
 }
 
 .message_button {
