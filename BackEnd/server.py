@@ -53,7 +53,7 @@ def login():
         conn, cur = create_connection(database=os.getenv('DATABASE_CHAT'),
                                       user=os.getenv('DATABASE_CHAT_USER'))
         
-        cur.execute(f"SELECT * FROM {os.getenv('LOGIN_TABLE')} WHERE username = %s AND password = %s;", (username, password))
+        cur.execute(f"SELECT * FROM {(os.getenv('LOGIN_TABLE'))} WHERE username = %s AND password = %s;", (username, password))
 
         user = cur.fetchone()
         conn.commit()
@@ -150,7 +150,7 @@ def new_chat():
 
 
 @app.route('/api/get_conversation', methods=['POST'])
-def get_conversation(conversation_id):
+def get_conversation():
     """
     Retrieve messages for a given conversation ID.
 
@@ -164,25 +164,37 @@ def get_conversation(conversation_id):
     dict
         Dictionary containing the messages for the conversation.
     """
+
+    data = request.get_json()
+    
     try:
         conn, cur = create_connection(database=os.getenv('DATABASE_CHAT'),
                                       user=os.getenv('DATABASE_CHAT_USER'))
 
         cur.execute(
-            f'''SELECT message FROM {os.getenv("DATABASE_CHAT_TABLE")} WHERE session_id = %s ORDER BY timestamp ASC''',
-            (conversation_id,)
+            f"SELECT tbl.message FROM {os.getenv('DATABASE_CHAT_TABLE')} AS tbl WHERE tbl.session_id = %s ORDER BY tbl.created_at ASC;", (data['id'], )
         )
 
         messages = [row[0] for row in cur.fetchall()]
+
+        formated_messages = []
+        for message in messages:
+            formated_message = {'message': message['data']['content'],
+                                 'sender': 'Eulàlia' if message['data']['type'] == 'ai' else 'User',
+                                 'conv_title': data['id']}
+            
+            formated_messages.append(formated_message)
         
+        print(formated_messages)
+             
         conn.commit()
         cur.close()
         conn.close()
 
-        return jsonify({"messages": messages})
+        return jsonify({"messages": formated_messages})
     
     except Exception as e:
-        print(f"Error retrieving conversation {conversation_id}: {e}")
+        print(f"Error retrieving conversation: {e}")
         return jsonify({"error": "Error retrieving conversation"}), 500
 
 
