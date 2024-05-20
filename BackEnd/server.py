@@ -134,10 +134,6 @@ def new_chat():
             f'''SELECT DISTINCT session_id FROM {os.getenv("DATABASE_CHAT_TABLE")}'''
         )
 
-        # cur.execute(
-        #     f'''SELECT DISTINCT session_id FROM {os.getenv("DATABASE_CHAT_TABLE")}'''
-        # )
-
         # Fetch all rows
         session_ids = [row[0] for row in cur.fetchall()]
         # print(session_ids)
@@ -151,6 +147,43 @@ def new_chat():
     except Exception as e:
         print(f"Error getting last conversation: {e}")
         return jsonify({"log": "Error getting last conversation"})
+
+
+@app.route('/api/get_conversation', methods=['POST'])
+def get_conversation(conversation_id):
+    """
+    Retrieve messages for a given conversation ID.
+
+    Parameters
+    ----------
+    conversation_id : str
+        The ID of the conversation to retrieve.
+
+    Returns
+    -------
+    dict
+        Dictionary containing the messages for the conversation.
+    """
+    try:
+        conn, cur = create_connection(database=os.getenv('DATABASE_CHAT'),
+                                      user=os.getenv('DATABASE_CHAT_USER'))
+
+        cur.execute(
+            f'''SELECT message FROM {os.getenv("DATABASE_CHAT_TABLE")} WHERE session_id = %s ORDER BY timestamp ASC''',
+            (conversation_id,)
+        )
+
+        messages = [row[0] for row in cur.fetchall()]
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify({"messages": messages})
+    
+    except Exception as e:
+        print(f"Error retrieving conversation {conversation_id}: {e}")
+        return jsonify({"error": "Error retrieving conversation"}), 500
 
 
 if __name__ == '__main__':

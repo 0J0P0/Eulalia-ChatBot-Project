@@ -114,9 +114,16 @@ def get_response(data: dict):
         conversation = Conversation(conv_id)
         data['messages'][-1]['conv_title'] = conv_id
     
-    response_message = conversation.generate_answer(data['messages'][-1]['message'])
+    # response_message = conversation.generate_answer(data['messages'][-1]['message'])
 
-    response = {'message': response_message['answer'],
+    # formated_message = response_message['answer'] + "\n"
+    # for idx, tbl in enumerate(response_message['relevant_tables']):
+    #     formated_message += f"\n{idx+1}: {tbl}"
+    # formated_message += "\n\n```sql" + response_message['sql_query'].replace("\n", " ")
+    
+    formated_message = "L'Ajuntament de Barcelona té un total de 37 seguidors a la seva compte de Twitter. Aquesta informació es basa en la suma dels seguidors dels comptes de Twitter relacionats amb la mobilitat de l'Ajuntament.\n\n1: poblacio\n2: persones_abonades_instal_lacions_esportives_municipals\n3: domicilis_per_nombre_de_persones\n4: nombre_de_domicilis\n5: ocupacio_mitjana_dels_domicilis\n6: nombre_de_persones_treballadores_de_l_ajuntament_per_ens\n7: persones_usuaries_instal_lacions_esportives_municipals\n8: persones_emigrants\n9: domicilis_pel_nombre_de_persones_de_18_a_64_anys\n10: poblacio_empadronada_sola_al_domicili\n\n```sqlSELECT valor FROM nombre_de_seguidors_al_compte_de_bcn_mobilitat_de_twitter ORDER BY data_inici DESC LIMIT 1"
+
+    response = {'message': formated_message,
                 'sender': 'Eulàlia',
                 'conv_title': data['messages'][-1]['conv_title']}
 
