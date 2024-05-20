@@ -1,42 +1,48 @@
 .message_list_container {
-  min-height: calc(100% - 3vw);
-  max-height: calc(100% - 3vw);
-  margin: 1vw 0vw 0vw 1vw;
+  height: 81%;
+  margin: 2vw 0vw 0vw 2vw;
   overflow-y: auto;
+  background-color: aqua;
 }
 .message_container {
   display: flex;
-  align-items: center;
+  align-items: top;
 }
+
 .message_logo {
   width: 2vw;
   height: 2vw;
+  margin: 0vw 0vw 1vw 0vw;
 }
+
 .user_message, .eulalia_message {
-  padding: 2vw 0vw;
   text-align: justify;
-  margin: 0vw 1vw;
+  margin: 0vw 2vw 1vw 1vw;
   font-size: 1.3vw;
   word-break: break-word;
+
+  background-color: antiquewhite;
 }
+
 .message_button {
   display: block;
   margin: 0.5vw auto;
   border: none;
   background: none;
   color: grey;
-  font-size: 1.2vw;
+  font-size: 1.1vw;
   cursor: pointer;
 }
+
 .message_button:hover {
   color: black;
 }
 
 .code-snippet {
-  background-color: #f5f5f5; /* Light gray background */
-  font-family: monospace; /* Monospace font */
+  background-color: #f5f5f5;
+  font-family: monospace;
   padding: 10px;
-  border-radius: 5px;
-  margin: 10px 0;
+  border-radius: 1vw;
+  /* margin: 1vw 0; */
   word-break: break-word;
 }
