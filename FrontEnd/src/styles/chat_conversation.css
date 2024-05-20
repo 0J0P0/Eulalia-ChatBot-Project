@@ -1,9 +1,22 @@
 .message_list_container {
+  width: calc(100% - 2vw);
   height: 81%;
   margin: 2vw 0vw 0vw 2vw;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
+
 .message_container {
+  width: calc(100% - 2vw);
+  display: flex;
+  align-items: top;
+}
+
+.message_container_row {
+  width: calc(100% - 2vw);
   display: flex;
   align-items: top;
 }
@@ -15,8 +28,10 @@
 }
 
 .user_message, .eulalia_message {
+  width: calc(100% - 2vw);
+
   text-align: justify;
-  margin: 0vw 2vw 1vw 1vw;
+  margin: 0vw 0vw 1vw 1vw;
   font-size: 1.3vw;
   word-break: break-word;
 }

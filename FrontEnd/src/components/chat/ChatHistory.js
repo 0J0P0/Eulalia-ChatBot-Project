@@ -1,5 +1,4 @@
 import React from 'react'
-
 import PrevChat from './PrevChat';
 
 import '../../styles/chathistory.css'
