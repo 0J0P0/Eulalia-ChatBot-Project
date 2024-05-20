@@ -1,17 +1,28 @@
 .chathistory_container {
-    height: 25vw;
-    padding: 10px;
-    border-radius: 2vw;
-    margin: 2vw 0vw 1vw 2vw;
-    overflow-y: auto;
-    background-color: aqua;
+  display: grid;
+  height: 25vw;
+  padding: 10px;
+  border-radius: 2vw;
+  margin: 2vw 0vw 1vw 2vw;
+  background-color: #F8F8F8;
+  
+  .chathistory_header {
+    position: relative;
     
     h1 {
-        font-size: 1.6vw;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 4vw;
+      font-size: 1.6vw;
+      font-weight: bold;
+      text-align: center;
     }
+  }
+  
+  .chathistory_content {
+    overflow-y: auto;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 
 
@@ -29,6 +40,6 @@
 }
 
 .prevChat:hover {
-  background-color: #646464;
+  background-color: #7c7c7c;
   color: white;
 }
