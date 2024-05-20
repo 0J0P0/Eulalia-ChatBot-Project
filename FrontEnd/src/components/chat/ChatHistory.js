@@ -8,10 +8,14 @@ function ChatHistory({ messages, setMessages, conversationIds }) {
   
   return (
     <div className='chathistory_container'>
-      <h1>Converses</h1>
-      {conversationIds.map(id => (
-        <PrevChat key={id} id={id} messages={messages} setMessages={setMessages} />
-      ))}
+      <div className='chathistory_header'>
+        <h1>Converses</h1>
+      </div>
+      <div className='chathistory_content'>
+        {conversationIds.map(id => (
+          <PrevChat key={id} id={id} messages={messages} setMessages={setMessages} />
+        ))}
+      </div>
     </div>
   );
 }

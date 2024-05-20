@@ -1,10 +1,11 @@
 .login_container {
-    bottom: 10vh;
-    height: 50%;
+    bottom: 5vh;
+    height: auto;
+    width:25vw;
     left: 50%;
-    padding: 2vw;
+    padding: 4vh;
     position: absolute;
-    border-radius: 2vw;
+    border-radius: 2vh;
     transform: translate(-50%);
     background-color: #ffffff;
     text-align: center;
@@ -12,50 +13,48 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
     p {
-        font-size: 1.5vw;
+        font-size: 3vh;
     }
 
     input {
         display: block;
-        width: calc(100% - 7vw);
-        padding: 0.8vw;
-        margin: 0 auto 2vw;
-        border: 0.1vw solid #B2B1B1;
-        border-radius: 2vw;
-        font-size: 1.1vw;
+        width: calc(100% - 4vh);
+        padding: 2vh;
+        margin: 2vh auto;
+        border: 0.2vh solid #B2B1B1;
+        border-radius: 2vh;
+        font-size: 2vh;
     }
 
     button.submit-button,
     button.close-button {
-        padding: 1vw;
-        border-radius: 2vw;
+        padding: 2vh;
+        border-radius: 2vh;
+        margin-bottom: 2vh;
         cursor: pointer;
         transition: transform 0.4s ease;
-        font-size: 1.3vw;
-
+        font-size: 2.5vh;
+        width: 60%;
     }
 
     button.submit-button {
-        width: 50%;
-        margin-bottom: 0.8vw;
         background-color: #5782AA;
         border: none;
         color: #f8f8f8;
     }
 
     button.close-button {
-        width: 30%;
-        margin-top: 0.8vw;
         background-color: #B2B1B1;
         border: none;
     }
 
     .error_message {
         color: rgb(242, 60, 60);
-        margin-top: 10px;
-        font-size: 13px;
+        margin-top: 2vh;
+        font-size: 2vh;
     }
 }
 
@@ -63,18 +62,37 @@
     bottom: 10vh;
     left: 50%;
     position: fixed;
-    padding: 2vh 5vw;
+    padding: 3vh 8vw;
     border: none;
-    border-radius: 20px;
+    border-radius: 2vh;
     transform: translate(-50%, -50%);
     cursor: pointer;
-
     background-color: #ffffff;
     color: black;
     opacity: 0.8;
-
-    text-decoration: none;
-    font-size: 1.3vw;
+    font-size: 2.5vh;
     font-family: 'Open Sans', sans-serif;
+}
 
+@media (max-width: 600px) {
+    .login_container {
+        width: 90%;
+        bottom: 2vh;
+        padding: 5vh;
+    }
+
+    input {
+        width: calc(100% - 4vh);
+    }
+
+    button.submit-button,
+    button.close-button {
+        width: 80%;
+        font-size: 2.5vh;
+    }
+    
+    #boto {
+        bottom: 5vh;
+        font-size: 3vh;
+    }
 }

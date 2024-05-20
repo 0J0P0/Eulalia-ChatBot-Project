@@ -15,7 +15,7 @@
         border-radius: 2vw;
         background-color: transparent;
         font-size: 1.2vw;
-        /* font-family: ; */
+        font-style: italic;
         resize: none;
     
         &:focus {

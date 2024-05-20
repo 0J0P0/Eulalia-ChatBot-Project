@@ -21,6 +21,7 @@
     }
     
     .right_chat_col {
+        display: fixed;
         border-radius: 0 2vw 2vw 0;
         overflow-y: hidden;
     }
