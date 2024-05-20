@@ -45,6 +45,7 @@ function Bot() {
     })
     .then(response => response.json())
     .then(data => {
+      console.log('ChatGPT response:', data.messages);
       const newMessages = data.messages
 
       localStorage.setItem('chatMessages', JSON.stringify(newMessages));
@@ -55,7 +56,6 @@ function Bot() {
   }
 
   const handleNewChat = () => {
-    // Reset chat history
     setMessages([]);
     localStorage.removeItem('chatMessages');
 
@@ -80,7 +80,7 @@ function Bot() {
       <Logo subtitle='' />
       <div className='chat_container'>
         <div className='left_chat_col'>
-          <ChatHistory conversationIds={conversationIds}/>
+          <ChatHistory messages={messages} setMessages={setMessages} conversationIds={conversationIds}/>
           <button onClick={handleNewChat} className='new_chat_button'>
             <img
               src={new_chat_icon}
