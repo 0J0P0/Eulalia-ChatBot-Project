@@ -4,21 +4,39 @@
   margin: 1vw 0vw 0vw 1vw;
   overflow-y: auto;
 }
-
 .message_container {
   display: flex;
   align-items: center;
 }
-
 .message_logo {
   width: 2vw;
   height: 2vw;
 }
-
 .user_message, .eulalia_message {
   padding: 2vw 0vw;
   text-align: justify;
   margin: 0vw 1vw;
   font-size: 1.3vw;
+  word-break: break-word;
+}
+.message_button {
+  display: block;
+  margin: 0.5vw auto;
+  border: none;
+  background: none;
+  color: grey;
+  font-size: 1.2vw;
+  cursor: pointer;
+}
+.message_button:hover {
+  color: black;
+}
+
+.code-snippet {
+  background-color: #f5f5f5; /* Light gray background */
+  font-family: monospace; /* Monospace font */
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
   word-break: break-word;
 }
