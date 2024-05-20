@@ -4,7 +4,7 @@
   padding: 10px;
   border-radius: 2vw;
   margin: 2vw 0vw 1vw 2vw;
-  background-color: #F8F8F8;
+  background-color: #F4F4F4;
   
   .chathistory_header {
     position: relative;
@@ -24,7 +24,6 @@
     }
   }
 }
-
 
 .prevChat {
   position: relative;
