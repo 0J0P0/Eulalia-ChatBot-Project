@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+
 import { TypingIndicator } from '@chatscope/chat-ui-kit-react';
+
 import '../../styles/chat_conversation.css';
+
 import user_message_logo from '../../img/user_message_logo.svg';
 import eulalia_message_logo from '../../img/eulalia_message_logo.svg';
+
 
 function ChatConversation({ messages, isTyping }) {
   const [expandedMessages, setExpandedMessages] = useState({});
@@ -23,45 +27,45 @@ function ChatConversation({ messages, isTyping }) {
     }));
   };
 
-  const formatMessage = (message, isExpanded, index) => {
+  const formatMessage = (content) => {
+    return content.split('\n').map((line, lineIndex) => {
+      // Check if the line starts with code snippet indicator
+      if (line.trim().startsWith('```sql')) {
+        const code = line.split('```sql')[1] || '';
+        return (
+          <div className="code-snippet" key={lineIndex}>
+            {code.trim()}
+          </div>
+        );
+      } else {
+        return (
+          <React.Fragment key={lineIndex}>
+            {line}
+            <br />
+          </React.Fragment>
+        );
+      }
+    });
+  };
+
+  const formatEulaliaMessage = (message, isExpanded, index, sender) => {
     const [answer, ...rest] = message.split('\n\n');
     const restOfMessage = rest.join('\n\n');
-
-    const formatContent = (content) => {
-      return content.split('\n').map((line, lineIndex) => {
-        // Check if the line starts with code snippet indicator
-        if (line.trim().startsWith('```sql')) {
-          const code = line.split('```sql')[1] || '';
-          return (
-            <div className="code-snippet" key={lineIndex}>
-              {code.trim()}
-            </div>
-          );
-        } else {
-          return (
-            <React.Fragment key={lineIndex}>
-              {line}
-              <br />
-            </React.Fragment>
-          );
-        }
-      });
-    };
 
     if (isExpanded) {
       return (
         <React.Fragment>
           {answer}
           <br /><br />
-          {formatContent(restOfMessage)}
-          <button className="message_button" onClick={() => toggleMessageExpansion(index)}>Veure menys</button>
+          {formatMessage(restOfMessage)}
+          {sender === 'Eulàlia' && <button className="message_button" onClick={() => toggleMessageExpansion(index)}>Veure menys</button>}
         </React.Fragment>
       );
     } else {
       return (
         <React.Fragment>
           {answer}
-          {rest.length > 0 && <button className="message_button" onClick={() => toggleMessageExpansion(index)}>Veure més</button>}
+          {rest.length > 0 && sender === 'Eulàlia' && <button className="message_button" onClick={() => toggleMessageExpansion(index)}>Veure més</button>}
         </React.Fragment>
       );
     }
@@ -75,14 +79,14 @@ function ChatConversation({ messages, isTyping }) {
             src={message.sender === 'Eulàlia' ? eulalia_message_logo : user_message_logo}
             alt='Message Logo'
             className='message_logo' />
-          <div>
+          <div className='message_container_row'>
             {message.sender === 'Eulàlia' ? (
               <div className='eulalia_message'>
-                {formatMessage(message.message, expandedMessages[index], index)}
+                {formatEulaliaMessage(message.message, expandedMessages[index], index, message.sender)}
               </div>
             ) : (
               <div className='user_message'>
-                {formatMessage(message.message, expandedMessages[index], index)}
+                {formatMessage(message.message, expandedMessages[index], index, message.sender)}
               </div>
             )}
           </div>

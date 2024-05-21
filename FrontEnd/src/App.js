@@ -4,8 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header.js';
 import SideBar from './components/SideBar.js';
 
-import './styles/App.css';
-
 import Inici from './pages/Inici.js';
 import Quisom from './pages/Quisom.js';
 import Bot from './pages/Bot.js';
