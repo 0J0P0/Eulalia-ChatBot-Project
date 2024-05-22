@@ -254,18 +254,17 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
     #     relevant_tables = list(dades["extracted_schema"].keys())
 
     print("INTERMEDIATE STEPS -----------")
-    print(agent_output["intermediate_steps"])
+    print(agent_output)
     print("-----------------------")
-
     output = {}
-    output["answer"] = agent_output["output"]
-    output["relevant_tables"] = relevant_tables
-    output["sql_query"] = sql_query
+    if not agent_output["intermediate_steps"]:
+        output["answer"] = agent_output["output"]
+        output["relevant_tables"] = ""
+        output["sql_query"] = ""
+    else:
+        output["answer"] = agent_output["output"]
+        output["relevant_tables"] = agent_output["intermediate_steps"][0][1]
+        output["sql_query"] = ""
 
-    
-
-    # output = {"answer": agent_output["output"], 
-    #         "relevant_tables": agent_output["intermediate_steps"][0][1], 
-    #         "sql_query": ""}
             
     return output

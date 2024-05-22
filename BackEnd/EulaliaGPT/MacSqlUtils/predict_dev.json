@@ -1,6 +1,6 @@
 [
   [
-    "quants habitants hi ha a barcelona?",
-    "SELECT sum(valor) FROM poblacio WHERE municipi='Barcelona'\t----- bird -----\tdbeulalia"
+    "quants arbres hi ha a barcelona?",
+    "SELECT AVG(valor) FROM percentatge_d_acompliment_de_la_campanya_de_poda_d_arbrat_viari WHERE municipi='Barcelona';\t----- bird -----\tdbeulalia"
   ]
 ]
