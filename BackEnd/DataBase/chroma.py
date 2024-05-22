@@ -235,7 +235,8 @@ def relevant_docs(q, max_results=10):
 
     dt = get_data()
     Municipi, AreaMetropolitana, ComunitatAutonoma, Districte, Barri = get_territory_values(dt)
-    df = pd.read_csv('./embedded_descr_large_weight.csv', sep = ';')
+
+    df = pd.read_csv('./DataBase/embedded_descr_large_weight.csv', sep = ';')
 
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
                 api_key=os.environ["OPENAI_API_KEY"],
@@ -264,7 +265,7 @@ def relevant_docs(q, max_results=10):
     )
 
     # Modify the names of the tables to transform its ids into a explanatory sentence
-    json_file = "./diccionario.json"
+    json_file = "./DataBase/diccionario.json"
 
     with open(json_file, "r") as file:
         dictionary_read = json.load(file)
