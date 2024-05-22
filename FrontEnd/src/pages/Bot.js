@@ -17,8 +17,12 @@ function Bot() {
 
   useEffect(() => {
     const storedMessages = localStorage.getItem('chatMessages');
+    const storedConversationIds = localStorage.getItem('conversationIds');
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
+    }
+    if (storedConversationIds) {
+      setConversationIds(JSON.parse(storedConversationIds));
     }
   }, []);
 
@@ -69,7 +73,7 @@ function Bot() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Conversation ids:', data);
+      localStorage.setItem('conversationIds', JSON.stringify(data));
         setConversationIds(data);
     })
     .catch(error => console.error('Error:', error));

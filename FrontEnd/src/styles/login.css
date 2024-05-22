@@ -1,11 +1,11 @@
 .login_container {
     bottom: 5vh;
-    height: auto;
-    width:25vw;
+    height: 44vh;
+    width: 23vw;
     left: 50%;
     padding: 4vh;
     position: absolute;
-    border-radius: 2vh;
+    border-radius: 4vh;
     transform: translate(-50%);
     background-color: #ffffff;
     text-align: center;
@@ -16,28 +16,29 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
     p {
-        font-size: 3vh;
+        font-size: 2.7vh;
     }
 
     input {
         display: block;
-        width: calc(100% - 4vh);
+        width: 70%;
         padding: 2vh;
         margin: 2vh auto;
         border: 0.2vh solid #B2B1B1;
-        border-radius: 2vh;
-        font-size: 2vh;
+        border-radius: 8vh;
+        font-size: 2.2vh;
     }
 
     button.submit-button,
     button.close-button {
-        padding: 2vh;
-        border-radius: 2vh;
+        padding: 1.5vh;
+        border-radius: 4vh;
         margin-bottom: 2vh;
+        margin-top: 1vh;
         cursor: pointer;
         transition: transform 0.4s ease;
-        font-size: 2.5vh;
-        width: 60%;
+        font-size: 2.2vh;
+        width: 55%;
     }
 
     button.submit-button {
@@ -47,7 +48,7 @@
     }
 
     button.close-button {
-        background-color: #B2B1B1;
+        background-color: #d8d8d8;
         border: none;
     }
 
@@ -59,12 +60,12 @@
 }
 
 #boto {
-    bottom: 10vh;
+    bottom: 20vh;
     left: 50%;
     position: fixed;
-    padding: 3vh 8vw;
+    padding: 2vh 8vw;
     border: none;
-    border-radius: 2vh;
+    border-radius: 4vh;
     transform: translate(-50%, -50%);
     cursor: pointer;
     background-color: #ffffff;
