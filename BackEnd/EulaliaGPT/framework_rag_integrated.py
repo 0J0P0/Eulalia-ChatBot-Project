@@ -52,8 +52,8 @@ prompt = ChatPromptTemplate.from_messages(
             The information contained in the dataset is about Barcelona and its demographics; 
             Always remember to use the tool when the query is related to this information.
 
-            After the answer you should provide a message saying "These are the most relevant tables for your query:" in the language of the conversation.
             """,
+            # After the answer you should provide a message saying "These are the most relevant tables for your query:" in the language of the conversation.
         ),
         MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}"),
@@ -131,7 +131,7 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
 
     if len(agent_output["intermediate_steps"]) == 0:
         output = {"answer": agent_output["output"], 
-                "relevant_tables": "", 
+                "relevant_tables": [], 
                 "sql_query": ""}
     else:
         output = {"answer": agent_output["output"], 
