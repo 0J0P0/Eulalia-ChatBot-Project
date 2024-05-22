@@ -86,35 +86,6 @@ agent = (
 )
 
 
-# def extract_output(output):
-#     """
-#     Extracts the output from the json string. If an action was taken, returns the relevant table. Otherwise returns the answer to the query.
-    
-#     Parameters
-#     ----------
-#     output : dict
-#         Output from the agent.
-
-#     Returns
-#     -------
-#     str
-#         Answer to the query or relevant table.
-#     """
-
-#     if "actions" in output[0]:
-#         string_data = output[1]["messages"][0].content
-#         start_index = string_data.find('[')
-#         end_index = string_data.rfind(']')
-#         vector = string_data[start_index + 1:end_index].split(', ')
-    
-#         vector = [element.strip('"') for element in vector]
-#         vector = [string.lower() for string in vector]
-
-#         return vector
-#     else:
-#         return output[0]["output"]
-
-
 ############################################################################################################
 #                                               Processing                                                 #
 ############################################################################################################
