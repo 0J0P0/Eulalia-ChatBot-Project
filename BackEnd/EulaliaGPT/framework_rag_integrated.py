@@ -127,10 +127,16 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
     # for value in agent_output["intermediate_steps"][0]:
     #     print(value)
     #     print()
-    # print("=============================")    
-    
-    output = {"answer": agent_output["output"], 
-            "relevant_tables": agent_output["intermediate_steps"][0][1], 
-            "sql_query": ""}
+    # print("=============================")   
+
+    if len(agent_output["intermediate_steps"]) == 0:
+        output = {"answer": agent_output["output"], 
+                "relevant_tables": "", 
+                "sql_query": ""}
+    else:
+        output = {"answer": agent_output["output"], 
+                "relevant_tables": agent_output["intermediate_steps"][0][1], 
+                "sql_query": ""}
+    print(output)
     return output
 

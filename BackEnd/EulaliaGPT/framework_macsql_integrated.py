@@ -234,7 +234,7 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         sql_query: str
             SQL query generated.
     """
-    agent_executor = AgentExecutor(agent=agent, tools = tools, verbose=True)
+    agent_executor = AgentExecutor(agent=agent, tools = tools, verbose=True, return_intermediate_steps=True)
     
     agent_with_chat_history = RunnableWithMessageHistory(
         agent_executor,
@@ -248,14 +248,24 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         config={"configurable": {"session_id": id}}
     )
 
-    with open("./EulaliaGPT/MacSqlUtils/output_eulaliadb_automated.json") as f:
-        dades = json.load(f)
-        sql_query = dades["pred"].replace("`","")
-        relevant_tables = list(dades["extracted_schema"].keys())
+    # with open("./EulaliaGPT/MacSqlUtils/output_eulaliadb_automated.json") as f:
+    #     dades = json.load(f)
+    #     sql_query = dades["pred"].replace("`","")
+    #     relevant_tables = list(dades["extracted_schema"].keys())
+
+    print("INTERMEDIATE STEPS -----------")
+    print(agent_output["intermediate_steps"])
+    print("-----------------------")
 
     output = {}
     output["answer"] = agent_output["output"]
     output["relevant_tables"] = relevant_tables
     output["sql_query"] = sql_query
+
     
+
+    # output = {"answer": agent_output["output"], 
+    #         "relevant_tables": agent_output["intermediate_steps"][0][1], 
+    #         "sql_query": ""}
+            
     return output
