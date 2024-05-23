@@ -66,7 +66,7 @@ class Conversation():
         Object to create or continue a conversation with the user.
     """
 
-    def __init__(self, id: str = str(uuid.uuid4()), model: str = "MACSQL"):
+    def __init__(self, id: str = str(uuid.uuid4()), model: str = "NORMAL"):
         self.id = id
         self.model = model
         self.memory = PostgresChatMessageHistory(
@@ -120,19 +120,23 @@ def get_response(data: dict):
     query = response_message['sql_query']
     relevant_tables = response_message['relevant_tables']
 
+    # Formatted message based on new requirements
     formated_message = answer
-    for idx, tbl in enumerate(relevant_tables):
-        if idx == 0:
-            formated_message += "\n"
-        formated_message += f"\n{idx+1}: {tbl}"
-    if query != "":
-        formated_message += "\n\n```sql" + query.replace("\n", " ")
     
-    # formated_message = "L'Ajuntament de Barcelona té un total de 37 seguidors a la seva compte de Twitter. Aquesta informació es basa en la suma dels seguidors dels comptes de Twitter relacionats amb la mobilitat de l'Ajuntament.\n\n1: poblacio\n2: persones_abonades_instal_lacions_esportives_municipals\n3: domicilis_per_nombre_de_persones\n4: nombre_de_domicilis\n5: ocupacio_mitjana_dels_domicilis\n6: nombre_de_persones_treballadores_de_l_ajuntament_per_ens\n7: persones_usuaries_instal_lacions_esportives_municipals\n8: persones_emigrants\n9: domicilis_pel_nombre_de_persones_de_18_a_64_anys\n10: poblacio_empadronada_sola_al_domicili\n\n```sqlSELECT valor FROM nombre_de_seguidors_al_compte_de_bcn_mobilitat_de_twitter ORDER BY data_inici DESC LIMIT 1"
+    if relevant_tables:
+        formated_message += "\n\nAquestes són les taules relacionades més importants que he trobat:"
+        for idx, tbl in enumerate(relevant_tables):
+            formated_message += f"\n{idx + 1}: {tbl}"
+    
+    if query:
+        formated_message += "\n\nAquesta és la consulta SQL que he utilitzat per trobar la informació proporcionada:"
+        formated_message += f"\n\n```sql\n{query}\n```"
 
-    response = {'message': formated_message,
-                'sender': 'Eulàlia',
-                'conv_title': data['messages'][-1]['conv_title']}
+    response = {
+        'message': formated_message,
+        'sender': 'Eulàlia',
+        'conv_title': data['messages'][-1]['conv_title']
+    }
 
     data['messages'].append(response)
 
