@@ -9,6 +9,8 @@ import Quisom from './pages/Quisom.js';
 import Bot from './pages/Bot.js';
 import Ajuda from './pages/Ajuda.js';
 
+import './styles/sidebar.css';
+
 export const metadata = {
   title: 'Eulàlia Chat'
 }
@@ -38,12 +40,12 @@ function App() {
       <Router>
         <Header onClick={handleViewSidebar} />
         <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} />
-        <Routes>
-          <Route path='/' element={<Inici authenticateUser={authenticateUser} />} />
-          <Route path='/bot' element={authenticated ? <Bot /> : <Inici authenticateUser={authenticateUser} />} />
-          <Route path='/quisom' element={<Quisom />} />
-          <Route path='/ajuda' element={<Ajuda />} />
-        </Routes>
+          <Routes>
+            <Route path='/' element={<Inici authenticateUser={authenticateUser} />} />
+            <Route path='/bot' element={authenticated ? <Bot sidebarOpen={sidebarOpen} /> : <Inici authenticateUser={authenticateUser} />} />
+            <Route path='/quisom' element={<Quisom />} />
+            <Route path='/ajuda' element={<Ajuda />} />
+          </Routes>
       </Router>
     </div>
   );
