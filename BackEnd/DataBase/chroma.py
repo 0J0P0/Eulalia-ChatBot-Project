@@ -20,6 +20,7 @@ os.environ["OPENAI_API_KEY"] = str(os.getenv("API_KEY"))
 nltk.download('stopwords')
 
 
+
 def encode(string):
     """
     Write strings in plain text.
@@ -180,9 +181,11 @@ def relevant_docs(q, max_results=10):
     query_result = query_collection(
         collection = collection,
         query = modified_query,
-        max_results = max_results,
+        max_results = 1215,
         dataframe = df
     )
+    
+    query_results = query_results[:max_results]
 
     # Modify the names of the tables to transform its ids into a explanatory sentence
     json_file = "./DataBase/diccionario.json"
