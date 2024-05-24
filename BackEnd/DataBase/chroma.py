@@ -20,88 +20,6 @@ os.environ["OPENAI_API_KEY"] = str(os.getenv("API_KEY"))
 nltk.download('stopwords')
 
 
-def get_data():
-    """
-    Extract data from the JSON file.
-
-    Returns
-    -------
-    dt : DataFrame
-        DataFrame containing all the data regarding the DataBase.
-    """
-
-    df = pd.read_json('/dades/eulalia/Data/Dades_solr_pro/yol_definicio_indicadors_collection_k8s_20240215.json', lines=True)
-    dd = df[df['api_origen']=='estadistiques'].dropna(axis=1, how='all')
-
-    dt = dd[['descripcio.ca', 'id_indicador', 'tags.ca', 'fet.ca', 'indicador.ca', 'tipus_territori.ca', 'unitat.ca', 'unitat_mesura.ca',  'valors_territori', 'llistat_dimensions.ca', 'notes_indicador.ca', 'valors_dimensions.ca']]
-    dt['tipus_territori.ca'] = dt['tipus_territori.ca'].astype(str)
-
-    dt['id_indicador'] = dt['id_indicador'].apply(lambda x: 'a' + x if x[0].isdigit() else x)
-    return dt
-
-
-def get_territory_values(dt):
-    """
-    Extract territorial values from the data.
-
-    Parameters
-    ----------
-    dt : DataFrame
-        DataFrame containing all the data regarding the DataBase.
-
-    Returns
-    -------
-    Municipi : List
-        List containing all values corresponding to a Municipality.
-    AreaMetropolitana : List
-        List containing all values corresponding to a Metropolitan Area.
-    ComunitatAutonoma : List 
-        List containing all values corresponding to a Autonomous Community.
-    Districte : List
-        List containing all values corresponding to a District.
-    Barri : List
-        List containing all values corresponding to a Neighborhood.
-    """
-
-    Municipi = dt[dt['tipus_territori.ca'] == "['Municipi']"]['valors_territori'].value_counts().keys().tolist()[0]
-    AreaMetropolitana = dt[dt['tipus_territori.ca'] == "['Àrea Metropolitana']"]['valors_territori'].value_counts().keys().tolist()[0]
-
-    # Comunitat Autònoma
-    ComunitatAutonoma = dt[dt['tipus_territori.ca'] == "['Comunitat Autònoma', 'Municipi']"]['valors_territori'].value_counts().keys().tolist()[0]
-    ComunitatAutonoma.remove('Barcelona')
-
-    # Districte
-    dt_districte = dt[dt['tipus_territori.ca'] == "['Municipi', 'Districte']"].copy()
-    Districte = dt_districte['valors_territori'].value_counts().keys().tolist()[0]
-    Districte.remove('Barcelona')
-
-    # Barri
-    e = dt[dt['tipus_territori.ca'] == "['Municipi', 'Districte', 'Barri']"]['valors_territori'].value_counts().keys().copy()
-    count, lists = [], []
-    lengths = set([len(row) for row in e.tolist()])
-    barri_lengths = {element: True for element in lengths}
-
-    for i in range(len(e)):
-        l = len(e.tolist()[i])
-        if l in lengths and barri_lengths[l]:
-            barri_lengths[l] = False
-            lists.append(e.tolist()[i])
-        count.append(l)
-    
-    new = []
-    for i in range(len(lists)):
-        lists[i].remove('Barcelona')
-        for dist in Districte:
-            if dist in lists[i]:
-                lists[i].remove(dist)
-        new.append(lists[i])
-    
-    flat_list = [string for sublist in new for string in sublist]
-    Barri = list(set(flat_list))
-
-    return Municipi, AreaMetropolitana, ComunitatAutonoma, Districte, Barri
-
-
 def encode(string):
     """
     Write strings in plain text.
@@ -233,10 +151,12 @@ def relevant_docs(q, max_results=10):
         List containing the 'max_results' most similar tables of the DataBase.
     """
 
-    dt = get_data()
-    Municipi, AreaMetropolitana, ComunitatAutonoma, Districte, Barri = get_territory_values(dt)
+    with open('territory_values.json', 'r', encoding='utf-8') as json_file:
+        data = json.load(json_file)
 
-    df = pd.read_csv('./DataBase/embedded_descr_large_weight.csv', sep = ';')
+    Municipi, Districte, Barri, ComunitatAutonoma =  data['Municipi'], data['Districte'], data['Barri'], data['ComunitatAutonoma']
+
+    df = pd.read_csv('./embedded_descr_large_weight.csv', sep = ';')
 
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
                 api_key=os.environ["OPENAI_API_KEY"],
@@ -265,7 +185,7 @@ def relevant_docs(q, max_results=10):
     )
 
     # Modify the names of the tables to transform its ids into a explanatory sentence
-    json_file = "./DataBase/diccionario.json"
+    json_file = "./diccionario.json"
 
     with open(json_file, "r") as file:
         dictionary_read = json.load(file)
