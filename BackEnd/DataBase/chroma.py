@@ -17,8 +17,12 @@ from chromadb.utils import embedding_functions
 
 dotenv.load_dotenv()
 os.environ["OPENAI_API_KEY"] = str(os.getenv("API_KEY"))
-nltk.download('stopwords')
 
+# Check if the stopwords package is downloaded
+try:
+    stopwords.words('catalan')
+except LookupError:
+    nltk.download('stopwords', quiet=True)
 
 
 def encode(string):
@@ -135,9 +139,9 @@ def query_collection(collection, query, max_results, dataframe):
     return df
     
 
-def relevant_docs(q, max_results=10):
+def relevant_docs(q, max_res=10):
     """
-    Find the top 'max_results' most similar tables given a query.
+    Find the top 'max_res' most similar tables given a query.
 
     Parameters
     ----------
@@ -149,22 +153,23 @@ def relevant_docs(q, max_results=10):
     Returns
     -------
     indicators : List
-        List containing the 'max_results' most similar tables of the DataBase.
+        List containing the 'max_res' most similar tables of the DataBase.
     """
 
-    with open('./DataBase/territory_values.json', 'r', encoding='utf-8') as json_file:
+    with open('/dades/eulalia/Eulalia-Project/BackEnd/DataBase/territory_values.json', 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
 
     Municipi, Districte, Barri, ComunitatAutonoma =  data['Municipi'], data['Districte'], data['Barri'], data['ComunitatAutonoma']
 
-    df = pd.read_csv('./DataBase/embedded_descr_large_weight.csv', sep = ';')
+    df = pd.read_csv('/dades/eulalia/Eulalia-Project/BackEnd/DataBase/embedded_descr_large_weight.csv', sep = ';')
 
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
                 api_key=os.environ["OPENAI_API_KEY"],
                 model_name="text-embedding-3-large"
             )
     
-    client = chromadb.Client()
+    # client = chromadb.Client()
+    client = chromadb.PersistentClient(path="client")
 
     if "new_collection" in [c.name for c in client.list_collections()]:
         collection = client.get_or_create_collection(name = "new_collection", embedding_function=openai_ef, metadata = {"hnsw:space": "cosine"})
@@ -185,10 +190,10 @@ def relevant_docs(q, max_results=10):
         dataframe = df
     )
     
-    query_results = query_results[:max_results]
+    query_result = query_result[:max_res]
 
     # Modify the names of the tables to transform its ids into a explanatory sentence
-    json_file = "./DataBase/diccionario.json"
+    json_file = "/dades/eulalia/Eulalia-Project/BackEnd/DataBase/diccionario.json"
 
     with open(json_file, "r") as file:
         dictionary_read = json.load(file)
