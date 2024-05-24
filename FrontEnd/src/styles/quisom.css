@@ -97,7 +97,7 @@
             color: #8a8a8a;
 
             &:hover {
-                border: 0.2vw solid #5782AA;
+                border: 0.2vw solid #3C74BD;
             }
         }
     
@@ -112,7 +112,7 @@
             padding: 0.8vw;
             border: none;
             border-radius: 0.5vw;
-            background-color: #5782AA;
+            background-color: #3C74BD;
             color: #f8f8f8;
             
             font-size: 1.3vw;
