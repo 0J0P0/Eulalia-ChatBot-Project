@@ -42,6 +42,7 @@ prompt = ChatPromptTemplate.from_messages(
             "system",
             """
             You are very powerful assistant, but don't know everything.
+            Very important: Always answer in the language you are spoken to.
             You can use tools to help you answer queries.
 
             The similarity search tool utilizes similarity search to find 
@@ -51,7 +52,7 @@ prompt = ChatPromptTemplate.from_messages(
             
             The information contained in the dataset is about Barcelona and its demographics; 
             Always remember to use the tool when the query is related to this information.
-
+            Once you get the relevant tables to your question, query a table to find the answer.
             """,
             # After the answer you should provide a message saying "These are the most relevant tables for your query:" in the language of the conversation.
         ),
@@ -128,7 +129,8 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
     #     print(value)
     #     print()
     # print("=============================")   
-
+    print(agent_output["intermediate_steps"])
+    print("-----------------------------------------")
     if len(agent_output["intermediate_steps"]) == 0:
         output = {"answer": agent_output["output"], 
                 "relevant_tables": [], 

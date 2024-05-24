@@ -1,6 +1,6 @@
 [
   [
-    "quants arbres hi ha a barcelona?",
-    "SELECT AVG(valor) FROM percentatge_d_acompliment_de_la_campanya_de_poda_d_arbrat_viari WHERE municipi='Barcelona';\t----- bird -----\tdbeulalia"
+    "Quants estudiants es van matricular a la UPC el 2019?",
+    "SELECT sum(valor) FROM alumnes_matriculats_universitat_sexe_tipus_estudi_universitat WHERE universitat='Universitat Politècnica de Catalunya (UPC)' and EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')) = 2019;\t----- bird -----\tdbeulalia"
   ]
 ]
