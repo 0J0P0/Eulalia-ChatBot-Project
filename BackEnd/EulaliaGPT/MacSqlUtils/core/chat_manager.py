@@ -48,8 +48,6 @@ class ChatManager(object):
         for agent in self.chat_group:  # check each agent in the group
             if message['send_to'] == agent.name:
                 agent.talk(message)
-                print(agent.name)
-                print(message)
 
     def start(self, user_message: dict):
         # we use `dict` type so value can be changed in the function

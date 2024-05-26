@@ -12,121 +12,165 @@ REFINER_NAME = 'Refiner'
 SYSTEM_NAME = 'System'
 
 
-selector_template = """
-As an experienced and professional database administrator, your task is to analyze a user question and a database schema to provide relevant information. The database schema consists of table descriptions, each containing multiple column descriptions. Your goal is to identify the relevant tables and columns based on the user question and evidence provided.
-Take a deep breath and approach this task methodically, step-by-step.
+# selector_template = """
+# As an experienced and professional database administrator, your task is to analyze a user question and a database schema to provide relevant information. The database schema consists of table descriptions, each containing multiple column descriptions. Your goal is to identify the relevant tables and columns based on the user question and evidence provided.
+# Take a deep breath and approach this task methodically, step-by-step.
 
-[Instruction]:
-1. You will be given up to ten tables from a database that have been determined most relevant with respect to the query. Discard any table schema that is not related to the user question and evidence.
-2. Sort the columns in each relevant table in descending order of relevance and keep the top 5 columns.
-3. Ensure that at least 2 tables are included in the final output JSON.
-4. The output should be in JSON format.
+# The database comprises several tables, all adhering to a consistent structure. Each table serves to encode specific data relevant to the query. Here's a breakdown of the table structure:
+# 1. Time enconding: `data_inici` and `data_final`.
+# 2. Spatial encoding: Some tables feature spatial data encoded in columns `municipi`, `districte` and `barri`.
+# 3. Fact description: The primary fact is described in the `valor` column.
+# 4. Metadata columns: While some columns like `fet_ca`, `indicador_ca`, `tags_ca`, `unitat_ca`, and `unitat_mesura_ca` provide additional information about the content of the table, they are irrelevant for SQL queries and can be disregarded.
+# 5. Main Dimensions: Other columns in each table represent main dimensions and should always be retained.
 
-Requirements:
-1. If a table has less than or equal to 7 columns, mark it as "keep_all".
-2. If a table is completely irrelevant to the user question and evidence, mark it as "drop_all".
-3. Prioritize the columns in each relevant table based on their relevance.
+# [Instruction]:
+# 1. You will be given up to ten tables from a database that have been determined most relevant with respect to the query.
+# 2. Sort the columns in each relevant table in descending order of relevance and keep the top 5 columns.
+# 3. Ensure that at least 2 tables are included in the final output JSON.
+# 4. The output should be in JSON format.
 
-Here is a typical example:
+# Requirements:
+# 1. If a table has less than or equal to 7 columns, mark it as "keep_all".
+# 2. If a table is completely irrelevant to the user question and evidence, mark it as "keep_all".
+# 3. Prioritize the columns in each relevant table based on their relevance.
 
-==========
-【DB_ID】 dbeulalia
-【Schema】
-# Table: Població_ocupada_assalariada
-[
-  (valor, Població ocupada assalariada. Value examples: [Decimal('576.8'), Decimal('614.4'), Decimal('619.4'), Decimal('553.2'), Decimal('100.2')])
-  (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
-  (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
-  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
-  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
-  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['epa'] ),
-  (municipi, municipality, it can only take the value of 'Barcelona'),
-  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number),
-  (unitat_mesura_ca. gives the units of measure of the column 'value'. Value: ['Milers the persones'] which means thousands of people, implying that 'value' must be multiplied by 1000),
-]
+# A typical example would be:
 
-# Table: canvis_domicili_titulacio_districte_baixa_districte_alta
-[
-  (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
-  (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
-  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre de canvis de domicili'].),
-  (indicador_ca, also describes the table, should not be in the SQL query. Value examples: ['Canvis de domicili per titulació acadèmica i districte de baixa i districte d'alta'].),
-  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['padró municipal, migracions internes, mudances, estudis, educació'] ),
-  (municipi, municipality, it can only take the value of 'Barcelona'),
-  (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
-  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'].),
-  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Canvis de domicili'].),
-  (valor, number of address changes. Value examples: [247, 1, 18, 33, 747].),
-  (districte_d_alta. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
-  (titulacio_academica. Value examples: ['Estudis universitaris, CFGS grau superior', 'Sense estudis', 'Estudis primaris, certificat d'escolaritat, EGB', 'Batxillerat elemental, graduat escolar, ESO, FPI', 'No consta'].)
-]
+# 【Question】
+# How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
+# 【Answer】
+# ```json
+# {{
+#   "Població_ocupada_assalariada": "keep_all",
+#   "canvis_domicili_titulacio_districte_baixa_districte_alta": "keep_all",
+#   "alumnes_universitaris_titulats_sexe_tipus_estudi_universitat": "keep_all",
+#   "alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi": "keep_all"
+# }}
+# ```
+# """
 
-# Table: alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
-[
-  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
-  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
-  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats'].),
-  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat'].),
-  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
-  (municipi, municipality, it can only take the value of 'Barcelona'),
-  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre']),
-  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones']),
-  (valor, number of students per study, university and sex. Value examples: [2874, 957, 109, 2383, 97].),
-  (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
-  (sexe, sex. Value examples: ['Dona', 'Home'].),
-  (tipus_d_estudi. Value examples: ['Màster', 'Doctorat', 'Grau'])
-]
+# selector_template1 = """
+# As an experienced and professional database administrator, your task is to analyze a user question and a database schema to provide relevant information. The database schema consists of table descriptions, each containing multiple column descriptions. Your goal is to identify the relevant tables and columns based on the user question and evidence provided.
+# Take a deep breath and approach this task methodically, step-by-step.
 
-# Table: alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi
-[
-  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
-  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
-  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a l’universitat'].),
-  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a la universitat per sexe, grup de nacionalitat i universitat'].),
-  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
-  (municipi, municipality, it can only take the value of 'Barcelona'),
-  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number.),
-  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones'] which means persons.),
-  (valor, number of students per university, sex and nationality. Value examples: [26251, 1306, 10234, 19556, 9914].),
-  (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
-  (sexe, sex. Value examples: ['Dona', 'Home']. 'Dona'=Woman; 'Home'=Man.),
-  (grup_de_nacionalitat, nationality. Value examples: ['Estranger', 'Espanya']. 'Estranger'=Foreigner; 'Espanya'=Spain)
-]
+# The database comprises several tables, all adhering to a consistent structure. Each table serves to encode specific data relevant to the query. Here's a breakdown of the table structure:
+# 1. Time enconding: `data_inici` and `data_final`.
+# 2. Spatial encoding: Some tables feature spatial data encoded in columns `municipi`, `districte` and `barri`.
+# 3. Fact description: The primary fact is described in the `valor` column.
+# 4. Metadata columns: While some columns like `fet_ca`, `indicador_ca`, `tags_ca`, `unitat_ca`, and `unitat_mesura_ca` provide additional information about the content of the table, they are irrelevant for SQL queries and can be disregarded.
+# 5. Main Dimensions: Other columns in each table represent main dimensions and should always be retained.
 
-【Question】
-How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
-【Answer】
-```json
-{{
-  "Població_ocupada_assalariada": "drop_all",
-  "canvis_domicili_titulacio_districte_baixa_districte_alta": "drop_all",
-  "alumnes_universitaris_titulats_sexe_tipus_estudi_universitat": [ "sexe", "universitat", "tipus_d_estudi", "valor", "data_inici", "data_final"],
-  "alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi": ["sexe", "universitat", "valor", "data_inici", "data_final"]
-}}
-```
-Question Solved.
+# [Instruction]:
+# 1. You will be given up to ten tables from a database that have been determined most relevant with respect to the query. Discard any table schema that is not related to the user question and evidence.
+# 2. Sort the columns in each relevant table in descending order of relevance and keep the top 5 columns.
+# 3. Ensure that at least 2 tables are included in the final output JSON.
+# 4. The output should be in JSON format.
 
-==========
+# Requirements:
+# 1. If a table has less than or equal to 7 columns, mark it as "keep_all".
+# 2. If a table is completely irrelevant to the user question and evidence, mark it as "drop_all".
+# 3. Prioritize the columns in each relevant table based on their relevance.
 
-Here is a new example, please start answering:
+# Here is a typical example:
 
-【DB_ID】 {db_id}
-【Schema】
-{desc_str}
-【Foreign keys】
-{fk_str}
-【Question】
-{query}
-【Evidence】
-{evidence}
-【Answer】
-"""
+# ==========
+# 【DB_ID】 dbeulalia
+# 【Schema】
+# # Table: Població_ocupada_assalariada
+# [
+#   (valor, Població ocupada assalariada. Value examples: [Decimal('576.8'), Decimal('614.4'), Decimal('619.4'), Decimal('553.2'), Decimal('100.2')])
+#   (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
+#   (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
+#   (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
+#   (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
+#   (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['epa'] ),
+#   (municipi, municipality, it can only take the value of 'Barcelona'),
+#   (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number),
+#   (unitat_mesura_ca. gives the units of measure of the column 'value'. Value: ['Milers the persones'] which means thousands of people, implying that 'value' must be multiplied by 1000),
+# ]
+
+# # Table: canvis_domicili_titulacio_districte_baixa_districte_alta
+# [
+#   (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
+#   (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
+#   (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre de canvis de domicili'].),
+#   (indicador_ca, also describes the table, should not be in the SQL query. Value examples: ['Canvis de domicili per titulació acadèmica i districte de baixa i districte d'alta'].),
+#   (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['padró municipal, migracions internes, mudances, estudis, educació'] ),
+#   (municipi, municipality, it can only take the value of 'Barcelona'),
+#   (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+#   (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'].),
+#   (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Canvis de domicili'].),
+#   (valor, number of address changes. Value examples: [247, 1, 18, 33, 747].),
+#   (districte_d_alta. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+#   (titulacio_academica. Value examples: ['Estudis universitaris, CFGS grau superior', 'Sense estudis', 'Estudis primaris, certificat d'escolaritat, EGB', 'Batxillerat elemental, graduat escolar, ESO, FPI', 'No consta'].)
+# ]
+
+# # Table: alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
+# [
+#   (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+#   (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+#   (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats'].),
+#   (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat'].),
+#   (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
+#   (municipi, municipality, it can only take the value of 'Barcelona'),
+#   (unitat_ca, gives the type of the column 'value'. Value: ['Nombre']),
+#   (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones']),
+#   (valor, number of students per study, university and sex. Value examples: [2874, 957, 109, 2383, 97].),
+#   (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+#   (sexe, sex. Value examples: ['Dona', 'Home'].),
+#   (tipus_d_estudi. Value examples: ['Màster', 'Doctorat', 'Grau'])
+# ]
+
+# # Table: alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi
+# [
+#   (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+#   (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+#   (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a l’universitat'].),
+#   (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a la universitat per sexe, grup de nacionalitat i universitat'].),
+#   (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
+#   (municipi, municipality, it can only take the value of 'Barcelona'),
+#   (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number.),
+#   (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones'] which means persons.),
+#   (valor, number of students per university, sex and nationality. Value examples: [26251, 1306, 10234, 19556, 9914].),
+#   (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+#   (sexe, sex. Value examples: ['Dona', 'Home']. 'Dona'=Woman; 'Home'=Man.),
+#   (grup_de_nacionalitat, nationality. Value examples: ['Estranger', 'Espanya']. 'Estranger'=Foreigner; 'Espanya'=Spain)
+# ]
+
+# 【Question】
+# How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
+# 【Answer】
+# ```json
+# {{
+#   "Població_ocupada_assalariada": "drop_all",
+#   "canvis_domicili_titulacio_districte_baixa_districte_alta": "drop_all",
+#   "alumnes_universitaris_titulats_sexe_tipus_estudi_universitat": [ "sexe", "universitat", "tipus_d_estudi", "valor", "data_inici", "data_final"],
+#   "alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi": ["sexe", "universitat", "valor", "data_inici", "data_final"]
+# }}
+# ```
+# Question Solved.
+
+# ==========
+
+# Here is a new example, please start answering:
+
+# 【DB_ID】 {db_id}
+# 【Schema】
+# {desc_str}
+# 【Foreign keys】
+# {fk_str}
+# 【Question】
+# {query}
+# 【Evidence】
+# {evidence}
+# 【Answer】
+# """
 
 
 subq_pattern = r"Sub question\s*\d+\s*:"
 
 
-decompose_template_bird = """
+decompose_template_bird_mostratge = """
 Given a 【Database schema】 description and the 【Question】, you need to use valid SQL and understand the database and knowledge for text-to-SQL generation.
 When generating SQL, we should always consider constraints:
 【Constraints】
@@ -136,9 +180,169 @@ When generating SQL, we should always consider constraints:
 - If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
 - If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
 - If you must return "the second most ..." use LIMIT 1 OFFSET 1. If you are asked "The two most..." use LIMIT 2 
-- `valor` gives the value that the fact table records. Remember to sum(valor) instead of count(valor).
-- `data_inici` and `data_final` have string format 'YYYY-MM-DD'. You will always extract the year and or month using EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')).
+- `valor` gives the value that the fact table records. It's worth noting that to obtain the total number, one must sum the values in the `valor` column as SUM(valor).
+- `data_inici` and `data_final` have string format 'YYYY-MM-DD'.
+==========
 
+【Database schema】
+# Table: poblacio_per_sexe
+[
+    (valor. Value examples: [3941, 1617, 4190, 5502]),
+    (data_inici, start date. Value examples: ['1997-01-01', '2023-01-01', '2018-01-01', '2016-01-01', '2015-01-01'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Població'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Població per sexe'),
+    (data_final, end date. Value examples: ['1997-01-01', '2023-01-01', '2018-01-01', '2016-01-01', '2015-01-01'].),
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+    (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+    (barri, location in district of Barcelona. Value examples: ['Sant Andreu', 'el Poblenou', 'Hostafrancs', 'Sants - Badal', 'el Guinardó', 'Montblau'].),
+    (area_estadistica_basica. Value examples: [140, 191, 84, 127]),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Nombre'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Persones'),
+    (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value: 'padró municipal, persones, habitants, residents, ciutadans, gènere, sexe'),
+    (sexe. Value examples: ['Dona', 'Home'].)
+]
+Given the table poblacio_per_sexe, you must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'
+
+# Table: puntuacio_mitjana_de_la_satisfaccio_de_viure_a_la_ciutat
+[
+    (valor. Value examples: [7.344, 7.825, 7.5675]),
+    (data_inici, start date. Value examples: ['2000-04-15', '2011-10-07', '2000-04-15', '2016-01-01', '2021-05-20'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Puntuació mitjana de la satisfacció de viure a la ciutat'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Puntuació mitjana de la satisfacció de viure a la ciutat'),
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+    (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Mitjana'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Puntuació'),
+    (data_final, end date. Value examples: ['2000-04-15', '2011-10-07', '2000-04-15', '2016-01-01', '2021-05-20'].)
+]
+
+# Table: poblacio
+[
+    (valor. Value examples: [3941, 4617, 37190, 45502]),
+    (data_inici, start date. Value examples: ['1997-01-01', '2023-01-01', '2018-01-01', '2016-01-01', '2015-01-01'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Població'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Població'),
+    (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value: 'residents, gent, ciutadans, total')
+    (data_final, end date. Value examples: ['1997-01-01', '2023-01-01', '2018-01-01', '2016-01-01', '2015-01-01'].),
+    (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+    (barri, location in district of Barcelona. Value examples: ['Sant Andreu', 'el Poblenou', 'Hostafrancs', 'Sants - Badal', 'el Guinardó', 'Montblau'].),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Nombre'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Persones'),
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+]
+Given the table poblacio, you must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'
+
+
+【Question】
+Quants habitants hi havia a Barcelona el 2010?
+
+SQL
+```sql
+SELECT sum(valor)
+FROM poblacio
+WHERE EXTRACT(YEAR FROM TO_DATE(data_inici,'YYYY-MM-DD')) = 2018
+GROUP BY data_final
+ORDER BY data_final DESC
+LIMIT 1;
+```
+
+Question Solved.
+
+==========
+
+【Database schema】
+# Table: nombre_de_motocicletes_per_marca
+[
+    (valor. Value examples: [1926, 8948, 27676, 12552]),
+    (data_inici, start date. Value examples: ['2020-12-31', '2023-12-31', '2018-12-31', '2016-12-31', '2015-12-31'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Nombre de motocicletes'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Nombre de motocicletes per marca'),
+    (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value: 'parc vehicles, cens vehicles, cotxe')
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Nombre'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Motocicletes'),
+    (data_final, end date. Value examples: ['2020-12-31', '2023-12-31', '2018-12-31', '2016-12-31', '2015-12-31'].),
+    (marca. Value examples: ['VESPA', 'SYM', 'KYMCO', 'PIAGGIO'])
+]
+Given the table poblacio, you must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'
+
+# Table: nombre_de_motocicletes_per_cilindrada_cc_
+[
+    (valor. Value examples: [57, 88, 1175, 1552]),
+    (data_inici, start date. Value examples: ['2020-12-31', '2023-12-31', '2018-12-31', '2016-12-31', '2015-12-31'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Nombre de motocicletes'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Nombre de motocicletes per cilindrada (cc)'),
+    (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value: 'parc vehicles, cens vehicles, cotxe')
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+    (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+    (barri, location in district of Barcelona. Value examples: ['Sant Andreu', 'el Poblenou', 'Hostafrancs', 'Sants - Badal', 'el Guinardó', 'Montblau'].),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Nombre'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Motocicletes'),
+    (data_final, end date. Value examples: ['2020-12-31', '2023-12-31', '2018-12-31', '2016-12-31', '2015-12-31'].),
+    (cilindrada. Value examples: ['126-200 cc', '>1000 cc', '201-250 cc', '251-300 cc'])
+]
+Given the table poblacio, you must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'
+
+# Table: nombre_de_turismes_per_marca
+[
+    (valor. Value examples: [38306, 4884, 10624, 28893]),
+    (data_inici, start date. Value examples: ['2020-12-31', '2023-12-31', '2018-12-31', '2016-12-31', '2015-12-31'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Nombre de turismes'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Nombre de turismes per marca'),
+    (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value: 'parc vehicles, cens vehicles, cotxe')
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Nombre'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Turismes'),
+    (data_final, end date. Value examples: ['2020-12-31', '2023-12-31', '2018-12-31', '2016-12-31', '2015-12-31'].),
+    (marca. Value examples: ['VOLVO', 'SKODA', 'RENAULT', 'SAAB'])
+]
+Given the table poblacio, you must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'
+
+【Question】
+Quina era la marca predominant de motocicletes el 2019?
+
+SQL
+```sql
+SELECT marca
+FROM nombre_de_motocicletes_per_marca
+WHERE EXTRACT(YEAR FROM TO_DATE(data_inici,'YYYY-MM-DD')) = 2019
+GROUP BY data_final, marca
+ORDER BY sum(valor) DESC
+LIMIT 1;
+```
+
+Question Solved.
+
+==========
+
+
+【Database schema】
+{desc_str}
+【Foreign keys】
+{fk_str}
+【Question】
+{query}
+【Evidence】
+{evidence}
+
+Avoid hallucinations: Avoid generating content that is not supported by the provided information, ensuring all claims, references, and data are based on the input.
+
+Considering 【Constraints】 generate the SQL after thinking step by step:     
+"""
+
+
+decompose_template_bird_contatge = """
+Given a 【Database schema】 description and the 【Question】, you need to use valid SQL and understand the database and knowledge for text-to-SQL generation.
+When generating SQL, we should always consider constraints:
+【Constraints】
+- In `SELECT <column>`, just select needed columns in the 【Question】 without any unnecessary column or value
+- In `FROM <table>` or `JOIN <table>`, do not include unnecessary table
+- If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
+- If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
+- If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+- If you must return "the second most ..." use LIMIT 1 OFFSET 1. If you are asked "The two most..." use LIMIT 2 
+- `valor` gives the value that the fact table records. It's worth noting that to obtain the total number, one must sum the values in the `valor` column as SUM(valor).
+- `data_inici` and `data_final` have string format 'YYYY-MM-DD'.
 ==========
 
 【Database schema】
@@ -175,14 +379,12 @@ Quants estudiants de doctorat de la Universitat Politècnica de Catalunya són d
 
 Considering 【Constraints】 generate the SQL after thinking step by step:
 
-Question: Quants estudiants de doctorat de la Universitat Politècnica de Catalunya són dones actualment?
+Question: Quants estudiants de doctorat de la Universitat Politècnica de Catalunya eren dones l'any 2019?
 
 ```sql
-SELECT valor
+SELECT sum(valor)
 FROM alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
-WHERE universitat='Universitat Politècnica de Catalunya (UPC)' and sexe='Dona' and tipus_d_estudi='Doctorat'
-ORDER BY data_inici DESC
-LIMIT 1'
+WHERE universitat='Universitat Politècnica de Catalunya (UPC)' and sexe='Dona' and tipus_d_estudi='Doctorat' and EXTRACT(YEAR FROM TO_DATE(data_inici, "YYYY-MM-DD")) == 2019
 ```
 
 Question Solved.
@@ -272,28 +474,6 @@ Question Solved.
 
 ==========
 
-【Database schema】
-# Table: nombre_de_seguidors_al_compte_de_bcn_mobilitat_de_twitter
-[
-  (data_inici, start date of the school year. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
-  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
-  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number.),
-  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Seguidors'] which means followers.),
-  (valor, number of new followers of @bcn_mobilitat twitter account. Value examples: [37, 131, 224, -31].),
-]
-
-【Question】
-Quina ha estat l'evolució anual de seguidors del compte de twitter de l'ajuntament @bcn_mobilitat?
-
-SQL
-```sql
-SELECT EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')), sum(valor)
-FROM nombre_de_seguidors_al_compte_de_bcn_mobilitat_de_twitter
-GROUP BY EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD'))
-ORDER BY EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD'));
-```
-
-Question Solved.
 
 【Database schema】
 {desc_str}
@@ -304,8 +484,266 @@ Question Solved.
 【Evidence】
 {evidence}
 
+Avoid hallucinations: Avoid generating content that is not supported by the provided information, ensuring all claims, references, and data are based on the input.
+
 Considering 【Constraints】 generate the SQL after thinking step by step:
 """
+
+
+
+
+refiner_template = """
+【Instruction】
+When executing SQL below, some errors occurred, please fix up SQL based on query and database info.
+Solve the task step by step if you need to. Using SQL format in the code block, and indicate script type in the code block.
+When you find an answer, verify the answer carefully. Include verifiable evidence in your response if possible.
+【Constraints】
+
+- Make sure that the columns you are refering to exist and are part of the table.
+- Make sure that when filtering by a value, it is one of the Value Examples.
+- EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')) in order to extract month or year of date
+- In `SELECT <column>`, just select needed columns in the 【Question】 without any unnecessary column or value
+- In `FROM <table>` or `JOIN <table>`, do not include unnecessary table
+- If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
+- If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
+- If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+
+【Query】
+-- {query}
+【Evidence】
+{evidence}
+【Database info】
+{desc_str}
+【Foreign keys】
+{fk_str}
+【old SQL】
+```sql
+{sql}
+```
+【SQLite error】 
+{sqlite_error}
+【Exception class】
+{exception_class}
+
+Now please fixup old SQL and generate new SQL again.
+
+Avoid hallucinations: Avoid generating content that is not supported by the provided information, ensuring all claims, references, and data are based on the input.
+【correct SQL】
+"""
+
+refiner_template_mostratge = """
+【Instruction】
+When executing SQL below, some errors occurred, please fix up SQL based on query and database info.
+Solve the task step by step if you need to. Using SQL format in the code block, and indicate script type in the code block.
+When you find an answer, verify the answer carefully. Include verifiable evidence in your response if possible.
+【Constraints】
+
+- Make sure that the columns you are refering to exist and are part of the table.
+- Make sure that when filtering by a value, it is one of the Value Examples.
+- EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')) in order to extract month or year of date
+- In `SELECT <column>`, just select needed columns in the 【Question】 without any unnecessary column or value
+- In `FROM <table>` or `JOIN <table>`, do not include unnecessary table
+- If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
+- If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
+- If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+
+
+Here is a typical example:
+
+==========
+
+Given a 【Database schema】 description and the 【Question】, you need to use valid SQL and understand the database and knowledge for text-to-SQL generation.
+When generating SQL, we should always consider constraints:
+【Constraints】
+- In `SELECT <column>`, just select needed columns in the 【Question】 without any unnecessary column or value
+- In `FROM <table>` or `JOIN <table>`, do not include unnecessary table
+- If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
+- If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
+- If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+- If you must return "the second most ..." use LIMIT 1 OFFSET 1. If you are asked "The two most..." use LIMIT 2 
+- `valor` gives the value that the fact table records. It's worth noting that to obtain the total number, one must sum the values in the `valor` column as SUM(valor).
+- `data_inici` and `data_final` have string format 'YYYY-MM-DD'.
+==========
+
+【Database schema】
+# Table: poblacio_per_sexe
+[
+    (valor. Value examples: [3941, 1617, 4190, 5502]),
+    (data_inici, start date. Value examples: ['1997-01-01', '2023-01-01', '2018-01-01', '2016-01-01', '2015-01-01'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Població'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Població per sexe'),
+    (data_final, end date. Value examples: ['1997-01-01', '2023-01-01', '2018-01-01', '2016-01-01', '2015-01-01'].),
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+    (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+    (barri, location in district of Barcelona. Value examples: ['Sant Andreu', 'el Poblenou', 'Hostafrancs', 'Sants - Badal', 'el Guinardó', 'Montblau'].),
+    (area_estadistica_basica. Value examples: [140, 191, 84, 127]),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Nombre'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Persones'),
+    (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value: 'padró municipal, persones, habitants, residents, ciutadans, gènere, sexe'),
+    (sexe. Value examples: ['Dona', 'Home'].)
+]
+Given the table poblacio_per_sexe, you must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'
+
+# Table: puntuacio_mitjana_de_la_satisfaccio_de_viure_a_la_ciutat
+[
+    (valor. Value examples: [7.344, 7.825, 7.5675]),
+    (data_inici, start date. Value examples: ['2000-04-15', '2011-10-07', '2000-04-15', '2016-01-01', '2021-05-20'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Puntuació mitjana de la satisfacció de viure a la ciutat'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Puntuació mitjana de la satisfacció de viure a la ciutat'),
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+    (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Mitjana'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Puntuació'),
+    (data_final, end date. Value examples: ['2000-04-15', '2011-10-07', '2000-04-15', '2016-01-01', '2021-05-20'].)
+]
+
+# Table: poblacio
+[
+    (valor. Value examples: [3941, 4617, 37190, 45502]),
+    (data_inici, start date. Value examples: ['1997-01-01', '2023-01-01', '2018-01-01', '2016-01-01', '2015-01-01'].),
+    (fet_ca, describes the table, should not be in the SQL query. Value: 'Població'),
+    (indicador_ca, describes the table, should not be in the SQL query. Value: 'Població'),
+    (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value: 'residents, gent, ciutadans, total')
+    (data_final, end date. Value examples: ['1997-01-01', '2023-01-01', '2018-01-01', '2016-01-01', '2015-01-01'].),
+    (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+    (barri, location in district of Barcelona. Value examples: ['Sant Andreu', 'el Poblenou', 'Hostafrancs', 'Sants - Badal', 'el Guinardó', 'Montblau'].),
+    (unitat_ca, gives the type of the column 'value'. Value: 'Nombre'), 
+    (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: 'Persones'),
+    (municipi, municipality, it can only take the value of 'Barcelona'),
+]
+Given the table poblacio, you must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'
+
+
+【Question】
+Quants habitants hi havia a Barcelona el 2010?
+
+SQL
+```sql
+SELECT sum(valor)
+FROM poblacio
+WHERE EXTRACT(YEAR FROM TO_DATE(data_inici,'YYYY-MM-DD')) = 2018
+GROUP BY data_final
+ORDER BY data_final DESC
+LIMIT 1;
+```
+
+Question Solved.
+
+==========
+
+【Query】
+-- {query}
+【Evidence】
+{evidence}
+【Database info】
+{desc_str}
+【Foreign keys】
+{fk_str}
+【old SQL】
+```sql
+{sql}
+```
+【SQLite error】 
+{sqlite_error}
+【Exception class】
+{exception_class}
+
+Now please fixup old SQL and generate new SQL again.
+
+Avoid hallucinations: Avoid generating content that is not supported by the provided information, ensuring all claims, references, and data are based on the input.
+【correct SQL】
+"""
+
+refiner_template_contatge = """
+【Instruction】
+When executing SQL below, some errors occurred, please fix up SQL based on query and database info.
+Solve the task step by step if you need to. Using SQL format in the code block, and indicate script type in the code block.
+When you find an answer, verify the answer carefully. Include verifiable evidence in your response if possible.
+【Constraints】
+
+- Make sure that the columns you are refering to exist and are part of the table.
+- Make sure that when filtering by a value, it is one of the Value Examples.
+- EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')) in order to extract month or year of date
+- In `SELECT <column>`, just select needed columns in the 【Question】 without any unnecessary column or value
+- In `FROM <table>` or `JOIN <table>`, do not include unnecessary table
+- If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
+- If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
+- If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
+
+
+Here is a typical example:
+
+==========
+【Database schema】
+# Table: alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
+[
+  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value examples: ['Nombre']),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value examples: ['Persones'].),
+  (valor, Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat. Value examples: [2874, 957, 109, 2383, 97].),
+  (universitat, universitat. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+  (sexe, sexe. Value examples: ['Dona', 'Home'].),
+  (tipus_d_estudi, tipus d'estudi. Value examples: ['Màster', 'Doctorat', 'Grau'])
+]
+
+# Table: alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi
+[
+  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+  (unitat_ca, gives the type of the column 'value'. Value examples: ['Nombre'].),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones'].),
+  (valor, Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat. Value examples: [26251, 1306, 10234, 19556, 9914].),
+  (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+  (sexe, sex. Value examples: ['Dona', 'Home'].),
+  (grup_de_nacionalitat, nacionalitat. Value examples: ['Estranger', 'Espanya'].)
+]
+
+【Question】
+Quants estudiants de doctorat de la Universitat Politècnica de Catalunya són dones actualment?
+
+Considering 【Constraints】 generate the SQL after thinking step by step:
+
+Question: Quants estudiants de doctorat de la Universitat Politècnica de Catalunya eren dones l'any 2019?
+
+```sql
+SELECT sum(valor)
+FROM alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
+WHERE universitat='Universitat Politècnica de Catalunya (UPC)' and sexe='Dona' and tipus_d_estudi='Doctorat' and EXTRACT(YEAR FROM TO_DATE(data_inici, "YYYY-MM-DD")) == 2019
+```
+
+Question Solved.
+
+==========
+
+【Query】
+-- {query}
+【Evidence】
+{evidence}
+【Database info】
+{desc_str}
+【Foreign keys】
+{fk_str}
+【old SQL】
+```sql
+{sql}
+```
+【SQL error】 
+{sqlite_error}
+【Exception class】
+{exception_class}
+
+Now please fixup old SQL and generate new SQL again.
+
+Avoid hallucinations: Avoid generating content that is not supported by the provided information, ensuring all claims, references, and data are based on the input.
+
+【correct SQL】
+"""
+
 
 
 # decompose_template_spider = """
@@ -613,41 +1051,4 @@ FROM table_b
 【Evidence】
 {evidence}
 【Answer】
-"""
-
-
-refiner_template = """
-【Instruction】
-When executing SQL below, some errors occurred, please fix up SQL based on query and database info.
-Solve the task step by step if you need to. Using SQL format in the code block, and indicate script type in the code block.
-When you find an answer, verify the answer carefully. Include verifiable evidence in your response if possible.
-【Constraints】
-
-- Make sure that the columns you are refering to exist and are part of the table.
-- In `SELECT <column>`, just select needed columns in the 【Question】 without any unnecessary column or value
-- In `FROM <table>` or `JOIN <table>`, do not include unnecessary table
-- If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`
-- If [Value examples] of <column> has 'None' or None, use `JOIN <table>` or `WHERE <column> is NOT NULL` is better
-- If use `ORDER BY <column> ASC|DESC`, add `GROUP BY <column>` before to select distinct values
-- Always use EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')) in order to extract month or year of date
-
-【Query】
--- {query}
-【Evidence】
-{evidence}
-【Database info】
-{desc_str}
-【Foreign keys】
-{fk_str}
-【old SQL】
-```sql
-{sql}
-```
-【SQLite error】 
-{sqlite_error}
-【Exception class】
-{exception_class}
-
-Now please fixup old SQL and generate new SQL again.
-【correct SQL】
 """

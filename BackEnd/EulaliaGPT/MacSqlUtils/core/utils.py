@@ -7,6 +7,7 @@ import time
 import sqlite3
 from core.const import subq_pattern
 from typing import Dict, List
+import psycopg2
 
 
 def is_valid_date(date_str):
@@ -251,7 +252,6 @@ def read_txt_file(path):
         return [line.strip() for line in f if line.strip()!= '']
 
 def load_json_file(path):
-    print(os.listdir())
     with open(path, 'r', encoding='utf-8') as f:
         print(f"load json file from {path}")
         return json.load(f)
@@ -538,3 +538,33 @@ def eval_hardness(sql):
         return "hard"
     else:
         return "extra"
+    
+
+    
+def extract_table_type(table_name):
+    
+    if "eleccions" in table_name:
+        return "Eleccions"
+    if "aeronaus" in table_name:
+        return "Contatge"
+    if table_name in ['nombre_d_escales_realitzades_al_port_de_barcelona', 'escales_realitzades_port_barcelona_tipus_vaixell', 'consum_d_electricitat_mwh_', 'unitats_productes_alimentaris_venudes_mercabarna_kg_sector_prod', 'preu_mitja_eur_kg_vendes_aliments_mercabarna_sector_producte', 'preu_eur_litre_dels_carburants_per_tipus_de_carburant']:
+        return "Contatge"
+    
+    conn = psycopg2.connect(database="dbeulalia", user="postgres", password="password", host="localhost", port="5432", client_encoding="utf8")
+    cursor = conn.cursor()
+    sql = f"SELECT DISTINCT data_inici, data_final::date - data_inici::date + 1 FROM {table_name} LIMIT 100;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    
+    days_set = set(i[0][5:-1] for i in result)
+    dif_days_set = set(i[1] for i in result)
+    
+    if 366 not in dif_days_set and 365 not in dif_days_set and 28 not in dif_days_set and 30 not in dif_days_set and 31 not in dif_days_set and days_set != {"09-01"}:
+        return "Mostratge"
+        
+    if len(dif_days_set) > 2: # dades mensual+anual  //   diària+mensual+anual
+        return "Contatge_especial"
+    
+    return "Contatge"
+
+    
