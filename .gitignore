@@ -4,5 +4,4 @@
 **__pycache__/
 **/.env
 BackEnd/EulaliaGPT/MacSqlUtils/tables_data.json
-BackEnd/EulaliaGPT/MacSqlUtils/core/
 BackEnd/DataBase/dictionario.json

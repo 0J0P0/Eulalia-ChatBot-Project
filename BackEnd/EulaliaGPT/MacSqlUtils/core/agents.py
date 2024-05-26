@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from core.utils import parse_json, parse_sql_from_string, add_prefix, load_json_file, extract_world_info, is_email, is_valid_date_column
+from core.utils import parse_json, parse_sql_from_string, add_prefix, load_json_file, extract_world_info, is_email, is_valid_date_column, extract_table_type
+from chroma import relevant_docs
 
-from DataBase.chroma import relevant_docs
 
 LLM_API_FUC = None
 # try import core.api, if error then import core.llm
+    
 try:
     from core import api
     LLM_API_FUC = api.safe_call_llm
@@ -150,8 +151,8 @@ class Selector(BaseAgent):
         col_to_values_str_lst = []
         col_to_values_str_dict = {}
 
-        key_col_list = [json_column_names[i] for i, flag in enumerate(is_key_column_lst) if flag]
-
+        # key_col_list = [json_column_names[i] for i, flag in enumerate(is_key_column_lst) if flag]
+        # key_col_list = []
         len_column_names = len(column_names)
 
         for idx, column_name in enumerate(column_names):
@@ -159,8 +160,8 @@ class Selector(BaseAgent):
             # print(f"In _get_unique_column_values_str, processing column: {idx}/{len_column_names} col_name: {column_name} of table: {table}", flush=True)
 
             # skip pk and fk
-            if column_name in key_col_list:
-                continue
+            # if column_name in key_col_list:
+            #     continue
             
             lower_column_name: str = column_name.lower()
             # if lower_column_name ends with [id, email, url], just use empty str
@@ -179,7 +180,7 @@ class Selector(BaseAgent):
             values_str = ''
             # try to get value examples str, if exception, just use empty str
             try:
-                values_str = self._get_value_examples_str(values, column_types[idx])
+                values_str = self._get_value_examples_str(values, column_types[idx], column_name)
             except Exception as e:
                 print(f"\nerror: get_value_examples_str failed, Exception:\n{e}\n")
 
@@ -195,12 +196,11 @@ class Selector(BaseAgent):
             # print(f"column_name: {column_name}")
             # print(f"col_to_values_str_dict: {col_to_values_str_dict}")
 
-            is_key = is_key_column_lst[k]
+            # is_key = is_key_column_lst[k]
 
             # pk or fk do not need value str
-            if is_key:
-                values_str = ''
-            elif column_name in col_to_values_str_dict:
+
+            if column_name in col_to_values_str_dict:
                 values_str = col_to_values_str_dict[column_name]
             else:
                 time.sleep(3)
@@ -212,11 +212,12 @@ class Selector(BaseAgent):
     
 
     # 这个地方需要精细化处理
-    def _get_value_examples_str(self, values: List[object], col_type: str):
+    def _get_value_examples_str(self, values: List[object], col_type: str, column_name: str):
+        
         if not values:
             return ''
-        if len(values) > 10 and col_type in ['INTEGER', 'REAL', 'NUMERIC', 'FLOAT', 'INT']:
-            return ''
+        if len(values) > 10 and col_type.upper() in ['INTEGER', 'REAL', 'NUMERIC', 'FLOAT', 'INT']:
+            return values[:5]
         
         vals = []
         has_null = False
@@ -233,7 +234,7 @@ class Selector(BaseAgent):
             return ''
         
         # drop meaningless values
-        if col_type in ['TEXT', 'VARCHAR']:
+        if col_type.upper() in ['TEXT', 'VARCHAR']:
             new_values = []
             
             for v in vals:
@@ -262,11 +263,9 @@ class Selector(BaseAgent):
         if not vals:
             return ''
         
-        vals = vals[:6]
-
-        is_date_column = is_valid_date_column(vals)
-        if is_date_column:
-            vals = vals[:1]
+        # vals = vals[:6]
+        if column_name in ["data_inici", "data_final"] or col_type.upper() in ['INTEGER', 'REAL', 'NUMERIC', 'FLOAT', 'INT']:
+            vals = vals[:4]
 
         if has_null:
             vals.insert(0, None)
@@ -315,8 +314,10 @@ class Selector(BaseAgent):
         # print(table_names_original_lst)    
         # table_names_original_lst = relevant_docs(self._message["query"])
         # table_names_original_lst = [i.lower() for i in table_names_original_lst]
-        table_names_original_lst = relevant_docs(self._message["query"])
-
+        table_names_original_lst = relevant_docs(self._message["query"], 10)
+        for table_namename in table_names_original_lst:
+            print(table_namename)
+        
         # print("------------------------------")
         # print("------------------------------")
         # print("------------------------------")
@@ -329,8 +330,7 @@ class Selector(BaseAgent):
         # print("\n\n\n\n\n")
         # print(table_names_original_lst)    
         # exit()
-
-        table_tbidx = dict(load_json_file("EulaliaGPT/MacSqlUtils/core/table_tbidx.json"))
+        table_tbidx = dict(load_json_file("core/table_tbidx.json"))
         # print(table_tbidx)
 
         for idx, tb_name in enumerate(table_names_original_lst):
@@ -373,11 +373,12 @@ class Selector(BaseAgent):
             # print("Pure column names original list", pure_column_names_original_lst)
             all_sqlite_column_names_lst, all_sqlite_column_types_lst = self._get_column_attributes(cursor, tb_name)
             col_to_values_str_lst = self._get_unique_column_values_str(cursor, tb_name, all_sqlite_column_names_lst, all_sqlite_column_types_lst, pure_column_names_original_lst, is_key_column_lst)
+
             table_unique_column_values[tb_name] = col_to_values_str_lst
             
 
         # table_foreign_keys 处理起来麻烦一些
-        foreign_keys_lst = db_dict['foreign_keys']
+        foreign_keys_lst = db_dict['foreign_keys'] # realment no hi ha FKs
 
         for from_col_idx, to_col_idx in foreign_keys_lst:
             from_col_name = all_column_names_original_lst[from_col_idx][1]
@@ -467,12 +468,10 @@ class Selector(BaseAgent):
         schema_desc_str += '{\n' + '\n'.join(extracted_column_infos) + '\n}' + '\n'
         return schema_desc_str
     
-    def _build_bird_table_schema_list_str(self, table_name, new_columns_desc, new_columns_val):
+    
+    def _build_bird_table_schema_list_str(self, table_name, new_columns_desc, new_columns_val, table_type=None):
         
-        conn = psycopg2.connect(database="dbeulalia", user="postgres", password="password", host="localhost", port="5432", client_encoding="utf8")
-        cursor = conn.cursor()
 
-        columnes_valors = ['valor', 'data_inici', 'data_final', 'fet_ca', 'indicador_ca', 'unitat_mesura_ca', 'unitat_ca', 'frequencia', 'pais_de_nacionalitat', 'continent_de_nacionalitat']
         schema_desc_str = ''
         schema_desc_str += f"# Table: {table_name}\n"
         extracted_column_infos = []
@@ -486,52 +485,49 @@ class Selector(BaseAgent):
             col_line_text += f"{col_name},"
 
             if col_name == 'valor':
-                col_line_text = col_line_text + new_columns_val[4][1][2:-2] + "."
+                col_line_text += " " + new_columns_val[4][1][2:-2] + "."
             elif col_name == 'data_inici':
                 col_line_text += "start date."
             elif col_name == 'data_final':
                 col_line_text += "end date."
             elif col_name in ['fet_ca', 'indicador_ca']:
-                col_line_text += "describes the table, should not be in the SQL query."
+                col_line_text += " describes the table, should not be in the SQL query."
             elif col_name == "tags_ca":
-                col_line_text += "relevant words related to the topic of the table, should not be in the SQL"
-            elif col_name == "municipality":
-                col_line_text += "municipality, it can only take the value of 'Barcelona'."
+                col_line_text += " relevant words related to the topic of the table, should not be in the SQL."
+            elif col_name == "municipi":
+                col_line_text += " municipality, it can only take the value of 'Barcelona'."
             elif col_name == "unitat_ca":
-                col_line_text += "gives the type of the column 'value'."
+                col_line_text += " gives the type of the column 'value'."
             elif col_name == "unitat_mesura_ca":
-                col_line_text += "gives the units of measure of the column 'value'."
+                col_line_text += " gives the units of measure of the column 'value'."
+                
             elif full_col_name != '':
                 full_col_name = full_col_name.strip()
                 col_line_text += f" {full_col_name}."
-                
-            if col_values_str != '':
+            
+            if col_name in ['unitat_ca', 'unitat_mesura_ca', 'tags_ca', 'fet_ca', 'indicador_ca']:
+                col_line_text += f" Value: {col_values_str[1:-2]}'"
+            elif col_values_str != '' and col_name != 'municipi':
                 col_line_text += f" Value examples: {col_values_str}."
-            elif col_values_str == '' and col_name not in columnes_valors:
-                sql=f"""
-                SELECT DISTINCT {col_name}
-                FROM {table_name}
-                LIMIT 6
-                """
-                # exit()
-                cursor.execute(sql)
-                result = cursor.fetchall()
-                examples = []
-                for el in result:
-                    examples.append(el[0])
-                col_line_text += f"Value examples: {examples}."
             
             if col_extra_desc != '':
                 col_line_text += f" {col_extra_desc}"
             col_line_text += '),'
             extracted_column_infos.append(col_line_text)
         schema_desc_str += '[\n' + '\n'.join(extracted_column_infos).strip(',') + '\n]' + '\n'
+        
+        if table_type == "Mostratge":
+            schema_desc_str += f"Given the table {table_name}, you must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'.\n\n"
+        elif table_type == "Contatge_especial": # si les dades estan mensuals+anuals o diàries+mensual+anuals
+            schema_desc_str += f"Given the table {table_name} you must filter or select a date by specifying the initial date 'date_inici' and the end date 'data_final'.\n\n"
+
         return schema_desc_str
     
     def _get_db_desc_str(self,
                          db_id: str,
                          extracted_schema: dict,
-                         use_gold_schema: bool = False) -> List[str]:
+                         use_gold_schema: bool = False,
+                         need_prune: bool = True) -> List[str]:
         """
         Add foreign keys, and value descriptions of focused columns.
         :param db_id: name of sqlite database
@@ -559,13 +555,19 @@ class Selector(BaseAgent):
         # pprint(extracted_schema)
         # print()
 
+        table_types = {"Mostratge": 0, "Eleccions": 0, "Contatge": 0}
+        
         print(f"db_id: {db_id}")
         # For selector recall and compression rate calculation
         chosen_db_schem_dict = {} # {table_name: ['col_a', 'col_b'], ..}
         for (table_name, columns_desc), (_, columns_val), (_, fk_info), (_, pk_info) in \
                 zip(desc_info.items(), value_info.items(), fk_info.items(), pk_info.items()):
             
-            table_decision = extracted_schema.get(table_name, '')
+            if need_prune:
+                table_decision = extracted_schema.get(table_name, '')
+            else:
+                table_decision = "keep_all"
+                
             if table_decision == '' and use_gold_schema:
                 continue
 
@@ -621,7 +623,13 @@ class Selector(BaseAgent):
             
             # 1. Build schema part of prompt
             # schema_desc_str += self._build_bird_table_schema_sqlite_str(table_name, new_columns_desc, new_columns_val)
-            schema_desc_str += self._build_bird_table_schema_list_str(table_name, new_columns_desc, new_columns_val)
+            table_type=extract_table_type(table_name) # CALCULAR TABLE TYP
+            schema_desc_str += self._build_bird_table_schema_list_str(table_name, new_columns_desc, new_columns_val, table_type)
+            
+            if table_type=="Contatge_especial":
+                table_type = "Contatge"
+            
+            table_types[table_type] += 1
 
             # 2. Build foreign key part of prompt
             for col_name, to_table, to_col in fk_info:
@@ -637,12 +645,18 @@ class Selector(BaseAgent):
         schema_desc_str = schema_desc_str.strip()
         fk_desc_str = fk_desc_str.strip()
         
-        return schema_desc_str, fk_desc_str, chosen_db_schem_dict
+        # escollir quina prompt agafar --> Possible que s'hagi de mirar més al detall
+        dataset_type = "Mostratge" if table_types["Mostratge"] + table_types["Eleccions"] > table_types["Contatge"] else "Contatge"
+        print(table_types)
+        print(dataset_type)
+        
+        return schema_desc_str, fk_desc_str, chosen_db_schem_dict, dataset_type
 
     def _is_need_prune(self, db_id: str, db_schema: str):
         # encoder = tiktoken.get_encoding("cl100k_base")
         # tokens = encoder.encode(db_schema)
         # return len(tokens) >= 25000
+        return False
         db_dict = self.db2dbjsons[db_id]
         avg_column_count = db_dict['avg_column_count']
         total_column_count = db_dict['total_column_count']
@@ -658,7 +672,7 @@ class Selector(BaseAgent):
                db_fk: str,
                evidence: str = None,
                ) -> dict:
-        print(db_schema)
+        
         prompt = selector_template.format(db_id=db_id, query=query, evidence=evidence, desc_str=db_schema, fk_str=db_fk) # afegir table names
         word_info = extract_world_info(self._message)
         reply = LLM_API_FUC(prompt, **word_info)
@@ -682,10 +696,14 @@ class Selector(BaseAgent):
         use_gold_schema = False
         if ext_sch:
             use_gold_schema = True
-        db_schema, db_fk, chosen_db_schem_dict = self._get_db_desc_str(db_id=db_id, extracted_schema=ext_sch, use_gold_schema=use_gold_schema)
-        need_prune = self._is_need_prune(db_id, db_schema)
+            
+        db_schema, db_fk, chosen_db_schem_dict, dataset_type = self._get_db_desc_str(db_id=db_id, extracted_schema=ext_sch, use_gold_schema=use_gold_schema)
+        
         if self.without_selector:
             need_prune = False
+        else:
+            need_prune = self._is_need_prune(db_id, db_schema)
+
         if ext_sch == {} and need_prune:
             try:
                 raw_extracted_schema_dict = self._prune(db_id=db_id, query=query, db_schema=db_schema, db_fk=db_fk, evidence=evidence)
@@ -694,7 +712,7 @@ class Selector(BaseAgent):
                 raw_extracted_schema_dict = {}
             
             print(f"query: {message['query']}\n")
-            db_schema_str, db_fk, chosen_db_schem_dict = self._get_db_desc_str(db_id=db_id, extracted_schema=raw_extracted_schema_dict)
+            db_schema_str, db_fk, chosen_db_schem_dict, dataset_type = self._get_db_desc_str(db_id=db_id, extracted_schema=raw_extracted_schema_dict)
 
             message['extracted_schema'] = raw_extracted_schema_dict
             message['chosen_db_schem_dict'] = chosen_db_schem_dict
@@ -702,12 +720,20 @@ class Selector(BaseAgent):
             message['fk_str'] = db_fk
             message['pruned'] = True
             message['send_to'] = DECOMPOSER_NAME
+            message['dataset_type'] = dataset_type
+            
         else:
+            
+            print(db_schema)
+            # db_schema, db_fk, chosen_db_schem_dict, dataset_type = self._get_db_desc_str(db_id=db_id, extracted_schema=ext_sch, use_gold_schema=use_gold_schema, need_prune=False)
+
             message['chosen_db_schem_dict'] = chosen_db_schem_dict
             message['desc_str'] = db_schema
             message['fk_str'] = db_fk
             message['pruned'] = False
             message['send_to'] = DECOMPOSER_NAME
+            message['dataset_type'] = dataset_type
+
 
 
 class Decomposer(BaseAgent):
@@ -740,7 +766,10 @@ class Decomposer(BaseAgent):
         
 
         if self.dataset_name == 'bird':
-            decompose_template = decompose_template_bird
+            if self._message["dataset_type"] == "Contatge": # contatge
+                decompose_template = decompose_template_bird_contatge
+            else: # mostratge o eleccions
+                decompose_template = decompose_template_bird_mostratge
             prompt = decompose_template.format(query=query, desc_str=schema_info, fk_str=fk_info, evidence=evidence)
         else:
             # default use spider template
@@ -815,6 +844,7 @@ class Refiner(BaseAgent):
 
     def _is_need_refine(self, exec_result: dict):
         # spider exist dirty values, even gold sql execution result is None
+    
         if self.dataset_name == 'spider':
             if 'data' not in exec_result:
                 return True
@@ -827,7 +857,7 @@ class Refiner(BaseAgent):
                 return True
             for t in data:
                 for n in t:
-                     if n is None:  # fixme fixme fixme fixme fixme
+                     if n is None: 
                         exec_result['postgresql_error'] = 'exist None value, you can add `NOT NULL` in SQL'
                         return True
             return False
@@ -839,16 +869,23 @@ class Refiner(BaseAgent):
                evidence:str,
                schema_info: str,
                fk_info: str,
-               error_info: dict) -> dict:
+               error_info: dict,
+               type_taula_escollida: str = "no_type") -> dict:
         
         sql_arg = add_prefix(error_info.get('sql'))
         
-        # TODO: CANVIAR
         postgresql_error = error_info.get('postgresql_error')
         exception_class = error_info.get('exception_class')
-        prompt = refiner_template.format(query=query, evidence=evidence, desc_str=schema_info, \
+
+        if type_taula_escollida == "no_type":
+            prompt = refiner_template.format(query=query, evidence=evidence, desc_str=schema_info, \
                                        fk_str=fk_info, sql=sql_arg, sqlite_error=postgresql_error, \
                                         exception_class=exception_class)
+        else:
+            wrong_table_type = "You must select the latest data_final with 'GROUP BY data_final ORDER BY data_final LIMIT 1'.\n"
+            prompt = refiner_template_mostratge.format(query=query, evidence=evidence, desc_str=schema_info, \
+                                       fk_str=fk_info, sql=sql_arg, sqlite_error=wrong_table_type, \
+                                        exception_class=wrong_table_type)            
 
         word_info = extract_world_info(self._message)
         reply = LLM_API_FUC(prompt, **word_info)
@@ -880,17 +917,41 @@ class Refiner(BaseAgent):
             message['pred'] = old_sql
             message['send_to'] = SYSTEM_NAME
             return
+           
+        try:
+            taula_escollida = old_sql.split("\nFROM ")[1].split("\n")[0]
+            type_taula_escollida = extract_table_type(taula_escollida)
+            refine_table = type_taula_escollida != message.get("dataset_type")
+            print(old_sql)
+        except:
+            print("There was a little error with the SQL.")
+            print(old_sql)
+            refine_table = False            
         
+        
+        if refine_table and type_taula_escollida == "Contatge":
+            old_sql = old_sql.replace("\nGROUP BY data_final", "").replace("\nORDER BY data_final DESC\nLIMIT 1", "")
+            refine_table = False
+
+        # if tipus_de_recompte(message) 
         error_info = self._execute_sql(old_sql, db_id)
         
-        if not self._is_need_refine(error_info):  # correct in one pass or refine success
+        if message.get('try_times', 0) + 1 == 1 and refine_table:
+            
+            new_sql = self._refine(query, evidence, schema_info, fk_info, error_info, type_taula_escollida)
             message['try_times'] = message.get('try_times', 0) + 1
-            message['pred'] = old_sql
+            message['pred'] = old_sql.replace("count(valor)", "sum(valor)").replace("COUNT(valor)", "SUM(valor)").replace("count(*)", "sum(valor)").replace("COUNT(*)", "SUM(valor)")
+            message['fixed'] = True            
+            message['send_to'] = REFINER_NAME
+            
+        elif not self._is_need_refine(error_info):  # correct in one pass or refine success
+            message['try_times'] = message.get('try_times', 0) + 1
+            message['pred'] = old_sql.replace("count(valor)", "sum(valor)").replace("COUNT(valor)", "SUM(valor)").replace("count(*)", "sum(valor)").replace("COUNT(*)", "SUM(valor)")
             message['send_to'] = SYSTEM_NAME
         else:
             new_sql = self._refine(query, evidence, schema_info, fk_info, error_info)
             message['try_times'] = message.get('try_times', 0) + 1
-            message['pred'] = new_sql
+            message['pred'] = new_sql.replace("count(valor)", "sum(valor)").replace("COUNT(valor)", "SUM(valor)").replace("count(*)", "sum(valor)").replace("COUNT(*)", "SUM(valor)")
             message['fixed'] = True
             message['send_to'] = REFINER_NAME
         return
