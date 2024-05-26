@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from core.utils import *
 from core.chat_manager import ChatManager
-# from core.utils import get_gold_columns
+from core.utils import get_gold_columns
 from core.const import SYSTEM_NAME
 from tqdm import tqdm
 import time
@@ -10,11 +10,8 @@ import sys
 import os
 import json
 import traceback
-# from DataBase.chroma import relevant_docs
 
 
-
-### AIXÒ NO SERVEIX DE RES
 def init_spider_message(idx: int, item: dict) -> dict:
     """
     Construct message for text-to-SQL task
@@ -78,14 +75,16 @@ def run_batch(dataset_name, input_file, output_file, db_path, tables_json_path, 
    
     # load dataset
     batch = load_json_file(input_file)
-    
+      
     # resume from last checkpoint
-
     finished_ids = set()
-    if os.path.exists(output_file):
-        output_data_lst = load_jsonl_file(output_file)
-        for o in output_data_lst:
-            finished_ids.add(o['idx'])
+
+    # if os.path.exists(output_file):
+    #     output_data_lst = load_jsonl_file(output_file)
+    #     print(output_data_lst)
+    #     for o in output_data_lst:
+    #         finished_ids.add(o['idx'])
+    
     unfinished_ids = [n for n in range(len(batch)) if n not in finished_ids and n >= start_pos]
     print(f"len(unfinished_data) = {len(unfinished_ids)}")
 
@@ -96,20 +95,22 @@ def run_batch(dataset_name, input_file, output_file, db_path, tables_json_path, 
 
     # skip some json data
     excluded_db_ids = []
-    if dataset_mode == 'train':
-        exclude_txt = './data/bird_train/excluded_db_ids.txt'
-        excluded_db_ids = read_txt_file(exclude_txt)
+    
+    # We use dev
+    # if dataset_mode == 'train':
+    #     exclude_txt = './data/bird_train/excluded_db_ids.txt'
+    #     excluded_db_ids = read_txt_file(exclude_txt)
     new_batch = []
     exclude_db_json_cnt = 0 # for exclude some dbs in bird train set
     for k, item in enumerate(batch):
         q_id = item['question_id']
         if q_id not in unfinished_ids:
             continue
-        if dataset_mode == 'train':
-            # skip excluded db_id
-            if item['db_id'] in excluded_db_ids:
-                exclude_db_json_cnt += 1
-                continue
+        # if dataset_mode == 'train':
+        #     # skip excluded db_id
+        #     if item['db_id'] in excluded_db_ids:
+        #         exclude_db_json_cnt += 1
+        #         continue
         new_batch.append(item)
     
     if exclude_db_json_cnt:
@@ -128,6 +129,7 @@ def run_batch(dataset_name, input_file, output_file, db_path, tables_json_path, 
     # generate SQL one by one, and save result one by one
     with open(output_file, 'a+', encoding='utf-8') as fp:
         total_num = len(batch)
+        
         for cur_idx, item in tqdm(enumerate(batch)):
             idx = item['question_id']
             db_id = item['db_id']
@@ -208,6 +210,7 @@ if __name__ == "__main__":
     parser.add_argument('--start_pos', type=int, default=0, help='start position of a batch')
     parser.add_argument('--use_gold_schema', action='store_true', default=False)
     parser.add_argument('--without_selector', action='store_true', default=False)
+    
     args = parser.parse_args()
     # 打印args中的键值对
     for key, value in vars(args).items():

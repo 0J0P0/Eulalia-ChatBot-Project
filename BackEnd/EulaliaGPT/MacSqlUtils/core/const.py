@@ -12,159 +12,320 @@ REFINER_NAME = 'Refiner'
 SYSTEM_NAME = 'System'
 
 
-# selector_template = """
-# As an experienced and professional database administrator, your task is to analyze a user question and a database schema to provide relevant information. The database schema consists of table descriptions, each containing multiple column descriptions. Your goal is to identify the relevant tables and columns based on the user question and evidence provided.
-# Take a deep breath and approach this task methodically, step-by-step.
+selector_template = """
+As an experienced and professional database administrator, your task is to analyze a user question and a database schema to provide relevant information. The database schema consists of table descriptions, each containing multiple column descriptions. Your goal is to identify the relevant tables and columns based on the user question and evidence provided.
+Take a deep breath and approach this task methodically, step-by-step.
 
-# The database comprises several tables, all adhering to a consistent structure. Each table serves to encode specific data relevant to the query. Here's a breakdown of the table structure:
-# 1. Time enconding: `data_inici` and `data_final`.
-# 2. Spatial encoding: Some tables feature spatial data encoded in columns `municipi`, `districte` and `barri`.
-# 3. Fact description: The primary fact is described in the `valor` column.
-# 4. Metadata columns: While some columns like `fet_ca`, `indicador_ca`, `tags_ca`, `unitat_ca`, and `unitat_mesura_ca` provide additional information about the content of the table, they are irrelevant for SQL queries and can be disregarded.
-# 5. Main Dimensions: Other columns in each table represent main dimensions and should always be retained.
+The database comprises several tables, all adhering to a consistent structure. Each table serves to encode specific data relevant to the query. Here's a breakdown of the table structure:
+1. Time encoding: `data_inici` and `data_final`.
+2. Spatial encoding: Some tables feature spatial data encoded in columns `municipi`, `districte`, and `barri`.
+3. Fact description: The primary fact is described in the `valor` column.
+4. Metadata columns: Columns like `fet_ca`, `indicador_ca`, `tags_ca`, `unitat_ca`, and `unitat_mesura_ca` provide additional information about the content of the table and should be considered when understanding the context, but they are irrelevant for SQL queries and can be disregarded.
+5. Main Dimensions: Other columns in each table represent main dimensions and should always be retained.
 
-# [Instruction]:
-# 1. You will be given up to ten tables from a database that have been determined most relevant with respect to the query.
-# 2. Sort the columns in each relevant table in descending order of relevance and keep the top 5 columns.
-# 3. Ensure that at least 2 tables are included in the final output JSON.
-# 4. The output should be in JSON format.
+[Instruction]:
+1. You will be given a tables from a database that has been determined relevant with respect to the query.
+2. Based on the user question and the provided evidence, determine if it could contain the information needed to answer the user's query. 
+3. Your answer should be either `Useful` or `Not useful`. 
+4. Look at the value of `indicador_ca` to understand the context and content of each table. Use this to guide your decision on usefulness.
 
-# Requirements:
-# 1. If a table has less than or equal to 7 columns, mark it as "keep_all".
-# 2. If a table is completely irrelevant to the user question and evidence, mark it as "keep_all".
-# 3. Prioritize the columns in each relevant table based on their relevance.
+Here is a typical example:
 
-# A typical example would be:
+==========
+【DB_ID】 dbeulalia
+【Schema】
+# poblacio_ocupada_assalariada
+[
+  (valor, Població ocupada assalariada. Value examples: [Decimal('576.8'), Decimal('614.4'), Decimal('619.4'), Decimal('553.2'), Decimal('100.2')])
+  (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
+  (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['epa'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number),
+  (unitat_mesura_ca. gives the units of measure of the column 'value'. Value: ['Milers the persones'] which means thousands of people, implying that 'value' must be multiplied by 1000),
+]
 
-# 【Question】
-# How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
-# 【Answer】
-# ```json
-# {{
-#   "Població_ocupada_assalariada": "keep_all",
-#   "canvis_domicili_titulacio_districte_baixa_districte_alta": "keep_all",
-#   "alumnes_universitaris_titulats_sexe_tipus_estudi_universitat": "keep_all",
-#   "alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi": "keep_all"
-# }}
-# ```
-# """
+【Question】
+How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
 
-# selector_template1 = """
-# As an experienced and professional database administrator, your task is to analyze a user question and a database schema to provide relevant information. The database schema consists of table descriptions, each containing multiple column descriptions. Your goal is to identify the relevant tables and columns based on the user question and evidence provided.
-# Take a deep breath and approach this task methodically, step-by-step.
+【Answer】
+Not useful
 
-# The database comprises several tables, all adhering to a consistent structure. Each table serves to encode specific data relevant to the query. Here's a breakdown of the table structure:
-# 1. Time enconding: `data_inici` and `data_final`.
-# 2. Spatial encoding: Some tables feature spatial data encoded in columns `municipi`, `districte` and `barri`.
-# 3. Fact description: The primary fact is described in the `valor` column.
-# 4. Metadata columns: While some columns like `fet_ca`, `indicador_ca`, `tags_ca`, `unitat_ca`, and `unitat_mesura_ca` provide additional information about the content of the table, they are irrelevant for SQL queries and can be disregarded.
-# 5. Main Dimensions: Other columns in each table represent main dimensions and should always be retained.
+==========
+【DB_ID】 dbeulalia
+【Schema】
 
-# [Instruction]:
-# 1. You will be given up to ten tables from a database that have been determined most relevant with respect to the query. Discard any table schema that is not related to the user question and evidence.
-# 2. Sort the columns in each relevant table in descending order of relevance and keep the top 5 columns.
-# 3. Ensure that at least 2 tables are included in the final output JSON.
-# 4. The output should be in JSON format.
+# alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
+[
+  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre']),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones']),
+  (valor, number of students per study, university and sex. Value examples: [2874, 957, 109, 2383, 97].),
+  (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+  (sexe, sex. Value examples: ['Dona', 'Home'].),
+  (tipus_d_estudi. Value examples: ['Màster', 'Doctorat', 'Grau'])
+]
 
-# Requirements:
-# 1. If a table has less than or equal to 7 columns, mark it as "keep_all".
-# 2. If a table is completely irrelevant to the user question and evidence, mark it as "drop_all".
-# 3. Prioritize the columns in each relevant table based on their relevance.
+【Question】
+How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
 
-# Here is a typical example:
+【Answer】
+Useful.
 
-# ==========
-# 【DB_ID】 dbeulalia
-# 【Schema】
-# # Table: Població_ocupada_assalariada
-# [
-#   (valor, Població ocupada assalariada. Value examples: [Decimal('576.8'), Decimal('614.4'), Decimal('619.4'), Decimal('553.2'), Decimal('100.2')])
-#   (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
-#   (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
-#   (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
-#   (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
-#   (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['epa'] ),
-#   (municipi, municipality, it can only take the value of 'Barcelona'),
-#   (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number),
-#   (unitat_mesura_ca. gives the units of measure of the column 'value'. Value: ['Milers the persones'] which means thousands of people, implying that 'value' must be multiplied by 1000),
-# ]
+**Most of the tables should be `Useful` unless there is a clear reason they are not relevant.**
 
-# # Table: canvis_domicili_titulacio_districte_baixa_districte_alta
-# [
-#   (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
-#   (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
-#   (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre de canvis de domicili'].),
-#   (indicador_ca, also describes the table, should not be in the SQL query. Value examples: ['Canvis de domicili per titulació acadèmica i districte de baixa i districte d'alta'].),
-#   (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['padró municipal, migracions internes, mudances, estudis, educació'] ),
-#   (municipi, municipality, it can only take the value of 'Barcelona'),
-#   (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
-#   (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'].),
-#   (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Canvis de domicili'].),
-#   (valor, number of address changes. Value examples: [247, 1, 18, 33, 747].),
-#   (districte_d_alta. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
-#   (titulacio_academica. Value examples: ['Estudis universitaris, CFGS grau superior', 'Sense estudis', 'Estudis primaris, certificat d'escolaritat, EGB', 'Batxillerat elemental, graduat escolar, ESO, FPI', 'No consta'].)
-# ]
+Avoid hallucinations: Avoid generating content that is not supported by the provided information, ensuring all claims, references, and data are based on the input.
+==========
 
-# # Table: alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
-# [
-#   (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
-#   (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
-#   (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats'].),
-#   (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat'].),
-#   (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
-#   (municipi, municipality, it can only take the value of 'Barcelona'),
-#   (unitat_ca, gives the type of the column 'value'. Value: ['Nombre']),
-#   (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones']),
-#   (valor, number of students per study, university and sex. Value examples: [2874, 957, 109, 2383, 97].),
-#   (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
-#   (sexe, sex. Value examples: ['Dona', 'Home'].),
-#   (tipus_d_estudi. Value examples: ['Màster', 'Doctorat', 'Grau'])
-# ]
+Here is a new example, please start answering:
 
-# # Table: alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi
-# [
-#   (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
-#   (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
-#   (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a l’universitat'].),
-#   (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a la universitat per sexe, grup de nacionalitat i universitat'].),
-#   (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
-#   (municipi, municipality, it can only take the value of 'Barcelona'),
-#   (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number.),
-#   (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones'] which means persons.),
-#   (valor, number of students per university, sex and nationality. Value examples: [26251, 1306, 10234, 19556, 9914].),
-#   (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
-#   (sexe, sex. Value examples: ['Dona', 'Home']. 'Dona'=Woman; 'Home'=Man.),
-#   (grup_de_nacionalitat, nationality. Value examples: ['Estranger', 'Espanya']. 'Estranger'=Foreigner; 'Espanya'=Spain)
-# ]
+【DB_ID】 {db_id}
+【Schema】
+{desc_str}
+【Foreign keys】
+{fk_str}
+【Question】
+{query}
+【Evidence】
+{evidence}
+【Answer】
+"""
 
-# 【Question】
-# How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
-# 【Answer】
-# ```json
-# {{
-#   "Població_ocupada_assalariada": "drop_all",
-#   "canvis_domicili_titulacio_districte_baixa_districte_alta": "drop_all",
-#   "alumnes_universitaris_titulats_sexe_tipus_estudi_universitat": [ "sexe", "universitat", "tipus_d_estudi", "valor", "data_inici", "data_final"],
-#   "alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi": ["sexe", "universitat", "valor", "data_inici", "data_final"]
-# }}
-# ```
-# Question Solved.
 
-# ==========
+selector_template = """
+As an experienced and professional database administrator, your task is to analyze a user question and a database schema to provide relevant information. The database schema consists of table descriptions, each containing multiple column descriptions. Your goal is to identify the relevant tables and columns based on the user question and evidence provided.
+Take a deep breath and approach this task methodically, step-by-step.
 
-# Here is a new example, please start answering:
+The database comprises several tables, all adhering to a consistent structure. Each table serves to encode specific data relevant to the query. Here's a breakdown of the table structure:
+1. Time encoding: `data_inici` and `data_final`.
+2. Spatial encoding: Some tables feature spatial data encoded in columns `municipi`, `districte`, and `barri`.
+3. Fact description: The primary fact is described in the `valor` column.
+4. Metadata columns: Columns like `fet_ca`, `indicador_ca`, `tags_ca`, `unitat_ca`, and `unitat_mesura_ca` provide additional information about the content of the table and should be considered when understanding the context, but they are irrelevant for SQL queries and can be disregarded.
+5. Main Dimensions: Other columns in each table represent main dimensions and should always be retained.
 
-# 【DB_ID】 {db_id}
-# 【Schema】
-# {desc_str}
-# 【Foreign keys】
-# {fk_str}
-# 【Question】
-# {query}
-# 【Evidence】
-# {evidence}
-# 【Answer】
-# """
+[Instruction]:
+1. You will be given up to ten tables from a database that have been determined most relevant with respect to the query.
+2. Based on the user question and the provided evidence, determine which tables could contain the information needed to answer the user's query. 
+3. Your answer should be a dictionary of tables marked as `Useful` or `Not Useful`. 
+4. Consider columns like `data_inici`, `valor`, `indicador_ca`, `tags_ca`, `districte`, etc., as primary in determining usefulness.
+5. Look at the value of `indicador_ca` to understand the context and content of each table. Use this to guide your decision on usefulness.
+
+**Most of the tables should be `Useful` unless there is a clear reason they are not relevant.**
+
+Here is a typical example:
+
+==========
+【DB_ID】 dbeulalia
+【Schema】
+# Table: poblacio_ocupada_assalariada
+[
+  (valor, Població ocupada assalariada. Value examples: [Decimal('576.8'), Decimal('614.4'), Decimal('619.4'), Decimal('553.2'), Decimal('100.2')])
+  (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
+  (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['epa'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number),
+  (unitat_mesura_ca. gives the units of measure of the column 'value'. Value: ['Milers the persones'] which means thousands of people, implying that 'value' must be multiplied by 1000),
+]
+
+# Table: canvis_domicili_titulacio_districte_baixa_districte_alta
+[
+  (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
+  (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre de canvis de domicili'].),
+  (indicador_ca, also describes the table, should not be in the SQL query. Value examples: ['Canvis de domicili per titulació acadèmica i districte de baixa i districte d'alta'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['padró municipal, migracions internes, mudances, estudis, educació'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'].),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Canvis de domicili'].),
+  (valor, number of address changes. Value examples: [247, 1, 18, 33, 747].),
+  (districte_d_alta. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+  (titulacio_academica. Value examples: ['Estudis universitaris, CFGS grau superior', 'Sense estudis', 'Estudis primaris, certificat d'escolaritat, EGB', 'Batxillerat elemental, graduat escolar, ESO, FPI', 'No consta'].)
+]
+
+# Table: alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
+[
+  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre']),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones']),
+  (valor, number of students per study, university and sex. Value examples: [2874, 957, 109, 2383, 97].),
+  (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+  (sexe, sex. Value examples: ['Dona', 'Home'].),
+  (tipus_d_estudi. Value examples: ['Màster', 'Doctorat', 'Grau'])
+]
+
+# Table: alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi
+[
+  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a l’universitat'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a la universitat per sexe, grup de nacionalitat i universitat'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number.),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones'] which means persons.),
+  (valor, number of students per university, sex and nationality. Value examples: [26251, 1306, 10234, 19556, 9914].),
+  (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+  (sexe, sex. Value examples: ['Dona', 'Home']. 'Dona'=Woman; 'Home'=Man.),
+  (grup_de_nacionalitat, nationality. Value examples: ['Estranger', 'Espanya']. 'Estranger'=Foreigner; 'Espanya'=Spain)
+]
+
+【Question】
+How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
+
+【Answer】
+['poblacio_ocupada_assalariada': 'Not useful', 'canvis_domicili_titulacio_districte_baixa_districte_alta': 'Not useful', 'alumnes_universitaris_titulats_sexe_tipus_estudi_universitat': 'Useful', 'alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi': 'Useful']
+
+**Most of the tables should be `Useful` unless there is a clear reason they are not relevant.**
+**Most of the tables should be `Useful` unless there is a clear reason they are not relevant.**
+**Most of the tables should be `Useful` unless there is a clear reason they are not relevant.**
+
+
+Avoid hallucinations: Avoid generating content that is not supported by the provided information, ensuring all claims, references, and data are based on the input.
+==========
+
+Here is a new example, please start answering:
+
+【DB_ID】 {db_id}
+【Schema】
+{desc_str}
+【Foreign keys】
+{fk_str}
+【Question】
+{query}
+【Evidence】
+{evidence}
+【Answer】
+"""
+
+selector_template1 = """
+As an experienced and professional database administrator, your task is to analyze a user question and a database schema to provide relevant information. The database schema consists of table descriptions, each containing multiple column descriptions. Your goal is to identify the relevant tables and columns based on the user question and evidence provided.
+Take a deep breath and approach this task methodically, step-by-step.
+
+The database comprises several tables, all adhering to a consistent structure. Each table serves to encode specific data relevant to the query. Here's a breakdown of the table structure:
+1. Time enconding: `data_inici` and `data_final`.
+2. Spatial encoding: Some tables feature spatial data encoded in columns `municipi`, `districte` and `barri`.
+3. Fact description: The primary fact is described in the `valor` column.
+4. Metadata columns: While some columns like `fet_ca`, `indicador_ca`, `tags_ca`, `unitat_ca`, and `unitat_mesura_ca` provide additional information about the content of the table, they are irrelevant for SQL queries and can be disregarded.
+5. Main Dimensions: Other columns in each table represent main dimensions and should always be retained.
+
+[Instruction]:
+1. You will be given up to ten tables from a database that have been determined most relevant with respect to the query. Discard any table schema that is not related to the user question and evidence.
+2. Sort the columns in each relevant table in descending order of relevance and keep the top 5 columns.
+3. Ensure that at least 2 tables are included in the final output JSON.
+4. The output should be in JSON format.
+
+Requirements:
+1. If a table has less than or equal to 7 columns, mark it as "keep_all".
+2. If a table is completely irrelevant to the user question and evidence, mark it as "drop_all".
+3. Prioritize the columns in each relevant table based on their relevance.
+
+Here is a typical example:
+
+==========
+【DB_ID】 dbeulalia
+【Schema】
+# Table: Població_ocupada_assalariada
+[
+  (valor, Població ocupada assalariada. Value examples: [Decimal('576.8'), Decimal('614.4'), Decimal('619.4'), Decimal('553.2'), Decimal('100.2')])
+  (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
+  (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Població ocupada assalariada'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['epa'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number),
+  (unitat_mesura_ca. gives the units of measure of the column 'value'. Value: ['Milers the persones'] which means thousands of people, implying that 'value' must be multiplied by 1000),
+]
+
+# Table: canvis_domicili_titulacio_districte_baixa_districte_alta
+[
+  (data_inici, start date. Value examples: ['2021-03-01', '2009-06-01', '2012-01-01', '2023-01-01', '2022-11-01'].),
+  (data_final, end date. Value examples: ['2021-03-31', '2009-06-30', '2012-12-31', '2023-12-31', '2022-11-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre de canvis de domicili'].),
+  (indicador_ca, also describes the table, should not be in the SQL query. Value examples: ['Canvis de domicili per titulació acadèmica i districte de baixa i districte d'alta'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['padró municipal, migracions internes, mudances, estudis, educació'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (districte, location in Barcelona. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'].),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Canvis de domicili'].),
+  (valor, number of address changes. Value examples: [247, 1, 18, 33, 747].),
+  (districte_d_alta. Value examples: ['Sant Martí', 'Gràcia', 'Eixample', 'Ciutat Vella', 'Sarrià-Sant Gervasi'].),
+  (titulacio_academica. Value examples: ['Estudis universitaris, CFGS grau superior', 'Sense estudis', 'Estudis primaris, certificat d'escolaritat, EGB', 'Batxillerat elemental, graduat escolar, ESO, FPI', 'No consta'].)
+]
+
+# Table: alumnes_universitaris_titulats_sexe_tipus_estudi_universitat
+[
+  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes universitaris titulats per sexe, tipus d’estudi i universitat'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre']),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones']),
+  (valor, number of students per study, university and sex. Value examples: [2874, 957, 109, 2383, 97].),
+  (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+  (sexe, sex. Value examples: ['Dona', 'Home'].),
+  (tipus_d_estudi. Value examples: ['Màster', 'Doctorat', 'Grau'])
+]
+
+# Table: alumnes_matriculats_universitat_sexe_grup_nacionalitat_universi
+[
+  (data_inici, start date. Value examples: ['2021-09-01', '2009-09-01', '2012-09-01', '2023-09-01', '2022-09-01'].),
+  (data_final, end date. Value examples: ['2021-06-30', '2009-06-30', '2012-06-30', '2023-06-30', '2022-06-30'].),
+  (fet_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a l’universitat'].),
+  (indicador_ca, describes the table, should not be in the SQL query. Value examples: ['Nombre d’alumnes matriculats a la universitat per sexe, grup de nacionalitat i universitat'].),
+  (tags_ca, relevant words related to the topic of the table, should not be in the SQL. Value examples: ['Univesitat, Matricules, Master, Grau, Doctorat'] ),
+  (municipi, municipality, it can only take the value of 'Barcelona'),
+  (unitat_ca, gives the type of the column 'value'. Value: ['Nombre'] means that 'value' is a number.),
+  (unitat_mesura_ca, gives the units of measure of the column 'value'. Value: ['Persones'] which means persons.),
+  (valor, number of students per university, sex and nationality. Value examples: [26251, 1306, 10234, 19556, 9914].),
+  (universitat, university of studies. Value examples: ['Universitat de Barcelona (UB)', 'Universitat Politècnica de Catalunya (UPC)', 'Universitat Abat Oliba (UAO)', 'Universitat Autònoma de Barcelona (UAB)', 'Universitat Internacional de Catalunya (UIC)', 'Universitat Pompeu Fabra (UPF)']),
+  (sexe, sex. Value examples: ['Dona', 'Home']. 'Dona'=Woman; 'Home'=Man.),
+  (grup_de_nacionalitat, nationality. Value examples: ['Estranger', 'Espanya']. 'Estranger'=Foreigner; 'Espanya'=Spain)
+]
+
+【Question】
+How many doctoral students from Universitat Politècnica de Catalunya were women in 2019?
+【Answer】
+Useful
+
+【Question】
+How many cars were there in Barcelona in 2015?
+【Answer】
+Not useful
+
+==========
+
+Here is a new example, please start answering:
+
+【DB_ID】 {db_id}
+【Schema】
+{desc_str}
+【Foreign keys】
+{fk_str}
+【Question】
+{query}
+【Evidence】
+{evidence}
+【Answer】
+"""
 
 
 subq_pattern = r"Sub question\s*\d+\s*:"
@@ -663,7 +824,7 @@ When you find an answer, verify the answer carefully. Include verifiable evidenc
 
 - Make sure that the columns you are refering to exist and are part of the table.
 - Make sure that when filtering by a value, it is one of the Value Examples.
-- EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')) in order to extract month or year of date
+- Remember that
 - In `SELECT <column>`, just select needed columns in the 【Question】 without any unnecessary column or value
 - In `FROM <table>` or `JOIN <table>`, do not include unnecessary table
 - If use max or min func, `JOIN <table>` FIRST, THEN use `SELECT MAX(<column>)` or `SELECT MIN(<column>)`

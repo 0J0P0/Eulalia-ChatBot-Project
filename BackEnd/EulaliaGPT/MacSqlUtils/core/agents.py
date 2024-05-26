@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 from core.utils import parse_json, parse_sql_from_string, add_prefix, load_json_file, extract_world_info, is_email, is_valid_date_column, extract_table_type
+
+import sys
+sys.path.insert(1, '/dades/eulalia/Eulalia-Project/BackEnd/DataBase')
+
 from chroma import relevant_docs
 
 
@@ -330,7 +334,7 @@ class Selector(BaseAgent):
         # print("\n\n\n\n\n")
         # print(table_names_original_lst)    
         # exit()
-        table_tbidx = dict(load_json_file("core/table_tbidx.json"))
+        table_tbidx = dict(load_json_file("/dades/eulalia/Eulalia-Project/BackEnd/EulaliaGPT/MacSqlUtils/core/table_tbidx.json"))
         # print(table_tbidx)
 
         for idx, tb_name in enumerate(table_names_original_lst):
@@ -673,11 +677,21 @@ class Selector(BaseAgent):
                evidence: str = None,
                ) -> dict:
         
-        prompt = selector_template.format(db_id=db_id, query=query, evidence=evidence, desc_str=db_schema, fk_str=db_fk) # afegir table names
-        word_info = extract_world_info(self._message)
-        reply = LLM_API_FUC(prompt, **word_info)
-        extracted_schema_dict = parse_json(reply)
-        return extracted_schema_dict
+        db_schema2 = db_schema.split("Table: ")
+        replies = []
+        useful = False
+        for i in range(1, len(db_schema2)):
+            prompt = selector_template.format(db_id=db_id, query=query, evidence=evidence, desc_str=db_schema2[i], fk_str=db_fk) # afegir table names
+            word_info = extract_world_info(self._message)
+            reply = LLM_API_FUC(prompt, **word_info)
+            if "not useful" not in reply.lower():
+                useful = True
+                break
+            replies.append(reply)
+
+        # extracted_schema_dict = parse_json(reply)
+        return useful
+        # return extracted_schema_dict
 
     def talk(self, message: dict):
         """
@@ -699,28 +713,41 @@ class Selector(BaseAgent):
             
         db_schema, db_fk, chosen_db_schem_dict, dataset_type = self._get_db_desc_str(db_id=db_id, extracted_schema=ext_sch, use_gold_schema=use_gold_schema)
         
+        need_prune = True
         if self.without_selector:
             need_prune = False
-        else:
-            need_prune = self._is_need_prune(db_id, db_schema)
+        # else:
+        #     need_prune = self._is_need_prune(db_id, db_schema)
 
         if ext_sch == {} and need_prune:
             try:
-                raw_extracted_schema_dict = self._prune(db_id=db_id, query=query, db_schema=db_schema, db_fk=db_fk, evidence=evidence)
+                # raw_extracted_schema_dict = self._prune(db_id=db_id, query=query, db_schema=db_schema, db_fk=db_fk, evidence=evidence)
+                useful = self._prune(db_id=db_id, query=query, db_schema=db_schema, db_fk=db_fk, evidence=evidence)
+
             except Exception as e:
                 print(e)
                 raw_extracted_schema_dict = {}
             
-            print(f"query: {message['query']}\n")
-            db_schema_str, db_fk, chosen_db_schem_dict, dataset_type = self._get_db_desc_str(db_id=db_id, extracted_schema=raw_extracted_schema_dict)
+            if useful:
+                print(f"query: {message['query']}\n")
+                # db_schema_str, db_fk, chosen_db_schem_dict, dataset_type = self._get_db_desc_str(db_id=db_id, extracted_schema=raw_extracted_schema_dict)
 
-            message['extracted_schema'] = raw_extracted_schema_dict
-            message['chosen_db_schem_dict'] = chosen_db_schem_dict
-            message['desc_str'] = db_schema_str
-            message['fk_str'] = db_fk
-            message['pruned'] = True
-            message['send_to'] = DECOMPOSER_NAME
-            message['dataset_type'] = dataset_type
+                # message['extracted_schema'] = raw_extracted_schema_dict
+                message['chosen_db_schem_dict'] = chosen_db_schem_dict
+                message['desc_str'] = db_schema
+                message['fk_str'] = db_fk
+                message['pruned'] = True
+                message['send_to'] = DECOMPOSER_NAME
+                message['dataset_type'] = dataset_type
+            else:
+                message['chosen_db_schem_dict'] = chosen_db_schem_dict
+                message['desc_str'] = db_schema
+                message['fk_str'] = db_fk
+                message['pruned'] = True
+                message['pred'] = "The database does not have the necessary information to answer the query."
+                message['send_to'] = SYSTEM_NAME
+                message['dataset_type'] = dataset_type
+                
             
         else:
             

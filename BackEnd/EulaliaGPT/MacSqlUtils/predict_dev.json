@@ -1,6 +1,6 @@
 [
   [
-    "Quants estudiants es van matricular a la UPC el 2019?",
-    "SELECT sum(valor) FROM alumnes_matriculats_universitat_sexe_tipus_estudi_universitat WHERE universitat='Universitat Politècnica de Catalunya (UPC)' and EXTRACT(YEAR FROM TO_DATE(data_inici, 'YYYY-MM-DD')) = 2019;\t----- bird -----\tdbeulalia"
+    "Quina era la mitjana d'edat per sexe a Barcelona el 2020?",
+    "SELECT sexe, AVG(valor) AS mitjana_edat FROM edat_mitjana_de_la_poblacio_per_sexe WHERE EXTRACT(YEAR FROM TO_DATE(data_final,'YYYY-MM-DD')) = 2020 GROUP BY sexe ORDER BY mitjana_edat DESC;\t----- bird -----\tdbeulalia"
   ]
 ]
