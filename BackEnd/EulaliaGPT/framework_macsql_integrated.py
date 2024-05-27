@@ -224,12 +224,7 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
     relevant_tables = list(dades["chosen_db_schem_dict"].keys())
     f.close()
 
-    print("RELEVANT TABLES: ")
-    print(relevant_tables)
-    print()
-    print("SQL QUERY: ")
-    print(sql_query)
-    
+
     
     output = {}
     if not agent_output["intermediate_steps"]:

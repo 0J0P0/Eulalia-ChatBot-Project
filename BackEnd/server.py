@@ -23,7 +23,7 @@ sys.path.append('./')
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 
-from EulaliaGPT.conversation import get_response
+from EulaliaGPT.conversation import get_response, format_message
 from DataBase.connection import create_connection
 
 
@@ -133,12 +133,12 @@ def refresh_history():
             f'''
             SELECT session_id
             FROM (
-                SELECT session_id, created_at
-                FROM {os.getenv("DATABASE_CHAT_TABLE")}
-                ORDER BY created_at DESC
+                SELECT session_id, message_id
+                FROM message_references
+                ORDER BY message_id DESC
             ) subquery
             GROUP BY session_id
-            ORDER BY MAX(created_at);
+            ORDER BY MAX(message_id);
             '''
         )
 
@@ -178,30 +178,43 @@ def get_conversation():
     
     try:
         conn, cur = create_connection(database=os.getenv('DATABASE_CHAT'),
-                                      user=os.getenv('DATABASE_CHAT_USER'))
+                                        user=os.getenv('DATABASE_CHAT_USER'))
+
 
         cur.execute(
-            f"SELECT tbl.message FROM {os.getenv('DATABASE_CHAT_TABLE')} AS tbl WHERE tbl.session_id = %s ORDER BY tbl.created_at ASC;", (data['id'], )
+            f"SELECT tbl.session_id, tbl.message, tbl.relevant_tables, tbl.sql_query, tbl.sender FROM message_references AS tbl WHERE tbl.session_id = %s ORDER BY tbl.message_id ASC;", (data['id'],)
         )
-
-        messages = [row[0] for row in cur.fetchall()]
-
+        
+        
+        messages = []
+        senders = []
+        conv_titles = []
+        rows = cur.fetchall()
+        for row in rows:
+            conv_titles.append(row[0])
+            senders.append(row[4])
+            message = row[1]
+            relevant_tables = row[2]
+            sql_query = row[3]
+            messages.append(format_message(message, relevant_tables, sql_query))
+            
+        
         formated_messages = []
-        for message in messages:
-            formated_message = {'message': message['data']['content'],
-                                 'sender': 'Eulàlia' if message['data']['type'] == 'ai' else 'User',
-                                 'conv_title': data['id']}
+        for i, message in enumerate(messages):
+            formated_message = {'message': message,
+                                'sender': senders[i],
+                                'conv_title': conv_titles[i]}
             
             formated_messages.append(formated_message)
         
-        print(formated_messages)
-             
+        
+                
         conn.commit()
         cur.close()
         conn.close()
 
         return jsonify({"messages": formated_messages})
-    
+        
     except Exception as e:
         print(f"Error retrieving conversation: {e}")
         return jsonify({"error": "Error retrieving conversation"}), 500
