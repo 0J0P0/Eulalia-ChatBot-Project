@@ -684,6 +684,7 @@ class Selector(BaseAgent):
             prompt = selector_template.format(db_id=db_id, query=query, evidence=evidence, desc_str=db_schema2[i], fk_str=db_fk) # afegir table names
             word_info = extract_world_info(self._message)
             reply = LLM_API_FUC(prompt, **word_info)
+            print(reply)
             if "not useful" not in reply.lower():
                 useful = True
                 break

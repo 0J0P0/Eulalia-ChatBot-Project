@@ -36,43 +36,12 @@ os.environ["OPENAI_API_KEY"] = str(os.getenv("API_KEY"))
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 
-# def extract_output(output):
-#     """
-#     Extracts the output from the json string. If an action was taken, returns the relevant tables. Otherwise returns the answer to the query.
-    
-#     Parameters
-#     ----------
-#     output : str
-#         Output from the tool.
-
-#     Returns
-#     -------
-#     str
-#         Answer to the query or relevant tables.
-    
-#     """
-    
-#     if "actions" in output[0]:
-        
-#         string_data = output[1]["messages"][0].content
-#         start_index = string_data.find('[')
-#         end_index = string_data.rfind(']')
-#         vector = string_data[start_index + 1:end_index].split(', ')
-    
-#         vector = [element.strip('"') for element in vector]
-#         vector = [string.lower() for string in vector]
-
-#         return vector
-#     else:
-#         return output[0]["output"]
-
-
 def macsql_tool(question,
                 tool_script: str = "./EulaliaGPT/MacSqlUtils/run_automated.sh",
                 input_file: str = "./EulaliaGPT/MacSqlUtils/input_automated.json",
                 output_file: str = "./EulaliaGPT/MacSqlUtils/output_eulaliadb_automated.json"):
     """
-    Aquesta funció s'encarrega de cridar a MAC-SQL (que ja integra ChromaDB) per tal de generar la query. Quan aquesta és generada, la executa. Retorna 3 objectes: la execució de la query, la query inicial i la seqüència generada. 
+    ...
 
     Parameters
     ----------
@@ -248,23 +217,29 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         config={"configurable": {"session_id": id}}
     )
 
-    # with open("./EulaliaGPT/MacSqlUtils/output_eulaliadb_automated.json") as f:
-    #     dades = json.load(f)
-    #     sql_query = dades["pred"].replace("`","")
-    #     relevant_tables = list(dades["extracted_schema"].keys())
+    output_file = "./EulaliaGPT/MacSqlUtils/output_eulaliadb_automated.json"
+    f = open(output_file)
+    dades = json.load(f)
+    sql_query = dades["pred"].replace("`","")
+    relevant_tables = list(dades["chosen_db_schem_dict"].keys())
+    f.close()
 
-    print("INTERMEDIATE STEPS -----------")
-    print(agent_output)
-    print("-----------------------")
+    print("RELEVANT TABLES: ")
+    print(relevant_tables)
+    print()
+    print("SQL QUERY: ")
+    print(sql_query)
+    
+    
     output = {}
     if not agent_output["intermediate_steps"]:
         output["answer"] = agent_output["output"]
-        output["relevant_tables"] = ""
+        output["relevant_tables"] = []
         output["sql_query"] = ""
     else:
         output["answer"] = agent_output["output"]
-        output["relevant_tables"] = agent_output["intermediate_steps"][0][1]
-        output["sql_query"] = ""
+        output["relevant_tables"] = relevant_tables
+        output["sql_query"] = sql_query
 
-            
+
     return output

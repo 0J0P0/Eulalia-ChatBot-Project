@@ -22,7 +22,6 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 
-
 from DataBase.chroma import relevant_docs
 from DataBase.connection import create_connection
 
@@ -92,7 +91,7 @@ agent = (
 ############################################################################################################
 
 
-def process_question(question: str, memory: PostgresChatMessageHistory, id: str) -> str:
+def process_question(question: str, memory: PostgresChatMessageHistory, id: str) -> dict:
     """
     Processes the question and returns the answer.
 
@@ -124,13 +123,7 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         {"input": question},
         config={"configurable": {"session_id": id}}
     )
-    # print("=============================")
-    # for value in agent_output["intermediate_steps"][0]:
-    #     print(value)
-    #     print()
-    # print("=============================")   
-    print(agent_output["intermediate_steps"])
-    print("-----------------------------------------")
+
     if len(agent_output["intermediate_steps"]) == 0:
         output = {"answer": agent_output["output"], 
                 "relevant_tables": [], 
@@ -139,6 +132,6 @@ def process_question(question: str, memory: PostgresChatMessageHistory, id: str)
         output = {"answer": agent_output["output"], 
                 "relevant_tables": agent_output["intermediate_steps"][0][1], 
                 "sql_query": ""}
-    print(output)
+    
     return output
 

@@ -5,3 +5,9 @@
 **/.env
 BackEnd/EulaliaGPT/MacSqlUtils/tables_data.json
 BackEnd/DataBase/dictionario.json
+BackEnd/EulaliaGPT/MacSqlUtils/output_eulaliadb_automated.json
+BackEnd/EulaliaGPT/MacSqlUtils/predict_dev.json
+BackEnd/EulaliaGPT/MacSqlUtils/predict_dev.json
+BackEnd/EulaliaGPT/MacSqlUtils/log.txt
+BackEnd/EulaliaGPT/MacSqlUtils/input_automated.json
+BackEnd/EulaliaGPT/MacSqlUtils/api_trace.json

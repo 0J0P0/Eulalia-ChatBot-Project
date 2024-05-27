@@ -1,6 +1,6 @@
 [
   [
-    "Quina era la mitjana d'edat per sexe a Barcelona el 2020?",
-    "SELECT sexe, AVG(valor) AS mitjana_edat FROM edat_mitjana_de_la_poblacio_per_sexe WHERE EXTRACT(YEAR FROM TO_DATE(data_final,'YYYY-MM-DD')) = 2020 GROUP BY sexe ORDER BY mitjana_edat DESC;\t----- bird -----\tdbeulalia"
+    "Quina és la renda mitjana del barri del Raval?",
+    "SELECT AVG(valor) AS salari_mitja_eur FROM salari_mitja_eur_de_les_persones_residents_a_barcelona WHERE districte='Ciutat Vella' AND municipi='Barcelona'\t----- bird -----\tdbeulalia"
   ]
 ]
