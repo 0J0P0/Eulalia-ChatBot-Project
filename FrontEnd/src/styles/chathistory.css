@@ -18,6 +18,7 @@
   
   .chathistory_content {
     overflow-y: auto;
+    background-color: antiquewhite;
     
     &::-webkit-scrollbar {
       display: none;

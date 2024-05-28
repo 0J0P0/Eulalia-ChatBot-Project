@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function PrevChat({ id, messages, setMessages}) {
+function PrevChat({ id, index, messages, setMessages }) {
 
   const handlePrevChat = () => {
     console.log('Chat', id);
@@ -26,10 +26,10 @@ function PrevChat({ id, messages, setMessages}) {
       .catch(error => console.error('Error:', error));
   };
 
-  return ( 
+  return (
     <button onClick={handlePrevChat} className='prevChat'>
-      Chat {id}
-    </button> 
+      Chat {index}
+    </button>
   );
 }
 
