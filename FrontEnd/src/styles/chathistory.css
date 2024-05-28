@@ -5,21 +5,25 @@
   border-radius: 2vw;
   margin: 2vw 0vw 1vw 2vw;
   background-color: #F4F4F4;
-  
+
   .chathistory_header {
+    height: 4vw;
     position: relative;
-    
+
     h3 {
       font-size: 1.6vw;
       font-weight: bold;
       text-align: center;
+
     }
   }
-  
+
   .chathistory_content {
+    height: 20vw;
+    margin-top: 1vw;
+    border-radius: 2vw;
     overflow-y: auto;
-    background-color: antiquewhite;
-    
+
     &::-webkit-scrollbar {
       display: none;
     }
@@ -29,17 +33,16 @@
 .prevChat {
   position: relative;
   background-color: #B2B1B1;
-  height: 2vw;
+  height: 2.3vw;
   width: 100%;
-  font-size: 0.8vw;
   text-align: center;
   margin-top: 0.5vw;
   border: none;
   border-radius: 2vw;
   cursor: pointer;
-
+  
   font-family: 'Segoe UI';
-  font-size: 0.5vw;
+  font-size: 1vw;
 }
 
 .prevChat:hover {
