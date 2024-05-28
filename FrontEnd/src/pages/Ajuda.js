@@ -5,7 +5,7 @@ import "../styles/ajuda.css";
 import Logo from '../components/Logo.js';
 
 import img_ine from "../img/ine.jpg";
-import img_moncloa from "../img/moncloa.jpg";
+import img_idescat from "../img/idescat.jpg";
 import img_opendata from "../img/opendata.png";
 import img_aj from "../img/barcelona.jpg";
 import img_generalitat from "../img/generalitat.png";
@@ -32,10 +32,10 @@ function Ajuda() {
           </div>
         </a>
     
-        <a href="https://www.ine.es/" className='Three' target="_blank">
-          <img src={img_ine} alt="Institut Nacional d'Estadística"/>
+        <a href="https://www.idescat.cat/?lang=es" className='Three' target="_blank">
+          <img src={img_idescat} alt="Institut d'Estadística de idescat"/>
           <div className='text_link'>
-            Institut Nacional d'Estadística
+            Institut d'Estadística de Catalunya
           </div>
         </a>
 
@@ -53,12 +53,13 @@ function Ajuda() {
           </div>
         </a>
     
-        <a href="https://www.lamoncloa.gob.es/Paginas/index.aspx" className='Six' target="_blank">
-          <img src={img_moncloa} alt='El Govern'/>
+        <a href="https://www.ine.es/" className='Six' target="_blank">
+          <img src={img_ine} alt="Institut Nacional d'Estadística"/>
           <div className='text_link'>
-            El Govern
+            Institut Nacional d'Estadística
           </div>
         </a>
+
       </div>
     </div>
   );
