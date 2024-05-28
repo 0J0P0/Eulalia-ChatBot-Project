@@ -92,7 +92,7 @@ function ChatConversation({ messages, isTyping }) {
           </div>
         </div>
       ))}
-      {isTyping && <TypingIndicator content='Eulàlia està escrivint...' />}
+      {isTyping && <TypingIndicator content='Eulàlia està escrivint...' className="blinking" />}
       <div ref={messagesEndRef} />
     </div>
   );
