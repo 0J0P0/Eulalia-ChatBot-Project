@@ -37,6 +37,10 @@
   word-break: break-word;
 }
 
+.eulalia_message {
+  margin-bottom: 2.5vw;
+}
+
 .message_button {
   display: block;
   margin: 0.5vw auto;
@@ -73,5 +77,8 @@
 }
 
 .blinking {
-  animation: blink 1s infinite;
+  animation: blink 2s infinite;
+  font-family: 'Segoe UI';
+  font-size: 1.1vw;
+  margin-left: 3vw;
 }
