@@ -9,7 +9,7 @@
   .chathistory_header {
     position: relative;
     
-    h1 {
+    h3 {
       font-size: 1.6vw;
       font-weight: bold;
       text-align: center;
@@ -36,6 +36,9 @@
   border: none;
   border-radius: 2vw;
   cursor: pointer;
+
+  font-family: 'Segoe UI';
+  font-size: 0.5vw;
 }
 
 .prevChat:hover {

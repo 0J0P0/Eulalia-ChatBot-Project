@@ -1,4 +1,5 @@
 .quisom_page_container {
+    font-family: 'Segoe UI';
     height: calc(13vw + 24vw + 12vw + 24vw + 12vw + 24vw + 8vw);
 }
 
@@ -84,6 +85,7 @@
         }
     
         input[type='name'], input[type='email'], textarea {
+            
             width: 95%;
             padding: 0.8vw;
             margin-top: 0.5vw;
@@ -93,8 +95,8 @@
             background-color: #f8f8f8;
             
             font-size: 1vw;
-            font-style: italic;
             color: #8a8a8a;
+            font-family: 'Segoe UI';
 
             &:hover {
                 border: 0.2vw solid #3C74BD;
@@ -116,6 +118,7 @@
             color: #f8f8f8;
             
             font-size: 1.3vw;
+            font-family: 'Segoe UI';
             
             cursor: pointer;
             transition: background-color 0.3s ease;

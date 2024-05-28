@@ -10,14 +10,15 @@
         height: 3vw;
         width: 55vw;
         padding-left: 2vw;
-        padding-top: 0.5vw;
         border: 0;
         border-radius: 2vw;
         background-color: transparent;
-        font-size: 1.2vw;
-        font-style: italic;
         resize: none;
-    
+        
+        font-family: 'Segoe UI';
+        font-size: 1.1vw;
+        line-height: 2.8vw;
+
         &:focus {
             outline: none;
         }

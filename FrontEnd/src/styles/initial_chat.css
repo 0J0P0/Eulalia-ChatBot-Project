@@ -16,14 +16,13 @@
     flex-direction: column;
     flex: 1;
 
-    h1 {
+    h3 {
         font-size: 1.6vw;
         align-self: center;
         margin-bottom: 4vw;
     }
 
     p {
-        font-size: 1.3vw;
         text-align: justify;
         align-self: center;
         margin: 0vw 3vw;

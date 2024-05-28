@@ -53,7 +53,7 @@ function Quisom() {
 
   return (
     <div className='quisom_page_container'>
-      <Logo subtitle='QUI SOM' />
+      <Logo subtitle='QUI SOM?' />
 
       <div className='quisom_container'>
         <img src={quisom1} alt='El nostre Equip'/>

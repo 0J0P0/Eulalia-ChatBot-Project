@@ -3,6 +3,7 @@
   height: 81%;
   margin: 2vw 0vw 0vw 2vw;
   overflow-y: auto;
+  font-family: 'Segoe UI';
 
   &::-webkit-scrollbar {
     display: none;

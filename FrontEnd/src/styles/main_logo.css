@@ -22,17 +22,14 @@
     }
 
     h1 {
-        font-family: 'Playfair Display';
         position: relative;
         font-size: 19vh;
     }
 
     .page_subtitle {
-        font-family: 'Open Sans', sans-serif;
         margin-top: 22vh;
         
         h2 {
-            font-family: 'Open Sans', sans-serif;
             font-weight: bold;
             font-size: 4vh;
         }

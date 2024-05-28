@@ -7,12 +7,33 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #F4F4F4;
+
+  h1 {
+    font-family: 'Playfair Display';
+  }
+
+  h2 {
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  h3 {
+    font-family: 'Segoe UI';
+  }
+
+  p {
+    font-family: 'Segoe UI';
+    font-size: 1.3vw;
+  }
+  
+  a {
+    font-family: 'Segoe UI';
+  }
 }
 
 code {

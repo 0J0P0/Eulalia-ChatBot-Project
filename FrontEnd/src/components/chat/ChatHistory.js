@@ -8,7 +8,7 @@ function ChatHistory({ messages, setMessages, conversationIds }) {
   return (
     <div className='chathistory_container'>
       <div className='chathistory_header'>
-        <h1>Converses</h1>
+        <h3>Converses</h3>
       </div>
       <div className='chathistory_content'>
         {conversationIds.map(id => (

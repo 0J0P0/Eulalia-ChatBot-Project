@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 
 function PrevChat({ id, messages, setMessages}) {
-  // const [selectedChatId, setSelectedChatId] = useState(null);
 
   const handlePrevChat = () => {
-    // setMessages([]);
-    // setSelectedChatId(id);
     console.log('Chat', id);
-    // localStorage.removeItem('chatMessages');
 
     fetch('/api/get_conversation', {
       method: 'POST',

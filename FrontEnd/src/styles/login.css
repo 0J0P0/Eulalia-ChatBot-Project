@@ -15,10 +15,6 @@
     align-items: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-    p {
-        font-size: 2.7vh;
-    }
-
     input {
         display: block;
         width: 70%;
@@ -27,18 +23,22 @@
         border: 0.2vh solid #B2B1B1;
         border-radius: 8vh;
         font-size: 2.2vh;
+
+        font-family: 'Segoe UI';
     }
 
     button.submit-button,
     button.close-button {
+        font-family: 'Segoe UI';
         padding: 1.5vh;
         border-radius: 4vh;
         margin-bottom: 2vh;
         margin-top: 1vh;
         cursor: pointer;
         font-size: 2.2vh;
-        width: 55%;
+        width: 40%;
         transition: transform 0.4s ease;
+        
         &:hover{
             transform: scale(1.1);
             transition: transform 0.4s ease;
@@ -76,16 +76,14 @@
     color: black;
     opacity: 0.8;
     font-size: 2.5vh;
-    font-family: 'Open Sans', sans-serif;
     transform: translateX(-50%) scale(1);
     transition: transform 0.4s ease;
+    
+    &:hover {
+        transform: translateX(-50%) scale(1.1);
+        transition: transform 0.4s ease;
+    }
 }
-
-#boto:hover {
-    transform: translateX(-50%) scale(1.1);
-    transition: transform 0.4s ease;
-}
-
 
 @media (max-width: 600px) {
     .login_container {
@@ -102,10 +100,5 @@
     button.close-button {
         width: 80%;
         font-size: 2.5vh;
-    }
-    
-    #boto {
-        bottom: 5vh;
-        font-size: 3vh;
     }
 }
