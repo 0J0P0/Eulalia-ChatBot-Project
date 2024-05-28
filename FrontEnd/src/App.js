@@ -18,6 +18,7 @@ export const metadata = {
 function App() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const [newSession, setNewSession] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('authenticated');
@@ -32,6 +33,7 @@ function App() {
 
   const authenticateUser = (status) => {
     setAuthenticated(status);
+    setNewSession(status); // Set newSession to true on login
     localStorage.setItem('authenticated', status);
   };
 
@@ -39,10 +41,10 @@ function App() {
     <div>
       <Router>
         <Header onClick={handleViewSidebar} />
-        <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} />
+        <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} closeSidebar={handleViewSidebar}/>
           <Routes>
             <Route path='/' element={<Inici authenticateUser={authenticateUser} />} />
-            <Route path='/bot' element={authenticated ? <Bot sidebarOpen={sidebarOpen} /> : <Inici authenticateUser={authenticateUser} />} />
+            <Route path='/bot' element={authenticated ? <Bot sidebarOpen={sidebarOpen} newSession={newSession} setNewSession={setNewSession}/> : <Inici authenticateUser={authenticateUser}/>} />
             <Route path='/quisom' element={<Quisom />} />
             <Route path='/ajuda' element={<Ajuda />} />
           </Routes>

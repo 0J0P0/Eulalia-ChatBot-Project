@@ -10,21 +10,27 @@ import ChatConversation from '../components/chat/ChatConversation.js';
 
 import new_chat_icon from '../img/new_chat.svg';
 
-function Bot() {
+function Bot({ newSession, setNewSession }) {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [conversationIds, setConversationIds] = useState([]);
 
   useEffect(() => {
-    const storedMessages = localStorage.getItem('chatMessages');
-    const storedConversationIds = localStorage.getItem('conversationIds');
-    if (storedMessages) {
-      setMessages(JSON.parse(storedMessages));
+    
+    if (newSession) {
+      handleNewChat();
+      setNewSession(false);
+    } else {
+      const storedMessages = localStorage.getItem('chatMessages');
+      const storedConversationIds = localStorage.getItem('conversationIds');
+      if (storedMessages) {
+        setMessages(JSON.parse(storedMessages));
+      }
+      if (storedConversationIds) {
+        setConversationIds(JSON.parse(storedConversationIds));
+      }
     }
-    if (storedConversationIds) {
-      setConversationIds(JSON.parse(storedConversationIds));
-    }
-  }, []);
+  }, [newSession, setNewSession]);
 
   const handleSend = async (message) => {
     const newMessage = {message: message, sender: 'User', conv_title: null};
@@ -74,7 +80,7 @@ function Bot() {
     .then(response => response.json())
     .then(data => {
       localStorage.setItem('conversationIds', JSON.stringify(data));
-        setConversationIds(data);
+      setConversationIds(data);
     })
     .catch(error => console.error('Error:', error));
   };
