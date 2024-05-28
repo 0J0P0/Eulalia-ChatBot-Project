@@ -2,14 +2,15 @@
     width: 100%;
     position: absolute;
     display: flex;
+    margin-top: 0.5vw;
     justify-content: space-between;
     z-index: 10; 
 }
 
 .nav_list_icon {
     height: 3vw;
+    margin-left: 0.5vw;
     position: fixed;
-    padding-top: 0.5vh;
     z-index: 1;
 }
 
@@ -25,5 +26,6 @@
 
 .nav_bcn {
     height: 3vw;
-    padding-top: 1vh;
+    padding-top: 0.5vh;
+    margin-right: 0.5vw;
 }
