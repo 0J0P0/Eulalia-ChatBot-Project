@@ -86,7 +86,7 @@ function Quisom() {
           <div className='contact_data'>
             <div className='contact_item'>
               <img src={phone} alt='phone' />
-              <p>+34 673 91 45 60</p>
+              <p>+34 123 45 67 89</p>
             </div>
             <div className='contact_item'>
               <img src={mail} alt='mail' />

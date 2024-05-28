@@ -13,7 +13,7 @@ function MainLogo() {
         <span class="blue-text">ia</span>
       </h1>
       <div className='page_subtitle'>
-        <h2> FEM BARCELONA </h2>
+        <h2> OBRIM BARCELONA </h2>
       </div>
     </div>
   );
