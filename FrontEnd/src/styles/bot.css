@@ -1,5 +1,7 @@
 .bot_page_container {
-    height: 100vh;
+    /* height: 100vh; */
+    top: 6vw;
+    position: relative;
     width: 100vw;
     display: flex;
     flex-direction: column;
@@ -19,9 +21,11 @@
   }
   
   .left_chat_col {
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     border-radius: 2vw 0 0 2vw;
-  }
+}
   
   .right_chat_col {
     display: flex;
@@ -31,26 +35,27 @@
   }
   
   .new_chat_button {
-    display: flex;
-    position: fixed;
-    justify-content: center;
-    align-items: center;
+    position: relative;
     height: 2.8vw;
     width: 2.8vw;
-    bottom: 2vw;
+    top: 0.2vw;
     left: 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 0;
     border-radius: 50%;
     background-color: #3C74BD;
     cursor: pointer;
-  }
+    
+    &:hover {
+      background-color: #4e7599;
+    }
+}
   
-  .new_chat_button:hover {
-    background-color: #4e7599;
-  }
-  
-  .new_chat_button img {
-    height: 2.3vw;
-    width: auto;
-  }
+
+.new_chat_button img {
+  height: 2.3vw;
+  width: auto;
+}
   
