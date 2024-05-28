@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import '../styles/sidebar.css';
@@ -12,21 +12,25 @@ const SideBar = props => {
   const handleLogout = () => {
       props.authenticateUser(false);
       navigate('/');
-  };  
+      props.closeSidebar();
+  };
+
+  const handleLinkClick = () => {
+      props.closeSidebar();
+  };
 
   return (
     <div className={sidebarClass}>
       <div className='sidebar_links'>
         <ul>
-          <li><Link to='/'>Inici</Link></li>
-          {props.authenticated && (
-            <li><Link to='/bot'>Eulàlia</Link></li>
+          <li><Link to='/' onClick={handleLinkClick}>Inici</Link></li>
+          {props.authenticated ? (
+            <li><Link to='/bot' onClick={handleLinkClick}>Eulàlia</Link></li>
+          ) : (
+            <li><Link to='/' onClick={handleLinkClick}>Eulàlia</Link></li>
           )}
-          {!props.authenticated && (
-            <li><Link to='/'>Eulàlia</Link></li>
-          )}
-          <li><Link to='/quisom'>Qui som?</Link></li>
-          <li><Link to='/ajuda'>Ajuda</Link></li>
+          <li><Link to='/quisom' onClick={handleLinkClick}>Qui som?</Link></li>
+          <li><Link to='/ajuda' onClick={handleLinkClick}>Ajuda</Link></li>
           {props.authenticated && (
             <li className="logout_container">
               <button className='logout_button' onClick={handleLogout}>

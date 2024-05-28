@@ -39,10 +39,10 @@ function App() {
     <div>
       <Router>
         <Header onClick={handleViewSidebar} />
-        <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} />
+        <SideBar isOpen={sidebarOpen} authenticated={authenticated} authenticateUser={authenticateUser} closeSidebar={handleViewSidebar}/>
           <Routes>
             <Route path='/' element={<Inici authenticateUser={authenticateUser} />} />
-            <Route path='/bot' element={authenticated ? <Bot sidebarOpen={sidebarOpen} /> : <Inici authenticateUser={authenticateUser} />} />
+            <Route path='/bot' element={authenticated ? <Bot sidebarOpen={sidebarOpen} /> : <Inici authenticateUser={authenticateUser}/>} />
             <Route path='/quisom' element={<Quisom />} />
             <Route path='/ajuda' element={<Ajuda />} />
           </Routes>
