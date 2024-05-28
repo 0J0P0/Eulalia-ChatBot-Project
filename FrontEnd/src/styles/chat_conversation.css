@@ -1,7 +1,7 @@
 .message_list_container {
   width: calc(100% - 2vw);
   height: 81%;
-  margin: 2vw 0vw 0vw 2vw;
+  margin: 2vw 0vw 1vw 2vw;
   overflow-y: auto;
   font-family: 'Segoe UI';
 

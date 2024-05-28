@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import "../styles/ajuda.css";
 
@@ -13,6 +13,11 @@ import img_bcn_dades from "../img/Logo_Ajuntament.jpg";
 
 
 function Ajuda() {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div>
       <Logo subtitle="AJUDA"/>

@@ -1,5 +1,5 @@
 .initial_container {
-    height: 86%;
+    height: 88%;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }

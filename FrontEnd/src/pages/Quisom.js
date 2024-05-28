@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 
 import '../styles/quisom.css';
 
@@ -12,6 +12,10 @@ import Logo from '../components/Logo.js';
 
 
 function Quisom() {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleSend = async (event) => {
     event.preventDefault();

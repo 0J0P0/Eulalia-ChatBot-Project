@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import '../styles/bot.css';
 
-import Logo from '../components/Logo.js';
 import ChatPanel from '../components/chat/ChatPanel.js';
 import InitialChat from '../components/chat/InitialChat.js';
 import ChatHistory from '../components/chat/ChatHistory.js';
@@ -16,7 +15,8 @@ function Bot({ newSession, setNewSession }) {
   const [conversationIds, setConversationIds] = useState([]);
 
   useEffect(() => {
-    
+    window.scrollTo(0, 0);
+
     if (newSession) {
       handleNewChat();
       setNewSession(false);
@@ -69,13 +69,12 @@ function Bot({ newSession, setNewSession }) {
     setMessages([]);
     localStorage.removeItem('chatMessages');
 
-    // Send request to backend: refresh history bar
     fetch('/api/refresh_history', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
     })
     .then(response => response.json())
     .then(data => {
@@ -87,7 +86,6 @@ function Bot({ newSession, setNewSession }) {
 
   return (
     <div className='bot_page_container'>
-      <Logo subtitle='' />
       <div className='chat_container'>
         <div className='left_chat_col'>
           <ChatHistory messages={messages} setMessages={setMessages} conversationIds={conversationIds}/>
