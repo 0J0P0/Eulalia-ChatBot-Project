@@ -104,8 +104,6 @@ class Conversation():
         elif self.model == "NORMAL":
             answer = process_question_normal(question, self.memory, self.id)
 
-        print(answer)
-        
         return answer
 
 
@@ -164,7 +162,6 @@ def get_response(data: dict):
     conn.commit()
 
     print("Eulalia message data inserted into message_references successfully.")
-
     
     formated_message = format_message(answer, relevant_tables, query)
     
@@ -179,20 +176,20 @@ def get_response(data: dict):
     return data
 
 
-
 def format_message(answer: str, relevant_tables: list[str], query: str) -> str:
     """
     Format the answer message and, possibly, the relevant tables and sql query
     for the Frontend.
     """
+
     formated_message = answer
     if relevant_tables:
         formated_message += "\n\nAquestes són les taules relacionades més importants que he trobat:"
         for idx, tbl in enumerate(relevant_tables):
-            formated_message += f"\n{idx + 1}: {tbl}"
+            formated_message += f"\n{idx + 1}. {tbl}"
     
     if query:
         formated_message += "\n\nAquesta és la consulta SQL que he utilitzat per trobar la informació proporcionada:"
         formated_message += f"\n\n```sql\n{query}\n```"
-        
+
     return formated_message
