@@ -63,15 +63,15 @@ function Quisom() {
         <img src={quisom1} alt='El nostre Equip'/>
         <div className='quisom_text'>
           <h3>El nostre equip</h3>
-          <p>L'equip de desenvolupadors està format per un grup de 10 estudiants del 3r any del grau de Ciència i Enginyeria de Dades a la Universitat Politècnica de Catalunya.</p>
+          <p>L'equip de desenvolupadors està format per un grup de 10 estudiants del 3r curs del Grau en Ciència i Enginyeria de Dades a la Universitat Politècnica de Catalunya.</p>
         </div>
       </div>
 
       <div className='project_container'>
         <img src={quisom2} alt='Sobre Eulalia'/>
         <div className='quisom_text'>
-          <h3>Sobre Eulalia</h3>
-          <p>Eulàlia és un assistent de xat dissenyat per oferir suport intern a l'equip de tècnics de l'Ajuntament de Barcelona. La seva principal tasca és proporcionar respostes a les preguntes dels tècnics utilitzant una base de dades que conté informació detallada sobre els serveis i les estadístiques oferts per l'Ajuntament de Barcelona.</p>
+          <h3>Sobre Eulàlia</h3>
+          <p>Eulàlia és un assistent de xat dissenyat per oferir suport intern a l'equip de tècnics de l'Ajuntament de Barcelona. La seva principal tasca és proporcionar respostes a les preguntes dels tècnics utilitzant una base de dades que conté informació detallada sobre els serveis i les estadístiques de l'Ajuntament de Barcelona.</p>
         </div>
       </div>
 
@@ -86,7 +86,7 @@ function Quisom() {
           <input type='submit' value='Enviar' onClick={handleSend}></input>
         </form>
         <div className='contact_data_container'>
-          <p className='description_text'>Si vols conèixer més sobre el nostre equip o sobre la Eulàlia, pots contactar-nos a través del següent formulari:</p>
+          <p className='description_text'>Si vols conèixer més sobre el nostre equip o sobre Eulàlia, pots contactar-nos a través del següent formulari:</p>
           <div className='contact_data'>
             <div className='contact_item'>
               <img src={phone} alt='phone' />
@@ -94,7 +94,7 @@ function Quisom() {
             </div>
             <div className='contact_item'>
               <img src={mail} alt='mail' />
-              <p>eulalia.contact@gmail.com</p>
+              <p>contact@eulalia.com</p>
             </div>
             <div className='contact_item'>
               <img src={location} alt='location' />
