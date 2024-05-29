@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { TypingIndicator } from '@chatscope/chat-ui-kit-react';
 
 import '../../styles/chat_conversation.css';
@@ -28,35 +31,50 @@ function ChatConversation({ messages, isTyping }) {
   };
 
   const formatMessage = (content) => {
-    return content.split('\n').map((line, lineIndex) => {
-      // Check if the line starts with code snippet indicator
-      if (line.trim().startsWith('```sql')) {
-        const code = line.split('```sql')[1] || '';
-        return (
-          <div className="code-snippet" key={lineIndex}>
-            {code.trim()}
-          </div>
-        );
-      } else {
-        return (
-          <React.Fragment key={lineIndex}>
-            {line}
-            <br />
-          </React.Fragment>
-        );
-      }
-    });
+    return (
+      <ReactMarkdown
+        components={{
+          code({ node, inline, className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className || '');
+
+            const customStyle = {
+              fontSize: '1.3vw',
+              borderRadius: '2vw',
+              backgroundColor: '#F4F4F4',
+            };
+
+            return !inline && match ? (
+              <SyntaxHighlighter
+                style={coy} customStyle={customStyle}
+                language={match[1]}
+                PreTag="div"
+                {...props}
+              >
+                {String(children).replace(/\n$/, '')}
+              </SyntaxHighlighter>
+            ) : (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            );
+          }
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    );
   };
 
   const formatEulaliaMessage = (message, isExpanded, index, sender) => {
-    const [answer, ...rest] = message.split('\n\n');
-    const restOfMessage = rest.join('\n\n');
+    const splitText = "Aquestes són les taules relacionades més importants que he trobat:";
+    const parts = message.split(new RegExp(`(${splitText})`));
+    const answer = parts[0];
+    const restOfMessage = parts.slice(1).join('');
 
     if (isExpanded) {
       return (
         <React.Fragment>
-          {answer}
-          <br /><br />
+          <ReactMarkdown>{answer}</ReactMarkdown>
           {formatMessage(restOfMessage)}
           {sender === 'Eulàlia' && <button className="message_button" onClick={() => toggleMessageExpansion(index)}>Veure menys</button>}
         </React.Fragment>
@@ -64,8 +82,8 @@ function ChatConversation({ messages, isTyping }) {
     } else {
       return (
         <React.Fragment>
-          {answer}
-          {rest.length > 0 && sender === 'Eulàlia' && <button className="message_button" onClick={() => toggleMessageExpansion(index)}>Veure més</button>}
+          <ReactMarkdown>{answer}</ReactMarkdown>
+          {restOfMessage && sender === 'Eulàlia' && <button className="message_button" onClick={() => toggleMessageExpansion(index)}>Veure més</button>}
         </React.Fragment>
       );
     }
@@ -86,7 +104,7 @@ function ChatConversation({ messages, isTyping }) {
               </div>
             ) : (
               <div className='user_message'>
-                {formatMessage(message.message, expandedMessages[index], index, message.sender)}
+                {formatMessage(message.message)}
               </div>
             )}
           </div>

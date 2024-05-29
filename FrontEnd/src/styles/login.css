@@ -1,11 +1,11 @@
 .login_container {
-    bottom: 5vh;
+    bottom: 7vh;
     height: 44vh;
     width: 23vw;
     left: 50%;
     padding: 4vh;
     position: absolute;
-    border-radius: 4vh;
+    border-radius: 2vw;
     transform: translate(-50%);
     background-color: #ffffff;
     text-align: center;
@@ -31,12 +31,12 @@
     button.close-button {
         font-family: 'Segoe UI';
         padding: 1.5vh;
-        border-radius: 4vh;
+        border-radius: 2vw;
         margin-bottom: 2vh;
         margin-top: 1vh;
         cursor: pointer;
         font-size: 2.2vh;
-        width: 40%;
+        width: 30%;
         transition: transform 0.4s ease;
         
         &:hover{
@@ -70,11 +70,10 @@
     position: fixed;
     padding: 2vh 8vw;
     border: none;
-    border-radius: 4vh;
+    border-radius: 2vw;
     cursor: pointer;
     background-color: #ffffff;
     color: black;
-    opacity: 0.8;
     font-size: 2.5vh;
     transform: translateX(-50%) scale(1);
     transition: transform 0.4s ease;
@@ -82,23 +81,5 @@
     &:hover {
         transform: translateX(-50%) scale(1.1);
         transition: transform 0.4s ease;
-    }
-}
-
-@media (max-width: 600px) {
-    .login_container {
-        width: 90%;
-        bottom: 2vh;
-        padding: 5vh;
-    }
-
-    input {
-        width: calc(100% - 4vh);
-    }
-
-    button.submit-button,
-    button.close-button {
-        width: 80%;
-        font-size: 2.5vh;
     }
 }

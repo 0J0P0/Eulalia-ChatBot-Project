@@ -1,5 +1,4 @@
 .bot_page_container {
-    /* height: 100vh; */
     top: 6vw;
     position: relative;
     width: 100vw;
@@ -12,7 +11,7 @@
   
   .chat_container {
     background-color: #E7E6E6;
-    height: 80%;
+    height: 38vw;
     width: 80%;
     border-radius: 2vw;
     display: grid;
@@ -30,16 +29,15 @@
   .right_chat_col {
     display: flex;
     flex-direction: column;
-    border-radius: 0 2vw 2vw 0;
     overflow-y: hidden;
+    border-radius: 0 2vw 2vw 0;
   }
   
   .new_chat_button {
-    position: relative;
     height: 2.8vw;
     width: 2.8vw;
-    top: 0.2vw;
-    left: 2vw;
+    margin-top: 4.1vw;
+    margin-left: 2vw;
     display: flex;
     justify-content: center;
     align-items: center;

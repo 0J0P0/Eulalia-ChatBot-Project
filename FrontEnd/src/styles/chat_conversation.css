@@ -1,7 +1,7 @@
 .message_list_container {
   width: calc(100% - 2vw);
   height: 81%;
-  margin: 2vw 0vw 1vw 2vw;
+  margin: 1vw 0vw 1vw 2vw;
   overflow-y: auto;
   font-family: 'Segoe UI';
 
@@ -25,20 +25,20 @@
 .message_logo {
   width: 2vw;
   height: 2vw;
-  margin: 0vw 0vw 1vw 0vw;
+  margin: 1.4vw 0vw 1vw 0vw;
 }
 
 .user_message, .eulalia_message {
   width: calc(100% - 2vw);
 
   text-align: justify;
-  margin: 0vw 0vw 1vw 1vw;
+  margin: 0vw 0vw 0vw 1vw;
   font-size: 1.3vw;
   word-break: break-word;
 }
 
 .eulalia_message {
-  margin-bottom: 2.5vw;
+  margin-bottom: 1.5vw;
 }
 
 .message_button {
