@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PopUp from './PopUp';
-import Login from './Login';
 
 import '../styles/sidebar.css';
 import logoutImg from '../img/logout.svg';
@@ -32,18 +31,22 @@ const SideBar = (props) => {
     setShowPopUp(false);
   };
 
+  const handleLinkClick = () => {
+    props.closeSidebar();
+  };
+
   return (
     <div className={sidebarClass}>
       <div className='sidebar_links'>
         <ul>
-          <li><Link to='/'>Inici</Link></li>
+          <li><Link to='/' onClick={handleLinkClick} >Inici</Link></li>
           {props.authenticated ? (
-            <li><Link to='/bot'>Eulàlia</Link></li>
+            <li><Link to='/bot ' onClick={handleLinkClick}>Eulàlia</Link></li>
           ) : (
             <li><a href='#' onClick={handleEulaliaClick}>Eulàlia</a></li>
           )}
-          <li><Link to='/quisom'>Qui som?</Link></li>
-          <li><Link to='/ajuda'>Ajuda</Link></li>
+          <li><Link to='/quisom ' onClick={handleLinkClick}>Qui som?</Link></li>
+          <li><Link to='/ajuda ' onClick={handleLinkClick}>Ajuda</Link></li>
           {props.authenticated && (
             <li className="logout_container">
               <button className='logout_button' onClick={handleLogout}>

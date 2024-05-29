@@ -12,17 +12,18 @@
 }
 
 .popup {
-    background: #ffffff;
-    padding: 10px;
+    height: 10vh;
+    width: 18vw;
+    padding: 4vh;
+    position: absolute;
     border-radius: 2vw;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 20%;
-    height: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .popup-message {
@@ -48,23 +49,4 @@
 
 .popup-close-button:hover {
     transform: scale(1.1);
-}
-
-@media (max-width: 600px) {
-    .popup {
-        width: 90%;
-        padding: 5vw;
-        border-radius: 4vw;
-    }
-
-    .popup-message {
-        font-size: 3.5vw;
-        margin-bottom: 2vw;
-    }
-
-    .popup-close-button {
-        width: 80%;
-        font-size: 4vw;
-        padding: 1vw;
-    }
 }

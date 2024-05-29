@@ -33,7 +33,7 @@ function App() {
 
   const authenticateUser = (status) => {
     setAuthenticated(status);
-    setNewSession(status); // Set newSession to true on login
+    setNewSession(status);
     localStorage.setItem('authenticated', status);
   };
 

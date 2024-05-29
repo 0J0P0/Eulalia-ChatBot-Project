@@ -28,7 +28,7 @@ function PrevChat({ id, index, messages, setMessages }) {
 
   return (
     <button onClick={handlePrevChat} className='prevChat'>
-      Chat {index}
+      Xat {index}
     </button>
   );
 }
