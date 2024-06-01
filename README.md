@@ -9,6 +9,8 @@
   </a>
 </p>
 
+The present project seeks to validate the technological feasibility of Large Language Models (LLMs), such as ChatGPT, for the management of structured data of Barcelona City Council, as the public entity faces the challenge of streamlining processes internal data analysis to improve operational efficiency. To solve such objective, the conversational bot Eulàlia has been developed, intended to answer queries from municipal managers through the use of natural language. Based on the implementation of the best open source text-to-SQL model that existed at the beginning, this has been improved and adapted to the specific data of the City Council, thus maximizing its performance. The implemented model has an accuracy of 65%, comparable to the best current models applied to real-world databases. The rapid evolution of the state of the art means that in the coming months a substantial improvement in the quality of this type of model is expected, showing a promising future for future versions of Eulàlia.
+
 Eulàlia is a chat assistant designed to offer internal support to Barcelona City Council's technical team. Its main task is to provide answers to questions from technicians using databases that contain detailed information on the services and statistics offered by Barcelona City Council.
 
 ## Installation and Usage
